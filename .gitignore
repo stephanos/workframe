@@ -1,0 +1,17 @@
+logs
+*.log
+
+pids
+*.pid
+*.seed
+
+lib-cov
+
+coverage
+
+dist
+draft
+node_modules
+coverage
+tmp
+.DS_Store
