@@ -1,8 +1,8 @@
 import {isFunction, endsWith} from 'lodash';
 
 
-function verifySourceName(cls) {
-  if (!endsWith(cls.name, 'Shell')) {
+function verifyComponentName(target) {
+  if (!endsWith(target.name, 'Shell')) {
     throw new Error(`class must have suffix 'Shell'`);
   }
 }
@@ -36,16 +36,16 @@ function addTypeFunc(proto) {
 }
 
 
-function shell(name, source) {
-  const proto = source.prototype;
+function shell(id, target) {
+  const proto = target.prototype;
   // console.log(Reflect.ownKeys(proto));
 
   // verify
-  verifySourceName(source);
+  verifyComponentName(target);
   verifyProcessFunc(proto);
 
   // modify
-  addID(proto, name);
+  addID(proto, id);
   addTypeFunc(proto);
 }
 
