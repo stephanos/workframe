@@ -8,7 +8,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('test:name', Invalid),
+      () => shell('test:name')(Invalid),
       (err) => err.message === `class must have suffix 'Shell'`);
   });
 
@@ -17,7 +17,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('test:process', Shell),
+      () => shell('test:process')(Shell),
       (err) => err.message === `method 'process' must be defined`);
   });
 
@@ -28,7 +28,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('test:process:param', Shell),
+      () => shell('test:process:param')(Shell),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 
@@ -45,8 +45,8 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('test:process:id:conflict', Shell),
-      (err) => err.message === `getter 'id' must not be defined`);
+      () => shell('test:process:id:conflict')(Shell),
+      (err) => err.message === `getter/property 'id' must not be defined`);
   });
 
   it('returns its id', () => {
@@ -57,8 +57,49 @@ describe('Shell', () => {
       }
     }
 
-    shell('test:process:id', Shell);
+    shell('test:process:id')(Shell);
     assert.equal(new Shell().id, 'test:process:id');
+  });
+
+  it('not have a "namespace" getter already', () => {
+    class Shell {
+
+      get namespace() {
+        return 'my-namspace';
+      }
+
+      process(signal) {
+        this.signal = signal;
+      }
+    }
+
+    assert.throws(
+      () => shell('test:process:namespace:conflict')(Shell),
+      (err) => err.message === `getter/property 'namespace' must not be defined`);
+  });
+
+  it('returns its namespace', () => {
+    class Shell {
+
+      process(signal) {
+        this.signal = signal;
+      }
+    }
+
+    shell('my-namspace', 'test:process:namespace')(Shell);
+    assert.equal(new Shell().namespace, 'my-namspace');
+  });
+
+  it('returns a default namespace if none was specified', () => {
+    class Shell {
+
+      process(signal) {
+        this.signal = signal;
+      }
+    }
+
+    shell('test:process:namespace:default')(Shell);
+    assert.equal(new Shell().namespace, 'default');
   });
 
   it('not have a "type" getter already', () => {
@@ -74,8 +115,8 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('test:process:type:conflict', Shell),
-      (err) => err.message === `getter 'type' must not be defined`);
+      () => shell('test:process:type:conflict')(Shell),
+      (err) => err.message === `getter/property 'type' must not be defined`);
   });
 
   it('returns its type', () => {
@@ -86,7 +127,7 @@ describe('Shell', () => {
       }
     }
 
-    shell('test:process:type', Shell);
+    shell('test:process:type')(Shell);
     assert.equal(new Shell().type, 'SHELL');
   });
 });

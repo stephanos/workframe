@@ -1,27 +1,20 @@
-import {isString, isFunction} from 'lodash';
+import {isFunction} from 'lodash';
 
 
 function isComponent(target) {
-  return target.id && target.type;
+  return target.namespace && target.id && target.type;
 }
 
 function inject(reference) {
   return (target, key) => {
     if (!isComponent(target)) {
-      throw new Error(`unable to inject into property of '${target.name}': not a component`);
+      throw new Error(`unable to inject into any property of '${target.name}': not a component`);
     }
-
-    let id;
-    if (isString(reference)) {
-      id = reference;
-    } else if (isFunction(reference)) {
-      if (!isComponent(reference)) {
-        throw new Error(`unable to inject into property of '${target.name}': not a component`);
-      }
-      id = reference.id;
-    } else {
-      // TODO: try to extract the name from the field name (need a namespace for that)
-      throw new Error(`unable to inject into '${key}' of '${target.id}': missing ID`);
+    if (!isFunction(reference)) {
+      throw new Error(`unable to inject '${reference}' into '${key}' of '${target.id}': not a function`);
+    }
+    if (!isComponent(reference)) {
+      throw new Error(`unable to inject '${reference.name}' into '${key}' of '${target.name}': not a component`);
     }
 
     const proto = target.prototype;
@@ -29,7 +22,11 @@ function inject(reference) {
     if (proto.dependencies[key]) {
       throw new Error(`unable to inject into '${target.name}': conflicting dependency`);
     }
-    proto.dependencies[key] = id;
+    proto.dependencies[key] = {
+      id: reference.id,
+      type: reference.type,
+      namespace: reference.namespace,
+    };
   };
 }
 

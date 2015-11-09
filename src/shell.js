@@ -19,16 +19,25 @@ function verifyProcessFunc(proto) {
 
 function addID(proto, id) {
   if (proto.id) {
-    throw new Error(`getter 'id' must not be defined`);
+    throw new Error(`getter/property 'id' must not be defined`);
   }
   Object.defineProperty(proto, 'id', {
     get: () => id,
   });
 }
 
-function addTypeFunc(proto) {
+function addNamespace(proto, namespace) {
+  if (proto.namespace) {
+    throw new Error(`getter/property 'namespace' must not be defined`);
+  }
+  Object.defineProperty(proto, 'namespace', {
+    get: () => namespace,
+  });
+}
+
+function addType(proto) {
   if (proto.type) {
-    throw new Error(`getter 'type' must not be defined`);
+    throw new Error(`getter/property 'type' must not be defined`);
   }
   Object.defineProperty(proto, 'type', {
     get: () => 'SHELL',
@@ -36,17 +45,29 @@ function addTypeFunc(proto) {
 }
 
 
-function shell(id, target) {
-  const proto = target.prototype;
-  // console.log(Reflect.ownKeys(proto));
+function shell(namespace, id) {
+  let componentId;
+  let componentNamespace;
+  if (id === undefined) {
+    componentId = namespace;
+    componentNamespace = 'default';
+  } else {
+    componentId = id;
+    componentNamespace = namespace;
+  }
 
-  // verify
-  verifyComponentName(target);
-  verifyProcessFunc(proto);
+  return (target) => {
+    const proto = target.prototype;
 
-  // modify
-  addID(proto, id);
-  addTypeFunc(proto);
+    // verify
+    verifyComponentName(target);
+    verifyProcessFunc(proto);
+
+    // modify
+    addID(proto, componentId);
+    addType(proto);
+    addNamespace(proto, componentNamespace);
+  };
 }
 
 
