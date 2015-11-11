@@ -1,19 +1,17 @@
 import {isFunction} from 'lodash';
 
+import ComponentUtil from './component';
 
-function isComponent(target) {
-  return target.namespace && target.id && target.type;
-}
 
 function inject(reference) {
   return (target, key) => {
-    if (!isComponent(target)) {
+    if (!ComponentUtil.isValid(target)) {
       throw new Error(`unable to inject into any property of '${target.name}': not a component`);
     }
     if (!isFunction(reference)) {
       throw new Error(`unable to inject '${reference}' into '${key}' of '${target.id}': not a function`);
     }
-    if (!isComponent(reference)) {
+    if (!ComponentUtil.isValid(reference)) {
       throw new Error(`unable to inject '${reference.name}' into '${key}' of '${target.name}': not a component`);
     }
 

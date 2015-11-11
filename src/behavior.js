@@ -8,18 +8,14 @@ function verifyProcessFunc(input) {
   if (!isFunction(processFunc)) {
     throw new Error(`method 'process' must be defined`);
   }
-  if (processFunc.length !== 1) {
-    throw new Error(`method 'process' must have exactly 1 parameter`);
-  }
 }
 
-
-function shell(namespace, id) {
+function behavior(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
-    ComponentUtil.create(target, namespace, id, 'Shell');
+    ComponentUtil.create(target, namespace, id, 'Behavior');
   };
 }
 
 
-export default shell;
+export default behavior;

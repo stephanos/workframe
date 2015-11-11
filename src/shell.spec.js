@@ -1,133 +1,51 @@
 import assert from 'assert';
+
 import shell from './shell';
+import ComponentUtil from './component';
 
 
 describe('Shell', () => {
-  it('has suffix', () => {
-    class Invalid {
+  it('should succeed', () => {
+    class Shell {
+      process(signal) {
+        this.signal = signal;
+      }
     }
 
-    assert.throws(
-      () => shell('test:name')(Invalid),
-      (err) => err.message === `class must have suffix 'Shell'`);
+    shell('shell', 'success')(Shell);
+    assert.ok(ComponentUtil.isValid(Shell));
   });
 
-  it('has a "process" method', () => {
+  it('should fail if "process" method missing', () => {
     class Shell {
     }
 
     assert.throws(
-      () => shell('test:process')(Shell),
+      () => shell('shell', 'process')(Shell),
       (err) => err.message === `method 'process' must be defined`);
   });
 
-  it('has a "process" method with 1 parameter', () => {
+  it('should fail if "process" method has less than 1 parameter', () => {
     class Shell {
       process() {
       }
     }
 
     assert.throws(
-      () => shell('test:process:param')(Shell),
+      () => shell('shell', 'process:param:too-few')(Shell),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 
-  it('not have a "id" getter already', () => {
+  it('should fail if "process" method has more than 1 parameter', () => {
     class Shell {
-
-      get id() {
-        return 'my-id';
-      }
-
-      process(signal) {
-        this.signal = signal;
+      process(one, two) {
+        this.one = one;
+        this.two = two;
       }
     }
 
     assert.throws(
-      () => shell('test:process:id:conflict')(Shell),
-      (err) => err.message === `getter/property 'id' must not be defined`);
-  });
-
-  it('returns its id', () => {
-    class Shell {
-
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    shell('test:process:id')(Shell);
-    assert.equal(new Shell().id, 'test:process:id');
-  });
-
-  it('not have a "namespace" getter already', () => {
-    class Shell {
-
-      get namespace() {
-        return 'my-namspace';
-      }
-
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    assert.throws(
-      () => shell('test:process:namespace:conflict')(Shell),
-      (err) => err.message === `getter/property 'namespace' must not be defined`);
-  });
-
-  it('returns its namespace', () => {
-    class Shell {
-
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    shell('my-namspace', 'test:process:namespace')(Shell);
-    assert.equal(new Shell().namespace, 'my-namspace');
-  });
-
-  it('returns a default namespace if none was specified', () => {
-    class Shell {
-
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    shell('test:process:namespace:default')(Shell);
-    assert.equal(new Shell().namespace, 'default');
-  });
-
-  it('not have a "type" getter already', () => {
-    class Shell {
-
-      get type() {
-        return 'my-type';
-      }
-
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    assert.throws(
-      () => shell('test:process:type:conflict')(Shell),
-      (err) => err.message === `getter/property 'type' must not be defined`);
-  });
-
-  it('returns its type', () => {
-    class Shell {
-
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    shell('test:process:type')(Shell);
-    assert.equal(new Shell().type, 'SHELL');
+      () => shell('shell', 'process:param:too-many')(Shell),
+      (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 });
