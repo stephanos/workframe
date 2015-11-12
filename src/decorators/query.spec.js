@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import query from './query';
-import ComponentUtil from './component';
+import ComponentUtil from '../component';
 
 
 describe('Query', () => {

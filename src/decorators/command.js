@@ -1,4 +1,4 @@
-import ComponentUtil from './component';
+import ComponentUtil from '../component';
 
 
 function command(namespace, id) {

@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import shell from './shell';
-import ComponentUtil from './component';
+import ComponentUtil from '../component';
 
 
 describe('Shell', () => {

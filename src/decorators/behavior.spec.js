@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import behavior from './behavior';
-import ComponentUtil from './component';
+import ComponentUtil from '../component';
 
 
 describe('Behavior', () => {

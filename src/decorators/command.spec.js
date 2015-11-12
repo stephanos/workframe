@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import command from './command';
-import ComponentUtil from './component';
+import ComponentUtil from '../component';
 
 
 describe('Command', () => {

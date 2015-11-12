@@ -1,6 +1,6 @@
 import {isFunction} from 'lodash';
 
-import ComponentUtil from './component';
+import ComponentUtil from '../component';
 
 
 function verifyProcessFunc(input) {
