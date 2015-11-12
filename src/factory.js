@@ -1,5 +1,10 @@
 import {endsWith} from 'lodash';
 
+import Registry from './registry';
+
+
+const registry = new Registry();
+
 
 function verifyName(input, type) {
   if (!endsWith(input.name, type)) {
@@ -45,4 +50,6 @@ export default function create(input, namespace, id, type) {
   addId(input, componentId);
   addType(input, type);
   addNamespace(input, componentNamespace);
+
+  registry.add(input);
 }

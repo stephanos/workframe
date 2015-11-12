@@ -33,12 +33,12 @@ function addComponent(container, Component) {
     throw new EntryError(`can not add '${Component}': invalid value`);
   }
 
-  const id = Component.prototype.id;
+  const id = Component.id;
   if (id === undefined) {
-    throw new KeyError(`can not add '${Component.name}': missing name`);
+    throw new KeyError(`can not add '${Component.name}': missing id`);
   }
   if (!isString(id) || !idRegex.test(id)) {
-    throw new KeyError(`can not add '${id}': invalid name`);
+    throw new KeyError(`can not add '${id}': invalid id`);
   }
   if (findComponent(container, id)) {
     throw new KeyError(`can not add '${id}': already exists`);

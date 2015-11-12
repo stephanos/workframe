@@ -26,7 +26,7 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, 'component', 'id:conflict', 'Component'),
+      () => createComponent(Component, 'component', 'factory:id:conflict', 'Component'),
       (err) => err.message === `getter/property 'id' must not be defined`);
   });
 
@@ -34,8 +34,8 @@ describe('Factory', () => {
     class Component {
     }
 
-    createComponent(Component, 'component', 'id', 'Component');
-    assert.equal(Component.id, 'id');
+    createComponent(Component, 'component', 'factory:id', 'Component');
+    assert.equal(Component.id, 'factory:id');
   });
 
   it('should fail if "namespace" property exists already', () => {
@@ -51,7 +51,7 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, 'component', 'ns:conflict', 'Component'),
+      () => createComponent(Component, 'component', 'factory:ns:conflict', 'Component'),
       (err) => err.message === `getter/property 'namespace' must not be defined`);
   });
 
@@ -59,7 +59,7 @@ describe('Factory', () => {
     class Component {
     }
 
-    createComponent(Component, 'component', 'ns', 'Component');
+    createComponent(Component, 'component', 'factory:ns', 'Component');
     assert.equal(Component.namespace, 'component');
   });
 
@@ -67,7 +67,7 @@ describe('Factory', () => {
     class Component {
     }
 
-    createComponent(Component, 'id', undefined, 'Component');
+    createComponent(Component, 'id:default', undefined, 'Component');
     assert.equal(Component.namespace, 'default');
   });
 
@@ -80,7 +80,7 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, 'component', 'type:conflict', 'Component'),
+      () => createComponent(Component, 'component', 'factory:type:conflict', 'Component'),
       (err) => err.message === `getter/property 'type' must not be defined`);
   });
 

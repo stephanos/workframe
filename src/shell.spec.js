@@ -12,7 +12,7 @@ describe('Shell', () => {
       }
     }
 
-    shell('shell', 'success')(Shell);
+    shell('shell', 'shell:success')(Shell);
     assert.ok(isComponent(Shell));
   });
 

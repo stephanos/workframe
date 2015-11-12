@@ -4,18 +4,20 @@ import where from 'data-driven';
 import Registry from './registry';
 
 
+let registry;
+
 describe('Registry', () => {
+  beforeEach(() => {
+    registry = new Registry();
+  });
+
   describe('adding a component', () => {
     it('should succeed', () => {
       class Component {
-        get id() {
-          return 'ID';
-        }
+        static id = 'ID';
       }
 
-      const registry = new Registry();
       registry.add(Component);
-
       assert.equal(registry._componentByIds.ID, Component);
     });
 
@@ -23,7 +25,6 @@ describe('Registry', () => {
       {value: 0}, {value: null}, {value: []}, {value: ''},
     ], () => {
       it('should fail for invalid Component', (ctx) => {
-        const registry = new Registry();
         assert.throws(
           () => registry.add(ctx.value),
           (err) => err.message === `can not add '${ctx.value}': invalid value`);
@@ -34,10 +35,9 @@ describe('Registry', () => {
       class Component {
       }
 
-      const registry = new Registry();
       assert.throws(
         () => registry.add(Component),
-        (err) => err.message === "can not add 'Component': missing name");
+        (err) => err.message === "can not add 'Component': missing id");
     });
 
     where([
@@ -45,26 +45,20 @@ describe('Registry', () => {
     ], () => {
       it('should fail for invalid ID', (ctx) => {
         class Component {
-          get id() {
-            return ctx.value;
-          }
+          static id = ctx.value;
         }
 
-        const registry = new Registry();
         assert.throws(
           () => registry.add(Component),
-          (err) => err.message === `can not add '${ctx.value}': invalid name`);
+          (err) => err.message === `can not add '${ctx.value}': invalid id`);
       });
     });
 
     it('should fail for already existing ID', () => {
       class Component {
-        get id() {
-          return 'ID';
-        }
+        static id = 'ID';
       }
 
-      const registry = new Registry();
       registry.add(Component);
       assert.throws(
         () => registry.add(Component),

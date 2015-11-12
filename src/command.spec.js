@@ -9,7 +9,7 @@ describe('Command', () => {
     class Command {
     }
 
-    command('command', 'success')(Command);
+    command('command', 'command:success')(Command);
     assert.ok(isComponent(Command));
   });
 });
