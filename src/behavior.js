@@ -13,7 +13,11 @@ function verifyProcessFunc(input) {
 function behavior(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
-    createComponent(target, namespace, id, 'Behavior');
+    createComponent(target, {
+      namespace: namespace,
+      type: 'Behavior',
+      id: id,
+    });
   };
 }
 

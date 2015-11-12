@@ -3,7 +3,11 @@ import createComponent from './factory';
 
 function command(namespace, id) {
   return (target) => {
-    createComponent(target, namespace, id, 'Command');
+    createComponent(target, {
+      namespace: namespace,
+      type: 'Command',
+      id: id,
+    });
   };
 }
 

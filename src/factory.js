@@ -34,7 +34,9 @@ function addType(input, type) {
 }
 
 
-export default function create(input, namespace, id, type) {
+export default function create(input, settings) {
+  const {namespace, id, type, injectTypeBlacklist} = settings;
+
   let componentId;
   let componentNamespace;
   if (id === undefined) {

@@ -1,7 +1,11 @@
 import assert from 'assert';
+import Chance from 'chance';
 
 import createComponent from './factory';
 
+
+const chance = new Chance();
+const randomId = () => chance.word({syllables: 5});
 
 describe('Factory', () => {
   it('should fail if suffix is missing', () => {
@@ -9,8 +13,11 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Invalid, 'component', 'name', 'Component'),
-      (err) => err.message === `class must have suffix 'Component'`);
+      () => createComponent(Invalid, {
+        namespace: 'namespace',
+        type: 'Component',
+        id: randomId(),
+      }), (err) => err.message === `class must have suffix 'Component'`);
   });
 
   it('should fail if "id" property exists already', () => {
@@ -26,16 +33,20 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, 'component', 'factory:id:conflict', 'Component'),
-      (err) => err.message === `getter/property 'id' must not be defined`);
+      () => createComponent(Component, {
+        namespace: 'namespace', type: 'Component', id: randomId(),
+      }), (err) => err.message === `getter/property 'id' must not be defined`);
   });
 
   it('should add method that returns its "id"', () => {
     class Component {
     }
 
-    createComponent(Component, 'component', 'factory:id', 'Component');
-    assert.equal(Component.id, 'factory:id');
+    const id = randomId();
+    createComponent(Component, {
+      namespace: 'namespace', type: 'Component', id: id,
+    });
+    assert.equal(Component.id, id);
   });
 
   it('should fail if "namespace" property exists already', () => {
@@ -51,23 +62,28 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, 'component', 'factory:ns:conflict', 'Component'),
-      (err) => err.message === `getter/property 'namespace' must not be defined`);
+      () => createComponent(Component, {
+        namespace: 'namespace', type: 'Component', id: randomId(),
+      }, (err) => err.message === `getter/property 'namespace' must not be defined`));
   });
 
   it('should add method that returns its "namespace"', () => {
     class Component {
     }
 
-    createComponent(Component, 'component', 'factory:ns', 'Component');
-    assert.equal(Component.namespace, 'component');
+    createComponent(Component, {
+      namespace: 'namespace', type: 'Component', id: randomId(),
+    });
+    assert.equal(Component.namespace, 'namespace');
   });
 
   it('should add method that returns a default "namespace" if none was specified', () => {
     class Component {
     }
 
-    createComponent(Component, 'id:default', undefined, 'Component');
+    createComponent(Component, {
+      namespace: randomId(), type: 'Component', id: undefined,
+    });
     assert.equal(Component.namespace, 'default');
   });
 
@@ -80,15 +96,18 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, 'component', 'factory:type:conflict', 'Component'),
-      (err) => err.message === `getter/property 'type' must not be defined`);
+      () => createComponent(Component, {
+        namespace: 'namespace', type: 'Component', id: randomId(),
+      }), (err) => err.message === `getter/property 'type' must not be defined`);
   });
 
   it('should add method that returns its "type"', () => {
     class Component {
     }
 
-    createComponent(Component, 'component', 'type', 'Component');
+    createComponent(Component, {
+      namespace: 'namespace', type: 'Component', id: randomId(),
+    });
     assert.equal(Component.type, 'Component');
   });
 });

@@ -17,7 +17,11 @@ function verifyProcessFunc(input) {
 function shell(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
-    createComponent(target, namespace, id, 'Shell');
+    createComponent(target, {
+      namespace: namespace,
+      type: 'Shell',
+      id: id,
+    });
   };
 }
 

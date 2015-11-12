@@ -3,7 +3,11 @@ import createComponent from './factory';
 
 function query(namespace, id) {
   return (target) => {
-    createComponent(target, namespace, id, 'Query');
+    createComponent(target, {
+      namespace: namespace,
+      type: 'Query',
+      id: id,
+    });
   };
 }
 
