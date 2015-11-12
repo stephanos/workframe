@@ -12,7 +12,7 @@ describe('Shell', () => {
       }
     }
 
-    shell('shell', 'shell:success')(Shell);
+    shell('shell', 'shellSuccess')(Shell);
     assert.ok(isComponent(Shell));
   });
 
@@ -21,7 +21,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('shell', 'process')(Shell),
+      () => shell('shell', undefined)(Shell),
       (err) => err.message === `method 'process' must be defined`);
   });
 
@@ -32,7 +32,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('shell', 'process:param:too-few')(Shell),
+      () => shell('shell', undefined)(Shell),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 
@@ -45,7 +45,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('shell', 'process:param:too-many')(Shell),
+      () => shell('shell', undefined)(Shell),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 });

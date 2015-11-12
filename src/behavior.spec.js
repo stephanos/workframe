@@ -11,7 +11,7 @@ describe('Behavior', () => {
       }
     }
 
-    behavior('behavior', 'success')(Behavior);
+    behavior('behavior', 'behaviorSuccess')(Behavior);
     assert.ok(isComponent(Behavior));
   });
 
@@ -20,7 +20,7 @@ describe('Behavior', () => {
     }
 
     assert.throws(
-      () => behavior('behavior', 'process')(Behavior),
+      () => behavior('behavior', undefined)(Behavior),
       (err) => err.message === `method 'process' must be defined`);
   });
 });

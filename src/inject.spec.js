@@ -5,16 +5,16 @@ import inject from './inject';
 
 describe('inject', () => {
   class Dependency {
-    static id = 'dep-id';
-    static type = 'dep-type';
-    static namespace = 'dep-ns';
+    static id = 'depId';
+    static type = 'Behavior';
+    static namespace = 'ns';
   }
 
   it('should add dependency', () => {
     class Component {
-      static id = 'comp-id';
-      static type = 'comp-type';
-      static namespace = 'comp-ns';
+      static id = 'id';
+      static type = 'Shell';
+      static namespace = 'ns';
 
       dependency = undefined;
     }
@@ -22,30 +22,30 @@ describe('inject', () => {
     inject(Dependency)(Component, 'dependency');
     assert.deepEqual(Component.prototype.dependencies,
       { 'dependency': {
-        id: 'dep-id',
-        type: 'dep-type',
-        namespace: 'dep-ns',
+        id: 'depId',
+        type: 'Behavior',
+        namespace: 'ns',
       }}
     );
   });
 
   it('should fail when a reference is not a class ', () => {
     class Component {
-      static id = 'my-id';
-      static type = 'my-type';
-      static namespace = 'my-ns';
+      static id = 'id';
+      static type = 'Behavior';
+      static namespace = 'ns';
     }
 
     assert.throws(
       () => inject('nonsense')(Component, 'dependency'),
-      (err) => err.message === `unable to inject 'nonsense' into 'dependency' of 'my-id': not a function`);
+      (err) => err.message === `unable to inject 'nonsense' into 'dependency' of 'id': not a function`);
   });
 
   it('should fail when a dependency is already specified', () => {
     class Component {
-      static id = 'my-id';
-      static type = 'my-type';
-      static namespace = 'my-ns';
+      static id = 'id';
+      static type = 'Behavior';
+      static namespace = 'ns';
 
       dependency = undefined;
     }
@@ -59,8 +59,8 @@ describe('inject', () => {
   describe('should fail when target is not a component', () => {
     it('because of missing "type"', () => {
       class InvalidComponent {
-        static id = 'my-id';
-        static namespace = 'my-ns';
+        static id = 'id';
+        static namespace = 'ns';
       }
 
       assert.throws(
@@ -70,8 +70,8 @@ describe('inject', () => {
 
     it('because of missing "id"', () => {
       class InvalidComponent {
-        static type = 'my-type';
-        static namespace = 'my-ns';
+        static type = 'Behavior';
+        static namespace = 'ns';
       }
 
       assert.throws(
@@ -81,8 +81,8 @@ describe('inject', () => {
 
     it('because of missing "namespace"', () => {
       class InvalidComponent {
-        static id = 'my-id';
-        static type = 'my-type';
+        static id = 'id';
+        static type = 'Behavior';
       }
 
       assert.throws(

@@ -9,7 +9,7 @@ describe('Query', () => {
     class Query {
     }
 
-    query('query', 'query:success')(Query);
+    query('query', 'querySuccess')(Query);
     assert.ok(isComponent(Query));
   });
 });

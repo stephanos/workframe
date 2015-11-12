@@ -1,6 +1,4 @@
-import {isFunction, isString} from 'lodash';
-
-const idRegex = new RegExp('^([a-zA-Z:])+$');
+import {isFunction} from 'lodash';
 
 
 export class EntryError extends Error {
@@ -34,12 +32,6 @@ function addComponent(container, Component) {
   }
 
   const id = Component.id;
-  if (id === undefined) {
-    throw new KeyError(`can not add '${Component.name}': missing id`);
-  }
-  if (!isString(id) || !idRegex.test(id)) {
-    throw new KeyError(`can not add '${id}': invalid id`);
-  }
   if (findComponent(container, id)) {
     throw new KeyError(`can not add '${id}': already exists`);
   }

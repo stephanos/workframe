@@ -31,29 +31,6 @@ describe('Registry', () => {
       });
     });
 
-    it('should fail for Component without ID', () => {
-      class Component {
-      }
-
-      assert.throws(
-        () => registry.add(Component),
-        (err) => err.message === "can not add 'Component': missing id");
-    });
-
-    where([
-      {value: 0}, {value: null}, {value: []}, {value: ''},
-    ], () => {
-      it('should fail for invalid ID', (ctx) => {
-        class Component {
-          static id = ctx.value;
-        }
-
-        assert.throws(
-          () => registry.add(Component),
-          (err) => err.message === `can not add '${ctx.value}': invalid id`);
-      });
-    });
-
     it('should fail for already existing ID', () => {
       class Component {
         static id = 'ID';
