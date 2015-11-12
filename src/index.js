@@ -1,10 +1,10 @@
 /* @flow */
 
-import behavior from './decorators/behavior';
-import command from './decorators/command';
-import inject from './decorators/inject';
-import query from './decorators/query';
-import shell from './decorators/shell';
+import behavior from './behavior';
+import command from './command';
+import inject from './inject';
+import query from './query';
+import shell from './shell';
 
 export default {
   behavior: behavior,

@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import behavior from './behavior';
-import ComponentUtil from '../component';
+import {isComponent} from './util';
 
 
 describe('Behavior', () => {
@@ -12,7 +12,7 @@ describe('Behavior', () => {
     }
 
     behavior('behavior', 'success')(Behavior);
-    assert.ok(ComponentUtil.isValid(Behavior));
+    assert.ok(isComponent(Behavior));
   });
 
   it('should fail if "process" method missing', () => {

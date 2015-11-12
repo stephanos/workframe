@@ -6,7 +6,6 @@ pids
 *.seed
 
 lib-cov
-
 coverage
 
 dist
@@ -15,3 +14,4 @@ node_modules
 coverage
 tmp
 .DS_Store
+TODO.md

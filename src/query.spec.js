@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import query from './query';
-import ComponentUtil from '../component';
+import {isComponent} from './util';
 
 
 describe('Query', () => {
@@ -10,6 +10,6 @@ describe('Query', () => {
     }
 
     query('query', 'success')(Query);
-    assert.ok(ComponentUtil.isValid(Query));
+    assert.ok(isComponent(Query));
   });
 });

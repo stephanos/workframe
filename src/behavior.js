@@ -1,6 +1,6 @@
 import {isFunction} from 'lodash';
 
-import ComponentUtil from '../component';
+import createComponent from './factory';
 
 
 function verifyProcessFunc(input) {
@@ -13,7 +13,7 @@ function verifyProcessFunc(input) {
 function behavior(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
-    ComponentUtil.create(target, namespace, id, 'Behavior');
+    createComponent(target, namespace, id, 'Behavior');
   };
 }
 

@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import shell from './shell';
-import ComponentUtil from '../component';
+import {isComponent} from './util';
 
 
 describe('Shell', () => {
@@ -13,7 +13,7 @@ describe('Shell', () => {
     }
 
     shell('shell', 'success')(Shell);
-    assert.ok(ComponentUtil.isValid(Shell));
+    assert.ok(isComponent(Shell));
   });
 
   it('should fail if "process" method missing', () => {

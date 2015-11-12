@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import command from './command';
-import ComponentUtil from '../component';
+import {isComponent} from './util';
 
 
 describe('Command', () => {
@@ -10,6 +10,6 @@ describe('Command', () => {
     }
 
     command('command', 'success')(Command);
-    assert.ok(ComponentUtil.isValid(Command));
+    assert.ok(isComponent(Command));
   });
 });

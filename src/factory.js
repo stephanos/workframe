@@ -29,32 +29,20 @@ function addType(input, type) {
 }
 
 
-class ComponentUtil {
-
-  static create(input, namespace, id, type) {
-    let componentId;
-    let componentNamespace;
-    if (id === undefined) {
-      componentId = namespace;
-      componentNamespace = 'default';
-    } else {
-      componentId = id;
-      componentNamespace = namespace;
-    }
-
-    verifyName(input, type);
-
-    addId(input, componentId);
-    addType(input, type);
-    addNamespace(input, componentNamespace);
+export default function create(input, namespace, id, type) {
+  let componentId;
+  let componentNamespace;
+  if (id === undefined) {
+    componentId = namespace;
+    componentNamespace = 'default';
+  } else {
+    componentId = id;
+    componentNamespace = namespace;
   }
 
-  static isValid(input) {
-    return input.namespace !== undefined
-      && input.type !== undefined
-      && input.id !== undefined;
-  }
+  verifyName(input, type);
+
+  addId(input, componentId);
+  addType(input, type);
+  addNamespace(input, componentNamespace);
 }
-
-
-export default ComponentUtil;
