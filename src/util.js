@@ -1,4 +1,4 @@
-import {isString} from 'lodash';
+import {isArray, isString} from 'lodash';
 
 
 const idRegex = new RegExp('^([a-zA-Z])+$');
@@ -22,8 +22,13 @@ function isValidType(t) {
   return t !== undefined && validTypes.indexOf(t) !== -1;
 }
 
+function isValidInjectTypeWhitelist(list) {
+  return list !== null && isArray(list);
+}
+
 export function isComponent(input) {
   return isValidId(input.id)
     && isValidType(input.type)
-    && isValidNamespace(input.namespace);
+    && isValidNamespace(input.namespace)
+    && isValidInjectTypeWhitelist(input.injectTypeWhitelist);
 }

@@ -11,6 +11,7 @@ describe('Util', () => {
         static id = 'id';
         static type = 'Behavior';
         static namespace = 'namsepace';
+        static injectTypeWhitelist = [];
       }
 
       assert.ok(isComponent(Component));
@@ -20,6 +21,7 @@ describe('Util', () => {
       class Component {
         static type = 'Behavior';
         static namespace = 'namespace';
+        static injectTypeWhitelist = [];
       }
 
       assert.ok(!isComponent(Component));
@@ -34,6 +36,7 @@ describe('Util', () => {
           static id = ctx.value;
           static type = 'Behavior';
           static namespace = 'namsepace';
+          static injectTypeWhitelist = [];
         }
 
         assert.ok(!isComponent(Component));
@@ -44,6 +47,7 @@ describe('Util', () => {
       class Component {
         static id = 'id';
         static type = 'Behavior';
+        static injectTypeWhitelist = [];
       }
 
       assert.ok(!isComponent(Component));
@@ -58,6 +62,7 @@ describe('Util', () => {
           static id = 'id';
           static type = 'Behavior';
           static namespace = ctx.value;
+          static injectTypeWhitelist = [];
         }
 
         assert.ok(!isComponent(Component));
@@ -68,6 +73,7 @@ describe('Util', () => {
       class Component {
         static id = 'id';
         static namespace = 'namespace';
+        static injectTypeWhitelist = [];
       }
 
       assert.ok(!isComponent(Component));
@@ -78,6 +84,7 @@ describe('Util', () => {
         static id = 'id';
         static type = 'invalid-type';
         static namespace = 'namsepace';
+        static injectTypeWhitelist = [];
       }
 
       assert.ok(!isComponent(Component));

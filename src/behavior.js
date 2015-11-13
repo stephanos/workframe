@@ -14,6 +14,7 @@ function behavior(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
     createComponent(target, {
+      injectTypeWhitelist: [],
       namespace: namespace,
       type: 'Behavior',
       id: id,

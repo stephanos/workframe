@@ -35,7 +35,7 @@ function addType(input, type) {
 
 
 export default function create(input, settings) {
-  const {namespace, id, type, injectTypeBlacklist} = settings;
+  const {namespace, id, type, injectTypeWhitelist} = settings;
 
   let componentId;
   let componentNamespace;
@@ -52,6 +52,7 @@ export default function create(input, settings) {
   addId(input, componentId);
   addType(input, type);
   addNamespace(input, componentNamespace);
+  input.injectTypeWhitelist = injectTypeWhitelist;
 
   registry.add(input);
 }

@@ -16,6 +16,17 @@ describe('Shell', () => {
     assert.ok(isComponent(Shell));
   });
 
+  it('should only allow limited injectable types', () => {
+    class Shell {
+      process(signal) {
+        this.signal = signal;
+      }
+    }
+
+    shell('shell', 'shellInjection')(Shell);
+    assert.deepEqual(Shell.injectTypeWhitelist, ['Behavior', 'Command', 'Shell', 'Query']);
+  });
+
   it('should fail if "process" method missing', () => {
     class Shell {
     }

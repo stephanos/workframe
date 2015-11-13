@@ -18,6 +18,7 @@ function shell(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
     createComponent(target, {
+      injectTypeWhitelist: ['Behavior', 'Command', 'Shell', 'Query'],
       namespace: namespace,
       type: 'Shell',
       id: id,

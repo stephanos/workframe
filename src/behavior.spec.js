@@ -15,6 +15,16 @@ describe('Behavior', () => {
     assert.ok(isComponent(Behavior));
   });
 
+  it('should not allow any injection', () => {
+    class Behavior {
+      process() {
+      }
+    }
+
+    behavior('behavior', 'behaviorInjection')(Behavior);
+    assert.deepEqual(Behavior.injectTypeWhitelist, []);
+  });
+
   it('should fail if "process" method missing', () => {
     class Behavior {
     }

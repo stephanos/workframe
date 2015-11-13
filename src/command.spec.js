@@ -12,4 +12,12 @@ describe('Command', () => {
     command('command', 'commandSuccess')(Command);
     assert.ok(isComponent(Command));
   });
+
+  it('should only allow limited injectable types', () => {
+    class Command {
+    }
+
+    command('command', 'commandInjection')(Command);
+    assert.deepEqual(Command.injectTypeWhitelist, ['Query']);
+  });
 });
