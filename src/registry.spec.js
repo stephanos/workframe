@@ -14,11 +14,13 @@ describe('Registry', () => {
   describe('adding a component', () => {
     it('should succeed', () => {
       class Component {
-        static id = 'ID';
+        static namespace = 'ns';
+        static type = 'type';
+        static id = 'id';
       }
 
       registry.add(Component);
-      assert.equal(registry._componentByIds.ID, Component);
+      assert.equal(registry._componentByIds['ns:type:id'], Component);
     });
 
     where([
@@ -33,13 +35,15 @@ describe('Registry', () => {
 
     it('should fail for already existing ID', () => {
       class Component {
-        static id = 'ID';
+        static namespace = 'ns';
+        static type = 'type';
+        static id = 'id';
       }
 
       registry.add(Component);
       assert.throws(
         () => registry.add(Component),
-        (err) => err.message === `can not add 'ID': already exists`);
+        (err) => err.message === `can not register Component 'Component': already registered`);
     });
   });
 });

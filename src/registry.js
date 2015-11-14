@@ -31,9 +31,9 @@ function addComponent(container, Component) {
     throw new EntryError(`can not add '${Component}': invalid value`);
   }
 
-  const id = Component.id;
+  const id = Component.namespace + ':' + Component.type + ':' + Component.id;
   if (findComponent(container, id)) {
-    throw new KeyError(`can not add '${id}': already exists`);
+    throw new KeyError(`can not register Component '${Component.name}': already registered`);
   }
 
   container._componentByIds[id] = Component;
