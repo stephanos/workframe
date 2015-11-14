@@ -23,7 +23,7 @@ class Injector {
       throw new Error(`unable to inject '${reference.name}' into '${key}' of '${target.name}': type '${reference.type}' is not allowed`);
     }
 
-    target.dependencies = target.dependencies || {};
+    target.dependencies = target.dependencies || new Map();
     if (target.dependencies[key]) {
       throw new Error(`unable to inject into '${target.name}': conflicting dependency`);
     }
