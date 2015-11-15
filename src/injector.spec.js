@@ -1,9 +1,8 @@
 import assert from 'assert';
+import sinon from 'sinon';
 
 import Injector from './injector';
 
-
-let injector;
 
 class Dependency {
   static id = 'depId';
@@ -12,10 +11,15 @@ class Dependency {
   static injectTypeWhitelist = [];
 }
 
+let injector;
+let isValidComponent;
 
 describe('inject', () => {
   beforeEach(() => {
-    injector = new Injector();
+    isValidComponent = sinon.stub().returns(true);
+    injector = new Injector({
+      isComponent: isValidComponent,
+    });
   });
 
   it('should add dependency', () => {
@@ -28,7 +32,8 @@ describe('inject', () => {
       dependency = undefined;
     }
 
-    injector.run(Dependency, Component, 'dependency');
+    injector.inject(Dependency, Component, 'dependency');
+
     assert.deepEqual(Component.dependencies,
       { 'dependency': {
         id: 'depId',
@@ -47,7 +52,7 @@ describe('inject', () => {
     }
 
     assert.throws(
-      () => injector.run('nonsense', Component, 'dependency'),
+      () => injector.inject('nonsense', Component, 'dependency'),
       (err) => err.message === `unable to inject 'nonsense' into 'dependency' of 'Component': not a function`);
   });
 
@@ -61,9 +66,9 @@ describe('inject', () => {
       dependency = undefined;
     }
 
-    injector.run(Dependency, Component, 'dependency');
+    injector.inject(Dependency, Component, 'dependency');
     assert.throws(
-      () => injector.run(Dependency, Component, 'dependency'),
+      () => injector.inject(Dependency, Component, 'dependency'),
       (err) => err.message === `unable to inject into 'Component': conflicting dependency`);
   });
 
@@ -73,9 +78,10 @@ describe('inject', () => {
       static namespace = 'ns';
     }
 
-    injector.isComponent = (target) => { return (target === InvalidComponent) ? false : true; };
+    isValidComponent.withArgs(InvalidComponent).returns(false);
+
     assert.throws(
-      () => injector.run(Dependency, InvalidComponent, 'dependency'),
+      () => injector.inject(Dependency, InvalidComponent, 'dependency'),
       (err) => err.message === `unable to inject into any property of 'InvalidComponent': not a component`);
   });
 
@@ -88,7 +94,7 @@ describe('inject', () => {
     }
 
     assert.throws(
-      () => injector.run(Dependency, Component, 'dependency'),
+      () => injector.inject(Dependency, Component, 'dependency'),
       (err) => err.message === `unable to inject 'Dependency' into 'dependency' of 'Component': type 'Behavior' is not allowed`);
   });
 });

@@ -1,36 +1,42 @@
 import assert from 'assert';
+import sinon from 'sinon';
 
-import behavior from './behavior';
-import {isComponent} from './util';
+import BehaviorFactory from './behavior';
 
 
-describe('Behavior', () => {
-  it('should succeed', () => {
+let factory;
+let componentFactory;
+
+describe('BehaviorFactory', () => {
+  beforeEach(() => {
+    componentFactory = sinon.spy();
+    factory = new BehaviorFactory({
+      build: componentFactory,
+    });
+  });
+
+  it('should delegate to ComponentFactory', () => {
     class Behavior {
-      process() {
+      behave() {
       }
     }
 
-    behavior('behavior', 'behaviorSuccess')(Behavior);
-    assert.ok(isComponent(Behavior));
+    factory.build(Behavior, 'behaviorNS', 'build');
+
+    assert.deepEqual(componentFactory.getCall(0).args[1], {
+      injectTypeWhitelist: [],
+      namespace: 'behaviorNS',
+      type: 'Behavior',
+      id: 'build',
+    });
   });
 
-  it('should not allow any injection', () => {
-    class Behavior {
-      process() {
-      }
-    }
-
-    behavior('behavior', 'behaviorInjection')(Behavior);
-    assert.deepEqual(Behavior.injectTypeWhitelist, []);
-  });
-
-  it('should fail if "process" method missing', () => {
+  it('should fail if "behave" method missing', () => {
     class Behavior {
     }
 
     assert.throws(
-      () => behavior('behavior', undefined)(Behavior),
-      (err) => err.message === `method 'process' must be defined`);
+      () => factory.build(Behavior, 'behaviorNS', undefined),
+      (err) => err.message === `method 'behave' must be defined`);
   });
 });

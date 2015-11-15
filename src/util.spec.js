@@ -1,10 +1,12 @@
 import assert from 'assert';
 import where from 'data-driven';
 
-import {isComponent} from './util';
+import ComponentValidator from './util';
 
 
-describe('Util', () => {
+const validator = new ComponentValidator();
+
+describe('ComponentValidator', () => {
   describe('validation of a component', () => {
     it('should succeed for valid component', () => {
       class Component {
@@ -14,7 +16,7 @@ describe('Util', () => {
         static injectTypeWhitelist = [];
       }
 
-      assert.ok(isComponent(Component));
+      assert.ok(validator.isComponent(Component));
     });
 
     it('should fail for component without id', () => {
@@ -24,7 +26,7 @@ describe('Util', () => {
         static injectTypeWhitelist = [];
       }
 
-      assert.ok(!isComponent(Component));
+      assert.ok(!validator.isComponent(Component));
     });
 
     where([
@@ -39,7 +41,7 @@ describe('Util', () => {
           static injectTypeWhitelist = [];
         }
 
-        assert.ok(!isComponent(Component));
+        assert.ok(!validator.isComponent(Component));
       });
     });
 
@@ -50,7 +52,7 @@ describe('Util', () => {
         static injectTypeWhitelist = [];
       }
 
-      assert.ok(!isComponent(Component));
+      assert.ok(!validator.isComponent(Component));
     });
 
     where([
@@ -65,7 +67,7 @@ describe('Util', () => {
           static injectTypeWhitelist = [];
         }
 
-        assert.ok(!isComponent(Component));
+        assert.ok(!validator.isComponent(Component));
       });
     });
 
@@ -76,7 +78,7 @@ describe('Util', () => {
         static injectTypeWhitelist = [];
       }
 
-      assert.ok(!isComponent(Component));
+      assert.ok(!validator.isComponent(Component));
     });
 
     it('should fail for component with invalid type', () => {
@@ -87,7 +89,7 @@ describe('Util', () => {
         static injectTypeWhitelist = [];
       }
 
-      assert.ok(!isComponent(Component));
+      assert.ok(!validator.isComponent(Component));
     });
   });
 });

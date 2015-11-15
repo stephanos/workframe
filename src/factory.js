@@ -1,10 +1,5 @@
 import {endsWith} from 'lodash';
 
-import Registry from './registry';
-
-
-const registry = new Registry();
-
 
 function verifyName(input, type) {
   if (!endsWith(input.name, type)) {
@@ -34,25 +29,35 @@ function addType(input, type) {
 }
 
 
-export default function create(input, settings) {
-  const {namespace, id, type, injectTypeWhitelist} = settings;
+class ComponentFactory {
 
-  let componentId;
-  let componentNamespace;
-  if (id === undefined) {
-    componentId = namespace;
-    componentNamespace = 'default';
-  } else {
-    componentId = id;
-    componentNamespace = namespace;
+  constructor(registry) {
+    this.registry = registry;
   }
 
-  verifyName(input, type);
+  build(input, settings) {
+    const {namespace, id, type, injectTypeWhitelist} = settings;
 
-  addId(input, componentId);
-  addType(input, type);
-  addNamespace(input, componentNamespace);
-  input.injectTypeWhitelist = injectTypeWhitelist;
+    let componentId;
+    let componentNamespace;
+    if (id === undefined) {
+      componentId = namespace;
+      componentNamespace = 'default';
+    } else {
+      componentId = id;
+      componentNamespace = namespace;
+    }
 
-  registry.add(input);
+    verifyName(input, type);
+
+    addId(input, componentId);
+    addType(input, type);
+    addNamespace(input, componentNamespace);
+    input.injectTypeWhitelist = injectTypeWhitelist;
+
+    this.registry.add(input);
+  }
 }
+
+
+export default ComponentFactory;

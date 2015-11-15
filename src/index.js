@@ -1,22 +1,38 @@
-import accessor from './accessor';
-import behavior from './behavior';
-import mutator from './mutator';
+import AccessorFactory from './accessor';
+import BehaviorFactory from './behavior';
+import ComponentFactory from './factory';
+import ComponentValidator from './util';
 import Injector from './inject';
-import query from './query';
-import processor from './processor';
+import LoaderFactory from './loader';
+import MutatorFactory from './mutator';
+import ProcessorFactory from './processor';
+import Registry from './registry';
 
 
-const injector = new Injector();
+const registry = new Registry();
+const componentFactory = new ComponentFactory(registry);
+const componentValidator = new ComponentValidator();
+const injector = new Injector(componentValidator);
+
+const accessorFactory = new AccessorFactory(componentFactory);
+const behaviorFactory = new BehaviorFactory(componentFactory);
+const loaderFactory = new LoaderFactory(componentFactory);
+const mutatorFactory = new MutatorFactory(componentFactory);
+const processorFactory = new ProcessorFactory(componentFactory);
+
+function toDecorator(fn) {
+  return (target) => {
+    return (...args) => {
+      return fn(target, ...args);
+    };
+  };
+}
 
 export default {
-  accessor: accessor,
-  behavior: behavior,
-  mutator: mutator,
-  inject: (reference) => {
-    return (target, key) => {
-      injector.run(reference, target, key);
-    };
-  },
-  processor: processor,
-  query: query,
+  accessor: toDecorator(accessorFactory.build),
+  behavior: toDecorator(behaviorFactory.build),
+  loader: toDecorator(loaderFactory.build),
+  mutator: toDecorator(mutatorFactory.build),
+  inject: toDecorator(injector.build),
+  processor: toDecorator(processorFactory.build),
 };

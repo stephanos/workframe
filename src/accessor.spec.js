@@ -1,32 +1,35 @@
 import assert from 'assert';
+import sinon from 'sinon';
 
-import accessor from './accessor';
-import {isComponent} from './util';
+import AccessorFactory from './accessor';
 
 
-describe('Accessor', () => {
-  it('should succeed', () => {
-    class Accessor {
-      access(signal) {
-        this.signal = signal;
-      }
-    }
+let factory;
+let componentFactory;
 
-    accessor('accessor', 'accessorSuccess')(Accessor);
-    assert.ok(isComponent(Accessor));
+describe('AccessorFactory', () => {
+  beforeEach(() => {
+    componentFactory = sinon.spy();
+    factory = new AccessorFactory({
+      build: componentFactory,
+    });
   });
 
-  it('should only allow limited injectable types', () => {
+  it('should delegate to ComponentFactory', () => {
     class Accessor {
       access(signal) {
         this.signal = signal;
       }
     }
 
-    accessor('accessor', 'accessorInjection')(Accessor);
+    factory.build(Accessor, 'accessorNS', 'build');
 
-    assert.deepEqual(Accessor.injectTypeWhitelist,
-      ['Accessor', 'Behavior', 'Command', 'Query']);
+    assert.deepEqual(componentFactory.getCall(0).args[1], {
+      injectTypeWhitelist: ['Accessor', 'Behavior', 'Command', 'Query'],
+      namespace: 'accessorNS',
+      type: 'Accessor',
+      id: 'build',
+    });
   });
 
   it('should fail if "access" method missing', () => {
@@ -34,7 +37,7 @@ describe('Accessor', () => {
     }
 
     assert.throws(
-      () => accessor('accessor', undefined)(Accessor),
+      () => factory.build(Accessor, 'accessorNS', undefined),
       (err) => err.message === `method 'access' must be defined`);
   });
 
@@ -45,7 +48,7 @@ describe('Accessor', () => {
     }
 
     assert.throws(
-      () => accessor('accessor', undefined)(Accessor),
+      () => factory.build(Accessor, 'accessorNS', undefined),
       (err) => err.message === `method 'access' must have exactly 1 parameter`);
   });
 
@@ -58,7 +61,7 @@ describe('Accessor', () => {
     }
 
     assert.throws(
-      () => accessor('accessor', undefined)(Accessor),
+      () => factory.build(Accessor, 'accessorNS', undefined),
       (err) => err.message === `method 'access' must have exactly 1 parameter`);
   });
 });

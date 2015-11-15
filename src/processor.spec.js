@@ -1,10 +1,20 @@
 import assert from 'assert';
+import sinon from 'sinon';
 
-import processor from './processor';
-import {isComponent} from './util';
+import ProcessorFactory from './processor';
 
 
-describe('Processor', () => {
+let factory;
+let componentFactory;
+
+describe('ProcessorFactory', () => {
+  beforeEach(() => {
+    componentFactory = sinon.spy();
+    factory = new ProcessorFactory({
+      build: componentFactory,
+    });
+  });
+
   it('should succeed', () => {
     class Processor {
       process(signal) {
@@ -12,21 +22,14 @@ describe('Processor', () => {
       }
     }
 
-    processor('processor', 'processorSuccess')(Processor);
-    assert.ok(isComponent(Processor));
-  });
+    factory.build(Processor, 'processorNS', 'build');
 
-  it('should only allow limited injectable types', () => {
-    class Processor {
-      process(signal) {
-        this.signal = signal;
-      }
-    }
-
-    processor('processor', 'processorInjection')(Processor);
-
-    assert.deepEqual(Processor.injectTypeWhitelist,
-      ['Behavior', 'Command', 'Processor', 'Query']);
+    assert.deepEqual(componentFactory.getCall(0).args[1], {
+      injectTypeWhitelist: ['Behavior', 'Command', 'Processor', 'Query'],
+      namespace: 'processorNS',
+      type: 'Processor',
+      id: 'build',
+    });
   });
 
   it('should fail if "process" method missing', () => {
@@ -34,7 +37,7 @@ describe('Processor', () => {
     }
 
     assert.throws(
-      () => processor('processor', undefined)(Processor),
+      () => factory.build(Processor, 'processorNS', undefined),
       (err) => err.message === `method 'process' must be defined`);
   });
 
@@ -45,7 +48,7 @@ describe('Processor', () => {
     }
 
     assert.throws(
-      () => processor('processor', undefined)(Processor),
+      () => factory.build(Processor, 'processorNS', undefined),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 
@@ -58,7 +61,7 @@ describe('Processor', () => {
     }
 
     assert.throws(
-      () => processor('processor', undefined)(Processor),
+      () => factory.build(Processor, 'processorNS', undefined),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 });

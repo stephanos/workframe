@@ -1,7 +1,5 @@
 import {isFunction} from 'lodash';
 
-import createComponent from './factory';
-
 
 function verifyProcessFunc(input) {
   const processFunc = input.prototype.process;
@@ -14,17 +12,22 @@ function verifyProcessFunc(input) {
 }
 
 
-function processor(namespace, id) {
-  return (target) => {
+class ProcessorFactory {
+
+  constructor(componentFactory) {
+    this.componentFactory = componentFactory;
+  }
+
+  build(target, namespace, id) {
     verifyProcessFunc(target);
-    createComponent(target, {
+    this.componentFactory.build(target, {
       injectTypeWhitelist: ['Behavior', 'Command', 'Processor', 'Query'],
       namespace: namespace,
       type: 'Processor',
       id: id,
     });
-  };
+  }
 }
 
 
-export default processor;
+export default ProcessorFactory;

@@ -1,23 +1,31 @@
 import assert from 'assert';
+import sinon from 'sinon';
 
-import mutator from './mutator';
-import {isComponent} from './util';
+import MutatorFactory from './mutator';
 
 
-describe('Mutator', () => {
-  it('should succeed', () => {
-    class Mutator {
-    }
+let factory;
+let componentFactory;
 
-    mutator('mutator', 'mutatorSuccess')(Mutator);
-    assert.ok(isComponent(Mutator));
+describe('MutatorFactory', () => {
+  beforeEach(() => {
+    componentFactory = sinon.spy();
+    factory = new MutatorFactory({
+      build: componentFactory,
+    });
   });
 
-  it('should only allow limited injectable types', () => {
+  it('should delegate to ComponentFactory', () => {
     class Mutator {
     }
 
-    mutator('mutator', 'mutatorInjection')(Mutator);
-    assert.deepEqual(Mutator.injectTypeWhitelist, ['Query']);
+    factory.build(Mutator, 'mutatorNS', 'build');
+
+    assert.deepEqual(componentFactory.getCall(0).args[1], {
+      injectTypeWhitelist: ['Query'],
+      namespace: 'mutatorNS',
+      type: 'Mutator',
+      id: 'build',
+    });
   });
 });

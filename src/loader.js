@@ -1,16 +1,18 @@
-import createComponent from './factory';
+class LoaderFactory {
 
+  constructor(componentFactory) {
+    this.componentFactory = componentFactory;
+  }
 
-function loader(namespace, id) {
-  return (target) => {
-    createComponent(target, {
+  build(target, namespace, id) {
+    this.componentFactory.build(target, {
       injectTypeWhitelist: [],
       namespace: namespace,
       type: 'Loader',
       id: id,
     });
-  };
+  }
 }
 
 
-export default loader;
+export default LoaderFactory;

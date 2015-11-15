@@ -1,23 +1,31 @@
 import assert from 'assert';
+import sinon from 'sinon';
 
-import loader from './loader';
-import {isComponent} from './util';
+import LoaderFactory from './loader';
 
 
-describe('Loader', () => {
-  it('should succeed', () => {
-    class Loader {
-    }
+let factory;
+let componentFactory;
 
-    loader('loader', 'loaderSuccess')(Loader);
-    assert.ok(isComponent(Loader));
+describe('LoaderFactory', () => {
+  beforeEach(() => {
+    componentFactory = sinon.spy();
+    factory = new LoaderFactory({
+      build: componentFactory,
+    });
   });
 
-  it('should not allow any injection', () => {
+  it('should delegate to ComponentFactory', () => {
     class Loader {
     }
 
-    loader('loader', 'loaderInjection')(Loader);
-    assert.deepEqual(Loader.injectTypeWhitelist, []);
+    factory.build(Loader, 'loaderNS', 'build');
+
+    assert.deepEqual(componentFactory.getCall(0).args[1], {
+      injectTypeWhitelist: [],
+      namespace: 'loaderNS',
+      type: 'Loader',
+      id: 'build',
+    });
   });
 });

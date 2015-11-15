@@ -1,19 +1,29 @@
 import assert from 'assert';
+import sinon from 'sinon';
 import Chance from 'chance';
 
-import createComponent from './factory';
+import ComponentFactory from './factory';
 
 
+let factory;
+let addToRegistry;
 const chance = new Chance();
 const randomId = () => chance.word({syllables: 5});
 
 describe('Factory', () => {
+  beforeEach(() => {
+    addToRegistry = sinon.spy();
+    factory = new ComponentFactory({
+      add: addToRegistry,
+    });
+  });
+
   it('should fail if suffix is missing', () => {
     class Invalid {
     }
 
     assert.throws(
-      () => createComponent(Invalid, {
+      () => factory.build(Invalid, {
         namespace: 'namespace',
         type: 'Component',
         id: randomId(),
@@ -33,7 +43,7 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, {
+      () => factory.build(Component, {
         namespace: 'namespace', type: 'Component', id: randomId(),
       }), (err) => err.message === `getter/property 'id' must not be defined`);
   });
@@ -43,7 +53,7 @@ describe('Factory', () => {
     }
 
     const id = randomId();
-    createComponent(Component, {
+    factory.build(Component, {
       namespace: 'namespace', type: 'Component', id: id,
     });
     assert.equal(Component.id, id);
@@ -62,7 +72,7 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, {
+      () => factory.build(Component, {
         namespace: 'namespace', type: 'Component', id: randomId(),
       }, (err) => err.message === `getter/property 'namespace' must not be defined`));
   });
@@ -71,7 +81,7 @@ describe('Factory', () => {
     class Component {
     }
 
-    createComponent(Component, {
+    factory.build(Component, {
       namespace: 'namespace', type: 'Component', id: randomId(),
     });
     assert.equal(Component.namespace, 'namespace');
@@ -81,7 +91,7 @@ describe('Factory', () => {
     class Component {
     }
 
-    createComponent(Component, {
+    factory.build(Component, {
       namespace: randomId(), type: 'Component', id: undefined,
     });
     assert.equal(Component.namespace, 'default');
@@ -96,7 +106,7 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => createComponent(Component, {
+      () => factory.build(Component, {
         namespace: 'namespace', type: 'Component', id: randomId(),
       }), (err) => err.message === `getter/property 'type' must not be defined`);
   });
@@ -105,7 +115,7 @@ describe('Factory', () => {
     class Component {
     }
 
-    createComponent(Component, {
+    factory.build(Component, {
       namespace: 'namespace', type: 'Component', id: randomId(),
     });
     assert.equal(Component.type, 'Component');

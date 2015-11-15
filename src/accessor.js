@@ -1,7 +1,5 @@
 import {isFunction} from 'lodash';
 
-import createComponent from './factory';
-
 
 function verifyAccessorFunc(input) {
   const accessFunc = input.prototype.access;
@@ -14,17 +12,22 @@ function verifyAccessorFunc(input) {
 }
 
 
-function accessor(namespace, id) {
-  return (target) => {
+class AccessorFactory {
+
+  constructor(componentFactory) {
+    this.componentFactory = componentFactory;
+  }
+
+  build(target, namespace, id) {
     verifyAccessorFunc(target);
-    createComponent(target, {
+    this.componentFactory.build(target, {
       injectTypeWhitelist: ['Accessor', 'Behavior', 'Command', 'Query'],
       namespace: namespace,
       type: 'Accessor',
       id: id,
     });
-  };
+  }
 }
 
 
-export default accessor;
+export default AccessorFactory;

@@ -1,22 +1,20 @@
 import {isFunction} from 'lodash';
 
-import {isComponent} from './util';
-
 
 class Injector {
 
-  isComponent(input) {
-    return isComponent(input);
+  constructor(componentValidator) {
+    this.componentValidator = componentValidator;
   }
 
-  run(reference, target, key) {
-    if (!this.isComponent(target)) {
+  inject(reference, target, key) {
+    if (!this.componentValidator.isComponent(target)) {
       throw new Error(`unable to inject into any property of '${target.name}': not a component`);
     }
     if (!isFunction(reference)) {
       throw new Error(`unable to inject '${reference}' into '${key}' of '${target.name}': not a function`);
     }
-    if (!this.isComponent(reference)) {
+    if (!this.componentValidator.isComponent(reference)) {
       throw new Error(`unable to inject '${reference.name}' into '${key}' of '${target.name}': not a component`);
     }
     if (target.injectTypeWhitelist.indexOf(reference.type) === -1) {
