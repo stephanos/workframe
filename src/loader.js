@@ -1,16 +1,16 @@
 import createComponent from './factory';
 
 
-function query(namespace, id) {
+function loader(namespace, id) {
   return (target) => {
     createComponent(target, {
       injectTypeWhitelist: [],
       namespace: namespace,
-      type: 'Query',
+      type: 'Loader',
       id: id,
     });
   };
 }
 
 
-export default query;
+export default loader;

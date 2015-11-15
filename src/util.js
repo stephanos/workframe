@@ -12,11 +12,11 @@ function isValidNamespace(ns) {
 }
 
 const behavior = 'Behavior';
+const loader = 'Loader';
 const mutator = 'Mutator';
-const query = 'Query';
 const shell = 'Shell';
 const validTypes = [
-  behavior, mutator, query, shell,
+  behavior, loader, mutator, shell,
 ];
 function isValidType(t) {
   return t !== undefined && validTypes.indexOf(t) !== -1;
