@@ -1,54 +1,56 @@
 import assert from 'assert';
 
-import shell from './shell';
+import processor from './processor';
 import {isComponent} from './util';
 
 
-describe('Shell', () => {
+describe('Processor', () => {
   it('should succeed', () => {
-    class Shell {
+    class Processor {
       process(signal) {
         this.signal = signal;
       }
     }
 
-    shell('shell', 'shellSuccess')(Shell);
-    assert.ok(isComponent(Shell));
+    processor('processor', 'processorSuccess')(Processor);
+    assert.ok(isComponent(Processor));
   });
 
   it('should only allow limited injectable types', () => {
-    class Shell {
+    class Processor {
       process(signal) {
         this.signal = signal;
       }
     }
 
-    shell('shell', 'shellInjection')(Shell);
-    assert.deepEqual(Shell.injectTypeWhitelist, ['Behavior', 'Command', 'Shell', 'Query']);
+    processor('processor', 'processorInjection')(Processor);
+
+    assert.deepEqual(Processor.injectTypeWhitelist,
+      ['Behavior', 'Command', 'Processor', 'Query']);
   });
 
   it('should fail if "process" method missing', () => {
-    class Shell {
+    class Processor {
     }
 
     assert.throws(
-      () => shell('shell', undefined)(Shell),
+      () => processor('processor', undefined)(Processor),
       (err) => err.message === `method 'process' must be defined`);
   });
 
   it('should fail if "process" method has less than 1 parameter', () => {
-    class Shell {
+    class Processor {
       process() {
       }
     }
 
     assert.throws(
-      () => shell('shell', undefined)(Shell),
+      () => processor('processor', undefined)(Processor),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 
   it('should fail if "process" method has more than 1 parameter', () => {
-    class Shell {
+    class Processor {
       process(one, two) {
         this.one = one;
         this.two = two;
@@ -56,7 +58,7 @@ describe('Shell', () => {
     }
 
     assert.throws(
-      () => shell('shell', undefined)(Shell),
+      () => processor('processor', undefined)(Processor),
       (err) => err.message === `method 'process' must have exactly 1 parameter`);
   });
 });

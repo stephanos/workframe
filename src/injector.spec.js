@@ -21,7 +21,7 @@ describe('inject', () => {
   it('should add dependency', () => {
     class Component {
       static id = 'id';
-      static type = 'Shell';
+      static type = 'Processor';
       static namespace = 'ns';
       static injectTypeWhitelist = ['Behavior'];
 

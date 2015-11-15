@@ -1,13 +1,15 @@
+import accessor from './accessor';
 import behavior from './behavior';
 import mutator from './mutator';
 import Injector from './inject';
 import query from './query';
-import shell from './shell';
+import processor from './processor';
 
 
 const injector = new Injector();
 
 export default {
+  accessor: accessor,
   behavior: behavior,
   mutator: mutator,
   inject: (reference) => {
@@ -15,6 +17,6 @@ export default {
       injector.run(reference, target, key);
     };
   },
+  processor: processor,
   query: query,
-  shell: shell,
 };

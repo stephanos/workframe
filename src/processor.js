@@ -14,17 +14,17 @@ function verifyProcessFunc(input) {
 }
 
 
-function shell(namespace, id) {
+function processor(namespace, id) {
   return (target) => {
     verifyProcessFunc(target);
     createComponent(target, {
-      injectTypeWhitelist: ['Behavior', 'Command', 'Shell', 'Query'],
+      injectTypeWhitelist: ['Behavior', 'Command', 'Processor', 'Query'],
       namespace: namespace,
-      type: 'Shell',
+      type: 'Processor',
       id: id,
     });
   };
 }
 
 
-export default shell;
+export default processor;

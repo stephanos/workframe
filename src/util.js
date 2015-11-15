@@ -11,12 +11,13 @@ function isValidNamespace(ns) {
   return ns !== undefined && isString(ns) && nsRegex.test(ns);
 }
 
+const accessor = 'Accessor';
 const behavior = 'Behavior';
 const loader = 'Loader';
 const mutator = 'Mutator';
-const shell = 'Shell';
+const processor = 'Processor';
 const validTypes = [
-  behavior, loader, mutator, shell,
+  accessor, behavior, loader, mutator, processor,
 ];
 function isValidType(t) {
   return t !== undefined && validTypes.indexOf(t) !== -1;
