@@ -1,29 +1,35 @@
 import {endsWith} from 'lodash';
 
 
+function verifyId(validator, id) {
+  if (!validator.isValidId(id)) {
+    throw new Error(`unable to create component: ID '${id}' has invalid format`);
+  }
+}
+
 function verifyName(input, type) {
   if (!endsWith(input.name, type)) {
-    throw new Error(`class must have suffix '${type}'`);
+    throw new Error(`unable to create component: '${input.name}' must have suffix '${type}'`);
   }
 }
 
 function addId(input, id) {
   if (input.id) {
-    throw new Error(`getter/property 'id' must not be defined`);
+    throw new Error(`unable to create component: property 'id' must not be defined`);
   }
   input.id = id;
 }
 
 function addNamespace(input, namespace) {
   if (input.namespace) {
-    throw new Error(`getter/property 'namespace' must not be defined`);
+    throw new Error(`unable to create component: property 'namespace' must not be defined`);
   }
   input.namespace = namespace;
 }
 
 function addType(input, type) {
   if (input.type) {
-    throw new Error(`getter/property 'type' must not be defined`);
+    throw new Error(`unable to create component: property 'type' must not be defined`);
   }
   input.type = type;
 }
@@ -31,8 +37,9 @@ function addType(input, type) {
 
 class ComponentFactory {
 
-  constructor(registry) {
+  constructor(registry, validator) {
     this.registry = registry;
+    this.validator = validator;
   }
 
   build(input, settings) {
@@ -49,6 +56,7 @@ class ComponentFactory {
     }
 
     verifyName(input, type);
+    verifyId(this.validator, id);
 
     addId(input, componentId);
     addType(input, type);

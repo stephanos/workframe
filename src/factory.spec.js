@@ -6,6 +6,7 @@ import ComponentFactory from './factory';
 
 
 let factory;
+let validateId;
 let addToRegistry;
 const chance = new Chance();
 const randomId = () => chance.word({syllables: 5});
@@ -13,8 +14,12 @@ const randomId = () => chance.word({syllables: 5});
 describe('Factory', () => {
   beforeEach(() => {
     addToRegistry = sinon.spy();
+    validateId = sinon.stub().returns(true);
+
     factory = new ComponentFactory({
       add: addToRegistry,
+    }, {
+      isValidId: validateId,
     });
   });
 
@@ -27,7 +32,24 @@ describe('Factory', () => {
         namespace: 'namespace',
         type: 'Component',
         id: randomId(),
-      }), (err) => err.message === `class must have suffix 'Component'`);
+      }), (err) =>
+        err.message === `unable to create component: 'Invalid' must have suffix 'Component'`);
+  });
+
+  it('should fail if ID has wrong format', () => {
+    class Component {
+      process(signal) {
+        this.signal = signal;
+      }
+    }
+
+    validateId.returns(false);
+
+    assert.throws(
+      () => factory.build(Component, {
+        namespace: 'namespace', type: 'Component', id: 'invalid_id',
+      }), (err) =>
+        err.message === `unable to create component: ID 'invalid_id' has invalid format`);
   });
 
   it('should fail if "id" property exists already', () => {
@@ -45,7 +67,8 @@ describe('Factory', () => {
     assert.throws(
       () => factory.build(Component, {
         namespace: 'namespace', type: 'Component', id: randomId(),
-      }), (err) => err.message === `getter/property 'id' must not be defined`);
+      }), (err) =>
+        err.message === `unable to create component: property 'id' must not be defined`);
   });
 
   it('should add method that returns its "id"', () => {
@@ -74,7 +97,8 @@ describe('Factory', () => {
     assert.throws(
       () => factory.build(Component, {
         namespace: 'namespace', type: 'Component', id: randomId(),
-      }, (err) => err.message === `getter/property 'namespace' must not be defined`));
+      }, (err) =>
+        err.message === `unable to create component: property 'namespace' must not be defined`));
   });
 
   it('should add method that returns its "namespace"', () => {
@@ -108,7 +132,8 @@ describe('Factory', () => {
     assert.throws(
       () => factory.build(Component, {
         namespace: 'namespace', type: 'Component', id: randomId(),
-      }), (err) => err.message === `getter/property 'type' must not be defined`);
+      }), (err) =>
+        err.message === `unable to create component: property 'type' must not be defined`);
   });
 
   it('should add method that returns its "type"', () => {

@@ -2,37 +2,51 @@ import AccessorFactory from './accessor';
 import BehaviorFactory from './behavior';
 import ComponentFactory from './factory';
 import ComponentValidator from './util';
-import Injector from './inject';
+import Injector from './injector';
 import LoaderFactory from './loader';
 import MutatorFactory from './mutator';
 import ProcessorFactory from './processor';
 import Registry from './registry';
 
 
-const registry = new Registry();
-const componentFactory = new ComponentFactory(registry);
-const componentValidator = new ComponentValidator();
-const injector = new Injector(componentValidator);
-
-const accessorFactory = new AccessorFactory(componentFactory);
-const behaviorFactory = new BehaviorFactory(componentFactory);
-const loaderFactory = new LoaderFactory(componentFactory);
-const mutatorFactory = new MutatorFactory(componentFactory);
-const processorFactory = new ProcessorFactory(componentFactory);
-
-function toDecorator(fn) {
+function toDecorator(factory, args) {
   return (target) => {
-    return (...args) => {
-      return fn(target, ...args);
-    };
+    return factory.build(target, ...args);
   };
 }
 
-export default {
-  accessor: toDecorator(accessorFactory.build),
-  behavior: toDecorator(behaviorFactory.build),
-  loader: toDecorator(loaderFactory.build),
-  mutator: toDecorator(mutatorFactory.build),
-  inject: toDecorator(injector.build),
-  processor: toDecorator(processorFactory.build),
-};
+
+const registry = new Registry();
+const componentValidator = new ComponentValidator();
+const componentFactory = new ComponentFactory(registry, componentValidator);
+
+
+const accessorFactory = new AccessorFactory(componentFactory);
+export function accessor(...args) {
+  return toDecorator(accessorFactory, ...args);
+}
+
+const behaviorFactory = new BehaviorFactory(componentFactory);
+export function behavior(...args) {
+  return toDecorator(behaviorFactory, ...args);
+}
+
+const injector = new Injector(componentValidator);
+export function inject(...args) {
+  return toDecorator(injector, ...args);
+}
+
+const loaderFactory = new LoaderFactory(componentFactory);
+export function loader(...args) {
+  return toDecorator(loaderFactory, ...args);
+}
+
+const mutatorFactory = new MutatorFactory(componentFactory);
+export function mutator(...args) {
+  return toDecorator(mutatorFactory, ...args);
+}
+
+const processorFactory = new ProcessorFactory(componentFactory);
+export function processor(...args) {
+  return toDecorator(processorFactory, ...args);
+}
