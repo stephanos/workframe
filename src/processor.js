@@ -12,22 +12,15 @@ function verifyProcessFunc(input) {
 }
 
 
-class ProcessorFactory {
+class ProcessorComponentType {
 
-  constructor(componentFactory) {
-    this.componentFactory = componentFactory;
-  }
+  static typeName = 'Processor';
+  static injectTypeWhitelist = ['Behavior', 'Command', 'Processor', 'Query'];
 
-  build(target, namespace, id) {
+  static verify(target) {
     verifyProcessFunc(target);
-    this.componentFactory.build(target, {
-      injectTypeWhitelist: ['Behavior', 'Command', 'Processor', 'Query'],
-      namespace: namespace,
-      type: 'Processor',
-      id: id,
-    });
   }
 }
 
 
-export default ProcessorFactory;
+export default ProcessorComponentType;

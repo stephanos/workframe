@@ -1,17 +1,12 @@
 import {isArray, isString} from 'lodash';
 
+import types from './types';
+
 
 const idRegex = new RegExp('^([a-zA-Z])+$');
 const nsRegex = new RegExp('^([a-z])+$');
 
-const accessor = 'Accessor';
-const behavior = 'Behavior';
-const loader = 'Loader';
-const mutator = 'Mutator';
-const processor = 'Processor';
-const validTypes = [
-  accessor, behavior, loader, mutator, processor,
-];
+const typeNames = types.map((type) => type.typeName);
 
 
 class ComponentValidator {
@@ -25,7 +20,7 @@ class ComponentValidator {
   }
 
   isValidType(t) {
-    return t !== undefined && validTypes.indexOf(t) !== -1;
+    return t !== undefined && typeNames.indexOf(t) !== -1;
   }
 
   isValidInjectTypeWhitelist(list) {

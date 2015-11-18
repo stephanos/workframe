@@ -1,18 +1,11 @@
-class MutatorFactory {
+class MutatorComponentType {
 
-  constructor(componentFactory) {
-    this.componentFactory = componentFactory;
-  }
+  static typeName = 'Mutator';
+  static injectTypeWhitelist = ['Query'];
 
-  build(target, namespace, id) {
-    this.componentFactory.build(target, {
-      injectTypeWhitelist: ['Query'],
-      namespace: namespace,
-      type: 'Mutator',
-      id: id,
-    });
+  static verify() {
   }
 }
 
 
-export default MutatorFactory;
+export default MutatorComponentType;

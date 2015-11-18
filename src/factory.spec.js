@@ -1,6 +1,6 @@
+/* eslint camelcase:0 */
 import assert from 'assert';
 import sinon from 'sinon';
-import Chance from 'chance';
 
 import ComponentFactory from './factory';
 
@@ -8,36 +8,33 @@ import ComponentFactory from './factory';
 let factory;
 let validateId;
 let addToRegistry;
-const chance = new Chance();
-const randomId = () => chance.word({syllables: 5});
 
 describe('Factory', () => {
   beforeEach(() => {
     addToRegistry = sinon.spy();
     validateId = sinon.stub().returns(true);
 
-    factory = new ComponentFactory({
+    factory = new ComponentFactory([{
+      typeName: 'Component',
+    }], {
       add: addToRegistry,
     }, {
       isValidId: validateId,
     });
   });
 
-  it('should fail if suffix is missing', () => {
+  it('should fail if type is unknown', () => {
     class Invalid {
     }
 
     assert.throws(
-      () => factory.build(Invalid, {
-        namespace: 'namespace',
-        type: 'Component',
-        id: randomId(),
-      }), (err) =>
-        err.message === `unable to create component: 'Invalid' must have suffix 'Component'`);
+      () => factory.build(Invalid),
+      (err) =>
+        err.message === `unable to create component: type of 'Invalid' is unknown`);
   });
 
   it('should fail if ID has wrong format', () => {
-    class Component {
+    class Invalid_NameComponent {
       process(signal) {
         this.signal = signal;
       }
@@ -46,14 +43,13 @@ describe('Factory', () => {
     validateId.returns(false);
 
     assert.throws(
-      () => factory.build(Component, {
-        namespace: 'namespace', type: 'Component', id: 'invalid_id',
-      }), (err) =>
-        err.message === `unable to create component: ID 'invalid_id' has invalid format`);
+      () => factory.build(Invalid_NameComponent),
+      (err) =>
+        err.message === `unable to create component: ID 'Invalid_Name' has invalid format`);
   });
 
   it('should fail if "id" property exists already', () => {
-    class Component {
+    class MyComponent {
 
       static get id() {
         return 'my-id';
@@ -65,25 +61,22 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => factory.build(Component, {
-        namespace: 'namespace', type: 'Component', id: randomId(),
-      }), (err) =>
+      () => factory.build(MyComponent),
+      (err) =>
         err.message === `unable to create component: property 'id' must not be defined`);
   });
 
   it('should add method that returns its "id"', () => {
-    class Component {
+    class MyComponent {
     }
 
-    const id = randomId();
-    factory.build(Component, {
-      namespace: 'namespace', type: 'Component', id: id,
-    });
-    assert.equal(Component.id, id);
+    factory.build(MyComponent);
+
+    assert.equal(MyComponent.id, 'My');
   });
 
   it('should fail if "namespace" property exists already', () => {
-    class Component {
+    class MyComponent {
 
       static get namespace() {
         return 'my-namspace';
@@ -95,34 +88,31 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => factory.build(Component, {
-        namespace: 'namespace', type: 'Component', id: randomId(),
-      }, (err) =>
-        err.message === `unable to create component: property 'namespace' must not be defined`));
+      () => factory.build(MyComponent),
+      (err) =>
+        err.message === `unable to create component: property 'namespace' must not be defined`);
   });
 
   it('should add method that returns its "namespace"', () => {
-    class Component {
+    class MyComponent {
     }
 
-    factory.build(Component, {
-      namespace: 'namespace', type: 'Component', id: randomId(),
-    });
-    assert.equal(Component.namespace, 'namespace');
+    factory.build(MyComponent, 'namespace');
+
+    assert.equal(MyComponent.namespace, 'namespace');
   });
 
   it('should add method that returns a default "namespace" if none was specified', () => {
-    class Component {
+    class MyComponent {
     }
 
-    factory.build(Component, {
-      namespace: randomId(), type: 'Component', id: undefined,
-    });
-    assert.equal(Component.namespace, 'default');
+    factory.build(MyComponent);
+
+    assert.equal(MyComponent.namespace, 'default');
   });
 
   it('should fail if "type" property exists already', () => {
-    class Component {
+    class MyComponent {
 
       static get type() {
         return 'my-type';
@@ -130,19 +120,17 @@ describe('Factory', () => {
     }
 
     assert.throws(
-      () => factory.build(Component, {
-        namespace: 'namespace', type: 'Component', id: randomId(),
-      }), (err) =>
+      () => factory.build(MyComponent),
+      (err) =>
         err.message === `unable to create component: property 'type' must not be defined`);
   });
 
   it('should add method that returns its "type"', () => {
-    class Component {
+    class MyComponent {
     }
 
-    factory.build(Component, {
-      namespace: 'namespace', type: 'Component', id: randomId(),
-    });
-    assert.equal(Component.type, 'Component');
+    factory.build(MyComponent);
+
+    assert.equal(MyComponent.type, 'Component');
   });
 });

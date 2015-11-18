@@ -1,18 +1,11 @@
-class LoaderFactory {
+class LoaderComponentType {
 
-  constructor(componentFactory) {
-    this.componentFactory = componentFactory;
-  }
+  static typeName = 'Loader';
+  static injectTypeWhitelist = [];
 
-  build(target, namespace, id) {
-    this.componentFactory.build(target, {
-      injectTypeWhitelist: [],
-      namespace: namespace,
-      type: 'Loader',
-      id: id,
-    });
+  static verify() {
   }
 }
 
 
-export default LoaderFactory;
+export default LoaderComponentType;

@@ -12,22 +12,15 @@ function verifyAccessorFunc(input) {
 }
 
 
-class AccessorFactory {
+class AccessorComponentType {
 
-  constructor(componentFactory) {
-    this.componentFactory = componentFactory;
-  }
+  static typeName = 'Accessor';
+  static injectTypeWhitelist = ['Accessor', 'Behavior', 'Command', 'Query'];
 
-  build(target, namespace, id) {
+  static verify(target) {
     verifyAccessorFunc(target);
-    this.componentFactory.build(target, {
-      injectTypeWhitelist: ['Accessor', 'Behavior', 'Command', 'Query'],
-      namespace: namespace,
-      type: 'Accessor',
-      id: id,
-    });
   }
 }
 
 
-export default AccessorFactory;
+export default AccessorComponentType;

@@ -9,22 +9,15 @@ function verifyBehaveFunc(input) {
 }
 
 
-class BehaviorFactory {
+class BehaviorComponentType {
 
-  constructor(componentFactory) {
-    this.componentFactory = componentFactory;
-  }
+  static typeName = 'Behavior';
+  static injectTypeWhitelist = [];
 
-  build(target, namespace, id) {
+  static verify(target) {
     verifyBehaveFunc(target);
-    this.componentFactory.build(target, {
-      injectTypeWhitelist: [],
-      namespace: namespace,
-      type: 'Behavior',
-      id: id,
-    });
   }
 }
 
 
-export default BehaviorFactory;
+export default BehaviorComponentType;

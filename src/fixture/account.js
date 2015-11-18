@@ -1,26 +1,29 @@
-import {accessor, loader, mutator, processor} from '../index.js';
+import {component} from '../index.js';
 
 
 class UserMutator {
 
 }
-mutator('User')(UserMutator);
+component()(UserMutator);
+
 
 class UserLoader {
 
 }
-loader('User')(UserLoader);
+component()(UserLoader);
+
 
 class AccountAccessor {
   access(signal) {
     this.signal = signal;
   }
 }
-accessor('Account')(AccountAccessor);
+component()(AccountAccessor);
+
 
 class ChangeEmailProcessor {
   process(signal) {
     this.signal = signal;
   }
 }
-processor('ChangeEmail')(ChangeEmailProcessor);
+component()(ChangeEmailProcessor);
