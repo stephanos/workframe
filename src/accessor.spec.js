@@ -1,9 +1,17 @@
 import assert from 'assert';
 
+import ComponentValidator from './util';
 import AccessorComponentType from './accessor';
 
 
 describe('AccessorComponentType', () => {
+  it('should whitelist allowed injectable types', () => {
+    const allowedTypes = AccessorComponentType.injectTypeWhitelist;
+
+    assert.equal(allowedTypes.length, 4);
+    assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
+  });
+
   describe('validation', () => {
     it('should succeed', () => {
       class Accessor {

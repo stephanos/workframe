@@ -15,7 +15,7 @@ function verifyProcessFunc(input) {
 class ProcessorComponentType {
 
   static typeName = 'Processor';
-  static injectTypeWhitelist = ['Behavior', 'Command', 'Processor', 'Query'];
+  static injectTypeWhitelist = ['Behavior', 'Loader', 'Mutator', 'Processor'];
 
   static verify(target) {
     verifyProcessFunc(target);

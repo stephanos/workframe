@@ -7,7 +7,7 @@ class Injector {
     this.componentValidator = componentValidator;
   }
 
-  inject(reference, target, key) {
+  inject(target, key, reference) {
     if (!this.componentValidator.isComponent(target)) {
       throw new Error(`unable to inject into any property of '${target.name}': not a component`);
     }

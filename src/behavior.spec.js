@@ -4,6 +4,11 @@ import BehaviorFactory from './behavior';
 
 
 describe('BehaviorComponentType', () => {
+  it('should not allow any injectable types', () => {
+    const allowedTypes = BehaviorFactory.injectTypeWhitelist;
+    assert.equal(allowedTypes.length, 0);
+  });
+
   describe('validation', () => {
     it('should succeed', () => {
       class Behavior {

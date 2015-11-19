@@ -1,9 +1,17 @@
 import assert from 'assert';
 
+import ComponentValidator from './util';
 import ProcessorComponentType from './processor';
 
 
 describe('ProcessorComponentType', () => {
+  it('should whitelist allowed injectable types', () => {
+    const allowedTypes = ProcessorComponentType.injectTypeWhitelist;
+
+    assert.equal(allowedTypes.length, 4);
+    assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
+  });
+
   describe('validation', () => {
     it('should succeed', () => {
       class Processor {

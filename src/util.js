@@ -24,7 +24,15 @@ class ComponentValidator {
   }
 
   isValidInjectTypeWhitelist(list) {
-    return list !== null && isArray(list);
+    if (list === null || !isArray(list)) {
+      return false;
+    }
+    for (const typeName of list) {
+      if (!this.isValidType(typeName)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   isComponent(input) {

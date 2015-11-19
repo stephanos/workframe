@@ -15,7 +15,7 @@ function verifyAccessorFunc(input) {
 class AccessorComponentType {
 
   static typeName = 'Accessor';
-  static injectTypeWhitelist = ['Accessor', 'Behavior', 'Command', 'Query'];
+  static injectTypeWhitelist = ['Accessor', 'Behavior', 'Loader', 'Mutator'];
 
   static verify(target) {
     verifyAccessorFunc(target);

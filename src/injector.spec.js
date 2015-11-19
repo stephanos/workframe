@@ -32,7 +32,7 @@ describe('inject', () => {
       dependency = undefined;
     }
 
-    injector.inject(Dependency, Component, 'dependency');
+    injector.inject(Component, 'dependency', Dependency);
 
     assert.deepEqual(Component.dependencies,
       { 'dependency': {
@@ -52,7 +52,7 @@ describe('inject', () => {
     }
 
     assert.throws(
-      () => injector.inject('nonsense', Component, 'dependency'),
+      () => injector.inject(Component, 'dependency', 'nonsense'),
       (err) => err.message === `unable to inject 'nonsense' into 'dependency' of 'Component': not a function`);
   });
 
@@ -66,9 +66,9 @@ describe('inject', () => {
       dependency = undefined;
     }
 
-    injector.inject(Dependency, Component, 'dependency');
+    injector.inject(Component, 'dependency', Dependency);
     assert.throws(
-      () => injector.inject(Dependency, Component, 'dependency'),
+      () => injector.inject(Component, 'dependency', Dependency),
       (err) => err.message === `unable to inject into 'Component': conflicting dependency`);
   });
 
@@ -81,7 +81,7 @@ describe('inject', () => {
     isValidComponent.withArgs(InvalidComponent).returns(false);
 
     assert.throws(
-      () => injector.inject(Dependency, InvalidComponent, 'dependency'),
+      () => injector.inject(InvalidComponent, 'dependency', Dependency),
       (err) => err.message === `unable to inject into any property of 'InvalidComponent': not a component`);
   });
 
@@ -94,7 +94,7 @@ describe('inject', () => {
     }
 
     assert.throws(
-      () => injector.inject(Dependency, Component, 'dependency'),
+      () => injector.inject(Component, 'dependency', Dependency),
       (err) => err.message === `unable to inject 'Dependency' into 'dependency' of 'Component': type 'Behavior' is not allowed`);
   });
 });
