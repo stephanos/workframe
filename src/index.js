@@ -1,14 +1,21 @@
 import ComponentFactory from './factory';
 import ComponentValidator from './util';
+import Dispatcher from './dispatcher';
 import Injector from './injector';
 import Registry from './registry';
 
 import types from './types';
 
 
-const registry = new Registry();
+const componentRegistry = new Registry();
 const componentValidator = new ComponentValidator();
-const componentFactory = new ComponentFactory(types, registry, componentValidator);
+
+const dispatcher = new Dispatcher(componentRegistry, componentValidator);
+export function dispatch(...args) {
+  return dispatcher.handle(...args);
+}
+
+const componentFactory = new ComponentFactory(types, componentRegistry, componentValidator);
 export function component(...args) {
   return (target) => {
     return componentFactory.build(target, ...args);
