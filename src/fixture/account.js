@@ -37,5 +37,5 @@ component()(ChangeEmailProcessor);
 inject(UserMutator)(ChangeEmailProcessor, 'userMutator');
 
 
-const Conductr = bootstrap();
-export default Conductr;
+const App = bootstrap();
+export default App;
