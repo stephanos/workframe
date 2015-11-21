@@ -1,4 +1,4 @@
-import {component, inject} from '../index.js';
+import {bootstrap, component, inject} from '../index.js';
 
 
 class UserLoader {
@@ -35,3 +35,7 @@ class ChangeEmailProcessor {
 }
 component()(ChangeEmailProcessor);
 inject(UserMutator)(ChangeEmailProcessor, 'userMutator');
+
+
+const Conductr = bootstrap();
+export default Conductr;
