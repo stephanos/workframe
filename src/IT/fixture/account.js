@@ -1,4 +1,4 @@
-import {bootstrap, component, inject} from '../index.js';
+import {bootstrap, component, inject} from '../../index.js';
 
 
 class MongoDatabaseSystem {
