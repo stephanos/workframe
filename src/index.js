@@ -1,11 +1,11 @@
-import ComponentFactory from './factory';
-import ComponentValidator from './util';
-import Dispatcher from './dispatcher';
-import Injector from './injector';
-import Registry from './registry';
-import API from './api';
+import ComponentFactory from './internal/factory';
+import ComponentValidator from './internal/util';
+import Dispatcher from './internal/dispatcher';
+import Injector from './internal/injector';
+import Registry from './internal/registry';
+import API from './internal/api';
 
-import types from './types';
+import types from './internal/types';
 
 
 const componentRegistry = new Registry();
