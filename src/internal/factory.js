@@ -10,36 +10,43 @@ function getTypeFor(types, input) {
   throw new Error(`unable to create component: type of '${input.name}' is unknown`);
 }
 
-function getIdFor(input, type, validator) {
-  const id = input.name.slice(0, -type.typeName.length);
-  if (id === '') {
-    throw new Error(`unable to create component: missing ID`);
+function getNameFor(input, type, validator) {
+  const name = input.name.slice(0, -type.typeName.length);
+  if (name === '') {
+    throw new Error(`unable to create component: missing name`);
   }
-  if (!validator.isValidId(id)) {
-    throw new Error(`unable to create component: ID '${id}' has invalid format`);
+  if (!validator.isValidName(name)) {
+    throw new Error(`unable to create component: name '${name}' has invalid format`);
   }
-  return id;
+  return name;
 }
 
-function addId(input, id) {
-  if (input.id) {
-    throw new Error(`unable to create component: property 'id' must not be defined`);
+function addName(input, name) {
+  if (input._name) {
+    throw new Error(`unable to create component: property '_name' must not be defined`);
   }
-  input.id = id;
+  input._name = name;
 }
 
 function addNamespace(input, namespace) {
-  if (input.namespace) {
-    throw new Error(`unable to create component: property 'namespace' must not be defined`);
+  if (input._namespace) {
+    throw new Error(`unable to create component: property '_namespace' must not be defined`);
   }
-  input.namespace = namespace || 'default';
+  input._namespace = namespace || 'default';
+}
+
+function addInjectTypeWhitelist(input, whitelist) {
+  if (input._injectTypeWhitelist) {
+    throw new Error(`unable to create component: property '_injectTypeWhitelist' must not be defined`);
+  }
+  input._injectTypeWhitelist = whitelist.slice();
 }
 
 function addType(input, type) {
-  if (input.type) {
-    throw new Error(`unable to create component: property 'type' must not be defined`);
+  if (input._type) {
+    throw new Error(`unable to create component: property '_type' must not be defined`);
   }
-  input.type = type;
+  input._type = type;
 }
 
 
@@ -53,14 +60,20 @@ class ComponentFactory {
 
   build(input, namespace) {
     const type = getTypeFor(this.types, input);
-    const id = getIdFor(input, type, this.validator);
+    const name = getNameFor(input, type, this.validator);
 
-    addId(input, id);
+    addName(input, name);
     addType(input, type.typeName);
     addNamespace(input, namespace);
-    input.injectTypeWhitelist = type.injectTypeWhitelist;
+    addInjectTypeWhitelist(input, type.injectTypeWhitelist);
 
-    this.registry.add(input);
+    this.registry.add(input, {
+      isSingleton: type.isSingleton,
+      dependencies: input._dependencies,
+      namespace: namespace,
+      name: name,
+      type: type,
+    });
   }
 }
 

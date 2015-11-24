@@ -27,43 +27,48 @@ export class KeyError extends Error {
 }
 
 function generateId(descriptor) {
-  return descriptor.namespace + ':' + descriptor.type + ':' + descriptor.id;
+  return descriptor.namespace + ':' + descriptor.name + ':' + descriptor.type;
 }
 
-function findComponent(container, id) {
-  const Component = container._componentById[id];
-  if (Component) {
-    return Component;
+function checkIsFactory(container, id, Factory) {
+  if (!isFunction(Factory)) {
+    throw new EntryError(`can not add '${Factory}': invalid value`);
   }
-  return null;
 }
 
-function resolveComponent(container, rootId) {
+function checkIsNoDuplicate(container, id, Factory) {
+  if (container._valueById[id] || container._factoryById[id]) {
+    throw new KeyError(`can not register '${Factory.name}': '${id}' is already registered`);
+  }
+}
+
+function createInstance(container, rootId) {
   const cache = {};
 
   function resolve(id, trace) {
     if (trace.contains(id)) {
-      throw new ResolveError(`unable to resolve Component for ID '${id}': ` +
+      throw new ResolveError(`unable to resolve ID '${id}': ` +
         `circular dependency '${trace.push(id).join('\' -> \'')}'`);
     }
 
-    const Component = findComponent(container, id);
-    if (Component === null) {
-      let message = `unable to resolve Component for ID '${id}': not found`;
+    const Factory = container._factoryById[id];
+    if (!Factory) {
+      let message = `unable to resolve ID '${id}': not found`;
       if (!trace.isEmpty()) {
         message += ` (trace: '${trace.join('\' -> \'')}')`;
       }
       throw new ResolveError(message);
     }
 
-    const instance = container._singletonsById[id] || new Component();
+    const instance = container._valueById[id] || new Factory();
 
-    if (Component.dependencies) {
-      for (const [property, depDescr] of Component.dependencies) {
+    const dependencies = container._dependenciesById[id];
+    if (dependencies) {
+      for (const [property, depDescr] of dependencies) {
         const depId = generateId(depDescr);
-        const depComp = cache[depId] || resolve(depId, trace.push(id));
-        cache[depId] = depComp;
-        instance[property] = depComp;
+        const depVal = cache[depId] || resolve(depId, trace.push(id));
+        cache[depId] = depVal;
+        instance[property] = depVal;
       }
     }
     return instance;
@@ -72,37 +77,29 @@ function resolveComponent(container, rootId) {
   return resolve(rootId, List());
 }
 
-function addComponent(container, Component) {
-  if (!isFunction(Component)) {
-    throw new EntryError(`can not add '${Component}': invalid value`);
-  }
-
-  const id = generateId(Component);
-  if (findComponent(container, id)) {
-    throw new KeyError(`can not register Component '${Component.name}': already registered`);
-  }
-
-  container._componentById[id] = Component;
-
-  if (Component.isSingleton) {
-    container._singletonsById[id] = resolveComponent(container, id);
-  }
-}
-
 
 class Registry {
 
   constructor() {
-    this._componentById = {};
-    this._singletonsById = {};
+    this._valueById = {};
+    this._factoryById = {};
+    this._dependenciesById = {};
   }
 
-  add(Component) {
-    addComponent(this, Component);
+  add(Factory, opts) {
+    const id = generateId(opts);
+    checkIsFactory(this, id, Factory);
+    checkIsNoDuplicate(this, id, Factory);
+
+    this._factoryById[id] = Factory;
+    this._dependenciesById[id] = opts.dependencies;
+    if (opts.isSingleton) {
+      this._valueById[id] = createInstance(this, id);
+    }
   }
 
   get(id) {
-    return resolveComponent(this, id);
+    return createInstance(this, id);
   }
 }
 

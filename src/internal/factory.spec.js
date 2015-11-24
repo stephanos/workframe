@@ -6,20 +6,21 @@ import ComponentFactory from './factory';
 
 
 let factory;
-let validateId;
+let validateName;
 let addToRegistry;
 
 describe('Factory', () => {
   beforeEach(() => {
     addToRegistry = sinon.spy();
-    validateId = sinon.stub().returns(true);
+    validateName = sinon.stub().returns(true);
 
     factory = new ComponentFactory([{
       typeName: 'Component',
+      injectTypeWhitelist: ['Component'],
     }], {
       add: addToRegistry,
     }, {
-      isValidId: validateId,
+      isValidName: validateName,
     });
   });
 
@@ -33,26 +34,26 @@ describe('Factory', () => {
         err.message === `unable to create component: type of 'Invalid' is unknown`);
   });
 
-  it('should fail if ID has wrong format', () => {
+  it('should fail if name has wrong format', () => {
     class Invalid_NameComponent {
       process(signal) {
         this.signal = signal;
       }
     }
 
-    validateId.returns(false);
+    validateName.returns(false);
 
     assert.throws(
       () => factory.build(Invalid_NameComponent),
       (err) =>
-        err.message === `unable to create component: ID 'Invalid_Name' has invalid format`);
+        err.message === `unable to create component: name 'Invalid_Name' has invalid format`);
   });
 
   it('should fail if "id" property exists already', () => {
     class MyComponent {
 
-      static get id() {
-        return 'my-id';
+      static get _name() {
+        return 'my-name';
       }
 
       process(signal) {
@@ -63,22 +64,22 @@ describe('Factory', () => {
     assert.throws(
       () => factory.build(MyComponent),
       (err) =>
-        err.message === `unable to create component: property 'id' must not be defined`);
+        err.message === `unable to create component: property '_name' must not be defined`);
   });
 
-  it('should add method that returns its "id"', () => {
+  it('should add method that returns its "name"', () => {
     class MyComponent {
     }
 
     factory.build(MyComponent);
 
-    assert.equal(MyComponent.id, 'My');
+    assert.equal(MyComponent._name, 'My');
   });
 
   it('should fail if "namespace" property exists already', () => {
     class MyComponent {
 
-      static get namespace() {
+      static get _namespace() {
         return 'my-namspace';
       }
 
@@ -90,7 +91,7 @@ describe('Factory', () => {
     assert.throws(
       () => factory.build(MyComponent),
       (err) =>
-        err.message === `unable to create component: property 'namespace' must not be defined`);
+        err.message === `unable to create component: property '_namespace' must not be defined`);
   });
 
   it('should add method that returns its "namespace"', () => {
@@ -99,7 +100,7 @@ describe('Factory', () => {
 
     factory.build(MyComponent, 'namespace');
 
-    assert.equal(MyComponent.namespace, 'namespace');
+    assert.equal(MyComponent._namespace, 'namespace');
   });
 
   it('should add method that returns a default "namespace" if none was specified', () => {
@@ -108,13 +109,13 @@ describe('Factory', () => {
 
     factory.build(MyComponent);
 
-    assert.equal(MyComponent.namespace, 'default');
+    assert.equal(MyComponent._namespace, 'default');
   });
 
   it('should fail if "type" property exists already', () => {
     class MyComponent {
 
-      static get type() {
+      static get _type() {
         return 'my-type';
       }
     }
@@ -122,7 +123,7 @@ describe('Factory', () => {
     assert.throws(
       () => factory.build(MyComponent),
       (err) =>
-        err.message === `unable to create component: property 'type' must not be defined`);
+        err.message === `unable to create component: property '_type' must not be defined`);
   });
 
   it('should add method that returns its "type"', () => {
@@ -131,6 +132,29 @@ describe('Factory', () => {
 
     factory.build(MyComponent);
 
-    assert.equal(MyComponent.type, 'Component');
+    assert.equal(MyComponent._type, 'Component');
+  });
+
+  it('should fail if "_injectTypeWhitelist" property exists already', () => {
+    class MyComponent {
+
+      static get _injectTypeWhitelist() {
+        return [];
+      }
+    }
+
+    assert.throws(
+      () => factory.build(MyComponent),
+      (err) =>
+        err.message === `unable to create component: property '_injectTypeWhitelist' must not be defined`);
+  });
+
+  it('should add method that returns its "injectTypeWhitelist"', () => {
+    class MyComponent {
+    }
+
+    factory.build(MyComponent);
+
+    assert.deepEqual(MyComponent._injectTypeWhitelist, ['Component']);
   });
 });

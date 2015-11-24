@@ -5,10 +5,10 @@ import Injector from './injector';
 
 
 class Dependency {
-  static id = 'depId';
-  static type = 'Behavior';
-  static namespace = 'ns';
-  static injectTypeWhitelist = [];
+  static _name = 'depId';
+  static _type = 'Behavior';
+  static _namespace = 'ns';
+  static _injectTypeWhitelist = [];
 }
 
 let injector;
@@ -24,19 +24,19 @@ describe('inject', () => {
 
   it('should add dependency', () => {
     class Component {
-      static id = 'id';
-      static type = 'Processor';
-      static namespace = 'ns';
-      static injectTypeWhitelist = ['Behavior'];
+      static _name = 'name';
+      static _type = 'Processor';
+      static _namespace = 'ns';
+      static _injectTypeWhitelist = ['Behavior'];
 
       dependency = undefined;
     }
 
     injector.inject(Component, 'dependency', Dependency);
 
-    assert.deepEqual(Component.dependencies,
+    assert.deepEqual(Component._dependencies,
       { 'dependency': {
-        id: 'depId',
+        name: 'depId',
         type: 'Behavior',
         namespace: 'ns',
       }}
@@ -45,10 +45,10 @@ describe('inject', () => {
 
   it('should fail when an injected value is not a class ', () => {
     class Component {
-      static id = 'id';
-      static type = 'Behavior';
-      static namespace = 'ns';
-      static injectTypeWhitelist = ['Behavior'];
+      static _name = 'name';
+      static _type = 'Behavior';
+      static _namespace = 'ns';
+      static _injectTypeWhitelist = ['Behavior'];
     }
 
     assert.throws(
@@ -58,10 +58,10 @@ describe('inject', () => {
 
   it('should fail when a property was already injected', () => {
     class Component {
-      static id = 'id';
-      static type = 'Behavior';
-      static namespace = 'ns';
-      static injectTypeWhitelist = ['Behavior'];
+      static _name = 'name';
+      static _type = 'Behavior';
+      static _namespace = 'ns';
+      static _injectTypeWhitelist = ['Behavior'];
 
       dependency = undefined;
     }
@@ -74,8 +74,8 @@ describe('inject', () => {
 
   it('should fail when an injected value is not a component', () => {
     class InvalidComponent {
-      static id = 'id';
-      static namespace = 'ns';
+      static _name = 'name';
+      static _namespace = 'ns';
     }
 
     isValidComponent.withArgs(InvalidComponent).returns(false);
@@ -87,10 +87,10 @@ describe('inject', () => {
 
   it('should fail when an injected value has forbidden type', () => {
     class Component {
-      static id = 'id';
-      static type = 'Behavior';
-      static namespace = 'ns';
-      static injectTypeWhitelist = [];
+      static _name = 'name';
+      static _type = 'Behavior';
+      static _namespace = 'ns';
+      static _injectTypeWhitelist = [];
     }
 
     assert.throws(

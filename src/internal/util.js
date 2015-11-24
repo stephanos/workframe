@@ -3,7 +3,7 @@ import {isArray, isString} from 'lodash';
 import types from './types';
 
 
-const idRegex = new RegExp('^([a-zA-Z])+$');
+const nameRegex = new RegExp('^([a-zA-Z])+$');
 const nsRegex = new RegExp('^([a-z])+$');
 
 const typeNames = types.map((type) => type.typeName);
@@ -11,8 +11,8 @@ const typeNames = types.map((type) => type.typeName);
 
 class ComponentValidator {
 
-  isValidId(id) {
-    return id !== undefined && isString(id) && idRegex.test(id);
+  isValidName(name) {
+    return name !== undefined && isString(name) && nameRegex.test(name);
   }
 
   isValidNamespace(ns) {
@@ -36,10 +36,10 @@ class ComponentValidator {
   }
 
   isComponent(input) {
-    return this.isValidId(input.id)
-      && this.isValidType(input.type)
-      && this.isValidNamespace(input.namespace)
-      && this.isValidInjectTypeWhitelist(input.injectTypeWhitelist);
+    return this.isValidName(input._name)
+      && this.isValidType(input._type)
+      && this.isValidNamespace(input._namespace)
+      && this.isValidInjectTypeWhitelist(input._injectTypeWhitelist);
   }
 }
 

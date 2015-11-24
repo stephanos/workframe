@@ -5,23 +5,25 @@ import Registry from './registry';
 
 
 let registry;
+let optsForComponent;
 
 describe('Registry', () => {
   beforeEach(() => {
     registry = new Registry();
+
+    optsForComponent = {
+      namespace: 'ns',
+      type: 'type',
+      name: 'name',
+    };
   });
 
   describe('adding a component', () => {
     it('should succeed', () => {
       class Component {
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
       }
 
-      registry.add(Component);
-
-      assert.equal(registry._componentById['ns:type:id'], Component);
+      registry.add(Component, optsForComponent);
     });
 
     where([
@@ -29,92 +31,80 @@ describe('Registry', () => {
     ], () => {
       it('should fail for invalid Component', (ctx) => {
         assert.throws(
-          () => registry.add(ctx.value),
+          () => registry.add(ctx.value, optsForComponent),
           (err) => err.message === `can not add '${ctx.value}': invalid value`);
       });
     });
 
     it('should fail for already existing ID', () => {
       class Component {
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
       }
 
-      registry.add(Component);
+      registry.add(Component, optsForComponent);
 
       assert.throws(
-        () => registry.add(Component),
-        (err) => err.message === `can not register Component 'Component': already registered`);
+        () => registry.add(Component, optsForComponent),
+        (err) => err.message === `can not register 'Component': 'ns:name:type' is already registered`);
     });
 
     describe('that is a singleton', () => {
       it('should succeed', () => {
         class Component {
-          static isSingleton = true;
-          static namespace = 'ns';
-          static type = 'type';
-          static id = 'id';
         }
+        optsForComponent.isSingleton = true;
 
-        registry.add(Component);
-
-        assert.equal(registry._componentById['ns:type:id'], Component);
-        assert.deepEqual(registry._singletonsById['ns:type:id'], {});
+        registry.add(Component, optsForComponent);
       });
     });
   });
 
   describe('resolving a component', () => {
     class DepA {
-      static dependencies = new Map();
-      static namespace = 'ns';
-      static type = 'type';
-      static id = 'depA';
     }
+    const optsForDepA = {
+      namespace: 'ns',
+      type: 'type',
+      name: 'depA',
+      dependencies: new Map(),
+    };
 
     class DepB {
-      static dependencies = new Map([['dependencyA', {
-        namespace: 'ns',
-        type: 'type',
-        id: 'depA',
-      }]]);
-      static namespace = 'ns';
-      static type = 'type';
-      static id = 'depB';
-
       dependencyA = null
     }
+    const optsForDepB = {
+      namespace: 'ns',
+      type: 'type',
+      name: 'depB',
+      dependencies: new Map([['dependencyA', {
+        namespace: 'ns',
+        type: 'type',
+        name: 'depA',
+      }]]),
+    };
 
     it('should succeed for component without dependencies', () => {
       class Component {
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
       }
 
-      registry.add(Component);
+      registry.add(Component, optsForComponent);
 
-      assert.ok(registry.get('ns:type:id'));
+      assert.ok(registry.get('ns:name:type'));
     });
 
     it('should succeed for component with one direct dependency', () => {
       class Component {
-        static dependencies = new Map([['dependencyA', {
-          namespace: 'ns',
-          type: 'type',
-          id: 'depA',
-        }]]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
-
-        dependencyA = null
+        dependencyA
       }
 
-      registry.add(DepA);
-      registry.add(Component);
-      const resolved = registry.get('ns:type:id');
+      optsForComponent.dependencies = new Map([['dependencyA', {
+        namespace: 'ns',
+        type: 'type',
+        name: 'depA',
+      }]]);
+
+      registry.add(DepA, optsForDepA);
+      registry.add(Component, optsForComponent);
+      const resolved = registry.get('ns:name:type');
 
       assert.ok(resolved);
       assert.ok(resolved.dependencyA);
@@ -122,22 +112,19 @@ describe('Registry', () => {
 
     it('should succeed for component with transitive dependencies', () => {
       class Component {
-        static dependencies = new Map([['dependencyB', {
-          namespace: 'ns',
-          type: 'type',
-          id: 'depB',
-        }]]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
-
-        dependencyB = null
+        dependencyB
       }
 
-      registry.add(DepA);
-      registry.add(DepB);
-      registry.add(Component);
-      const resolved = registry.get('ns:type:id');
+      optsForComponent.dependencies = new Map([['dependencyB', {
+        namespace: 'ns',
+        type: 'type',
+        name: 'depB',
+      }]]);
+
+      registry.add(DepA, optsForDepA);
+      registry.add(DepB, optsForDepB);
+      registry.add(Component, optsForComponent);
+      const resolved = registry.get('ns:name:type');
 
       assert.ok(resolved);
       assert.ok(resolved.dependencyB);
@@ -146,30 +133,27 @@ describe('Registry', () => {
 
     it('should only create each dependency once', () => {
       class Component {
-        static dependencies = new Map([
-          ['dependencyA', {
-            namespace: 'ns',
-            type: 'type',
-            id: 'depA',
-          }],
-          ['dependencyB', {
-            namespace: 'ns',
-            type: 'type',
-            id: 'depB',
-          }],
-        ]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
-
         dependencyA = null
         dependencyB = null
       }
 
-      registry.add(DepA);
-      registry.add(DepB);
-      registry.add(Component);
-      const resolved = registry.get('ns:type:id');
+      optsForComponent.dependencies = new Map([
+        ['dependencyA', {
+          namespace: 'ns',
+          type: 'type',
+          name: 'depA',
+        }],
+        ['dependencyB', {
+          namespace: 'ns',
+          type: 'type',
+          name: 'depB',
+        }],
+      ]);
+
+      registry.add(DepA, optsForDepA);
+      registry.add(DepB, optsForDepB);
+      registry.add(Component, optsForComponent);
+      const resolved = registry.get('ns:name:type');
 
       assert.equal(resolved.dependencyB.dependencyA, resolved.dependencyA);
     });
@@ -177,100 +161,81 @@ describe('Registry', () => {
     it('should fail for non-existing component', () => {
       assert.throws(
         () => registry.get('ns:type:missing'),
-        (err) => err.message === `unable to resolve Component for ID 'ns:type:missing': not found`);
+        (err) => err.message === `unable to resolve ID 'ns:type:missing': not found`);
     });
 
     it('should fail for non-existing direct dependency', () => {
       class Component {
-        static dependencies = new Map([['dependencyA', {
-          namespace: 'ns',
-          type: 'type',
-          id: 'depA',
-        }]]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
-
         dependencyA = null
       }
 
-      registry.add(Component);
+      optsForComponent.dependencies = new Map([['dependencyA', {
+        namespace: 'ns',
+        type: 'type',
+        name: 'depA',
+      }]]);
+
+      registry.add(Component, optsForComponent);
 
       assert.throws(
-        () => registry.get('ns:type:id'),
-        (err) => err.message === `unable to resolve Component for ID 'ns:type:depA': not found (trace: 'ns:type:id')`);
+        () => registry.get('ns:name:type'),
+        (err) => err.message === `unable to resolve ID 'ns:depA:type': not found (trace: 'ns:name:type')`);
     });
 
     it('should fail for non-existing transitive dependency', () => {
       class Component {
-        static dependencies = new Map([['dependencyB', {
-          namespace: 'ns',
-          type: 'type',
-          id: 'depB',
-        }]]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
-
         dependencyB = null
       }
 
-      registry.add(DepB);
-      registry.add(Component);
+      optsForComponent.dependencies = new Map([['dependencyB', {
+        namespace: 'ns',
+        name: 'depB',
+        type: 'type',
+      }]]);
+
+      registry.add(DepB, optsForDepB);
+      registry.add(Component, optsForComponent);
 
       assert.throws(
-        () => registry.get('ns:type:id'),
-        (err) => err.message === `unable to resolve Component for ID 'ns:type:depA': not found (trace: 'ns:type:id' -> 'ns:type:depB')`);
+        () => registry.get('ns:name:type'),
+        (err) => err.message === `unable to resolve ID 'ns:depA:type': not found (trace: 'ns:name:type' -> 'ns:depB:type')`);
     });
 
     it('should fail for circular dependency', () => {
-      class DepALoop {
-        static dependencies = new Map([['dependencyB', {
-          namespace: 'ns',
-          type: 'type',
-          id: 'depB',
-        }]]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'depA';
-
-        dependencyB = null
-      }
-
       class Component {
-        static dependencies = new Map([['dependencyB', {
-          namespace: 'ns',
-          type: 'type',
-          id: 'depB',
-        }]]);
-        static namespace = 'ns';
-        static type = 'type';
-        static id = 'id';
-
         dependencyB = null
       }
 
-      registry.add(DepALoop);
-      registry.add(DepB);
-      registry.add(Component);
+      optsForComponent.dependencies = new Map([['dependencyB', {
+        namespace: 'ns',
+        type: 'type',
+        name: 'depB',
+      }]]);
+
+      optsForDepA.dependencies = new Map([['dependencyB', {
+        namespace: 'ns',
+        type: 'type',
+        name: 'depB',
+      }]]);
+
+      registry.add(DepA, optsForDepA);
+      registry.add(DepB, optsForDepB);
+      registry.add(Component, optsForComponent);
 
       assert.throws(
-        () => registry.get('ns:type:id'),
-        (err) => err.message === `unable to resolve Component for ID 'ns:type:depB': circular dependency 'ns:type:id' -> 'ns:type:depB' -> 'ns:type:depA' -> 'ns:type:depB'`);
+        () => registry.get('ns:name:type'),
+        (err) => err.message === `unable to resolve ID 'ns:depB:type': circular dependency 'ns:name:type' -> 'ns:depB:type' -> 'ns:depA:type' -> 'ns:depB:type'`);
     });
 
     describe('that is a singleton', () => {
       it('should succeed', () => {
         class Component {
-          static isSingleton = true;
-          static namespace = 'ns';
-          static type = 'type';
-          static id = 'id';
         }
+        optsForComponent.isSingleton = true;
 
-        registry.add(Component);
-        const resolved1 = registry.get('ns:type:id');
-        const resolved2 = registry.get('ns:type:id');
+        registry.add(Component, optsForComponent);
+        const resolved1 = registry.get('ns:name:type');
+        const resolved2 = registry.get('ns:name:type');
 
         assert.equal(resolved1, resolved2);
       });
