@@ -1,8 +1,8 @@
 import ComponentFactory from './internal/factory';
 import ComponentValidator from './internal/util';
 import Dispatcher from './internal/dispatcher';
-import Injector from './internal/injector';
-import Registry from './internal/registry';
+import Injector from './internal/ioc/injector';
+import Registry from './internal/ioc/registry';
 import API from './internal/api';
 
 import types from './internal/types';
