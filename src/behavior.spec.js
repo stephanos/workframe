@@ -1,11 +1,11 @@
 import assert from 'assert';
 
-import BehaviorFactory from './behavior';
+import BehaviorComponentType from './behavior';
 
 
 describe('BehaviorComponentType', () => {
   it('should not allow any injectable types', () => {
-    const allowedTypes = BehaviorFactory.injectTypeWhitelist;
+    const allowedTypes = BehaviorComponentType.injectTypeWhitelist;
     assert.equal(allowedTypes.length, 0);
   });
 
@@ -16,7 +16,7 @@ describe('BehaviorComponentType', () => {
         }
       }
 
-      BehaviorFactory.verify(Behavior);
+      BehaviorComponentType.verify(Behavior);
     });
 
     it('should fail if "behave" method missing', () => {
@@ -24,7 +24,7 @@ describe('BehaviorComponentType', () => {
       }
 
       assert.throws(
-        () => BehaviorFactory.verify(Behavior),
+        () => BehaviorComponentType.verify(Behavior),
         (err) => err.message === `method 'behave' must be defined`);
     });
   });

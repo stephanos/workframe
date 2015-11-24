@@ -1,10 +1,19 @@
 import {bootstrap, component, inject} from '../index.js';
 
 
+class MongoDatabaseSystem {
+
+}
+component()(MongoDatabaseSystem);
+
+
 class UserLoader {
+
+  mongoDatabaseSystem
 
 }
 component()(UserLoader);
+inject(MongoDatabaseSystem)(UserLoader, 'mongoDatabaseSystem');
 
 
 class AccountAccessor {
@@ -21,8 +30,11 @@ inject(UserLoader)(AccountAccessor, 'userLoader');
 
 class UserMutator {
 
+  mongoDatabaseSystem
+
 }
 component()(UserMutator);
+inject(MongoDatabaseSystem)(UserMutator, 'mongoDatabaseSystem');
 
 
 class ChangeEmailProcessor {

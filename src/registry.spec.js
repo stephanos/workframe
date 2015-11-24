@@ -20,7 +20,8 @@ describe('Registry', () => {
       }
 
       registry.add(Component);
-      assert.equal(registry._componentByIds['ns:type:id'], Component);
+
+      assert.equal(registry._componentById['ns:type:id'], Component);
     });
 
     where([
@@ -41,9 +42,26 @@ describe('Registry', () => {
       }
 
       registry.add(Component);
+
       assert.throws(
         () => registry.add(Component),
         (err) => err.message === `can not register Component 'Component': already registered`);
+    });
+
+    describe('that is a singleton', () => {
+      it('should succeed', () => {
+        class Component {
+          static isSingleton = true;
+          static namespace = 'ns';
+          static type = 'type';
+          static id = 'id';
+        }
+
+        registry.add(Component);
+
+        assert.equal(registry._componentById['ns:type:id'], Component);
+        assert.deepEqual(registry._singletonsById['ns:type:id'], {});
+      });
     });
   });
 
@@ -70,13 +88,13 @@ describe('Registry', () => {
 
     it('should succeed for component without dependencies', () => {
       class Component {
-        static dependencies = new Map();
         static namespace = 'ns';
         static type = 'type';
         static id = 'id';
       }
 
       registry.add(Component);
+
       assert.ok(registry.get('ns:type:id'));
     });
 
@@ -239,6 +257,23 @@ describe('Registry', () => {
       assert.throws(
         () => registry.get('ns:type:id'),
         (err) => err.message === `unable to resolve Component for ID 'ns:type:depB': circular dependency 'ns:type:id' -> 'ns:type:depB' -> 'ns:type:depA' -> 'ns:type:depB'`);
+    });
+
+    describe('that is a singleton', () => {
+      it('should succeed', () => {
+        class Component {
+          static isSingleton = true;
+          static namespace = 'ns';
+          static type = 'type';
+          static id = 'id';
+        }
+
+        registry.add(Component);
+        const resolved1 = registry.get('ns:type:id');
+        const resolved2 = registry.get('ns:type:id');
+
+        assert.equal(resolved1, resolved2);
+      });
     });
   });
 });

@@ -3,6 +3,7 @@ import BehaviorComponentType from './behavior';
 import LoaderComponentType from './loader';
 import MutatorComponentType from './mutator';
 import ProcessorComponentType from './processor';
+import SystemComponentType from './system';
 
 export default [
   AccessorComponentType,
@@ -10,4 +11,5 @@ export default [
   LoaderComponentType,
   MutatorComponentType,
   ProcessorComponentType,
+  SystemComponentType,
 ];

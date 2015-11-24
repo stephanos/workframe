@@ -1,7 +1,7 @@
 class LoaderComponentType {
 
   static typeName = 'Loader';
-  static injectTypeWhitelist = [];
+  static injectTypeWhitelist = ['System'];
 
   static verify() {
   }

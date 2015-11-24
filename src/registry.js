@@ -31,7 +31,7 @@ function generateId(descriptor) {
 }
 
 function findComponent(container, id) {
-  const Component = container._componentByIds[id];
+  const Component = container._componentById[id];
   if (Component) {
     return Component;
   }
@@ -56,12 +56,15 @@ function resolveComponent(container, rootId) {
       throw new ResolveError(message);
     }
 
-    const instance = new Component();
-    for (const [property, depDescr] of Component.dependencies) {
-      const depId = generateId(depDescr);
-      const depComp = cache[depId] || resolve(depId, trace.push(id));
-      cache[depId] = depComp;
-      instance[property] = depComp;
+    const instance = container._singletonsById[id] || new Component();
+
+    if (Component.dependencies) {
+      for (const [property, depDescr] of Component.dependencies) {
+        const depId = generateId(depDescr);
+        const depComp = cache[depId] || resolve(depId, trace.push(id));
+        cache[depId] = depComp;
+        instance[property] = depComp;
+      }
     }
     return instance;
   }
@@ -79,14 +82,19 @@ function addComponent(container, Component) {
     throw new KeyError(`can not register Component '${Component.name}': already registered`);
   }
 
-  container._componentByIds[id] = Component;
+  container._componentById[id] = Component;
+
+  if (Component.isSingleton) {
+    container._singletonsById[id] = resolveComponent(container, id);
+  }
 }
 
 
 class Registry {
 
   constructor() {
-    this._componentByIds = {};
+    this._componentById = {};
+    this._singletonsById = {};
   }
 
   add(Component) {
