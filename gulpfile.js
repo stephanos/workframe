@@ -94,7 +94,7 @@ gulp.task('_daemon', (done) => {
 
 
 gulp.task('package',
-  gulp.series('build', 'lint', 'typecheck', 'pre-test', 'test', 'coveralls'));
+  gulp.series('build', 'lint', 'typecheck', 'pre-test', 'test'));
 
 gulp.task('dev',
   gulp.series('_daemon', 'clean', 'package', 'watch'));
