@@ -3,6 +3,7 @@ import ComponentValidator from './internal/util';
 import Dispatcher from './internal/dispatcher';
 import Injector from './internal/ioc/injector';
 import Registry from './internal/ioc/registry';
+import {State} from './internal/state';
 import API from './internal/api';
 
 import types from './internal/types';
@@ -32,3 +33,5 @@ const dispatcher = new Dispatcher(componentRegistry, componentValidator);
 export function bootstrap() {
   return new API(dispatcher);
 }
+
+export {State};

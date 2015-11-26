@@ -1,7 +1,7 @@
 class SystemComponentType {
 
   static typeName = 'System';
-  static injectTypeWhitelist = [];
+  static injectTypeWhitelist = ['State'];
 
   static verify() {
   }

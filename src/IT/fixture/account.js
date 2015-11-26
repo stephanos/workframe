@@ -1,19 +1,28 @@
-import {bootstrap, component, inject} from '../../index.js';
+import {bootstrap, component, inject, State} from '../../index.js';
 
 
-class MongoDatabaseSystem {
+class ConnectionState extends State {
 
 }
-component()(MongoDatabaseSystem);
+component()(ConnectionState);
+
+
+class DatabaseSystem {
+
+  connectionState
+
+}
+component()(DatabaseSystem);
+inject(ConnectionState)(DatabaseSystem, 'connectionState');
 
 
 class UserLoader {
 
-  mongoDatabaseSystem
+  databaseSystem
 
 }
 component()(UserLoader);
-inject(MongoDatabaseSystem)(UserLoader, 'mongoDatabaseSystem');
+inject(DatabaseSystem)(UserLoader, 'databaseSystem');
 
 
 class AccountAccessor {
@@ -30,11 +39,11 @@ inject(UserLoader)(AccountAccessor, 'userLoader');
 
 class UserMutator {
 
-  mongoDatabaseSystem
+  databaseSystem
 
 }
 component()(UserMutator);
-inject(MongoDatabaseSystem)(UserMutator, 'mongoDatabaseSystem');
+inject(DatabaseSystem)(UserMutator, 'databaseSystem');
 
 
 class ChangeEmailProcessor {

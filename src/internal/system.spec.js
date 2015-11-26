@@ -5,10 +5,13 @@ import SystemComponentType from './system';
 
 
 describe('SystemComponentType', () => {
-  it('should not allow any injectable types', () => {
+  it('should whitelist allowed injectable types', () => {
     const allowedTypes = SystemComponentType.injectTypeWhitelist;
-    assert.equal(allowedTypes.length, 0);
+
+    assert.deepEqual(allowedTypes, ['State']);
+    assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
   });
+
 
   describe('validation', () => {
     it('should always succeed', () => {

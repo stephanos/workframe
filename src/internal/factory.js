@@ -60,6 +60,7 @@ class ComponentFactory {
 
   build(input, namespace) {
     const type = getTypeFor(this.types, input);
+    type.verify(input);
     const name = getNameFor(input, type, this.validator);
 
     addName(input, name);

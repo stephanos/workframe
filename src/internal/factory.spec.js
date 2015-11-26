@@ -7,14 +7,17 @@ import ComponentFactory from './factory';
 
 let factory;
 let validateName;
+let validateComp;
 let addToRegistry;
 
 describe('Factory', () => {
   beforeEach(() => {
     addToRegistry = sinon.spy();
+    validateComp = sinon.stub();
     validateName = sinon.stub().returns(true);
 
     factory = new ComponentFactory([{
+      verify: validateComp,
       typeName: 'Component',
       injectTypeWhitelist: ['Component'],
     }], {
@@ -22,6 +25,17 @@ describe('Factory', () => {
     }, {
       isValidName: validateName,
     });
+  });
+
+  it('should fail if type verification fails', () => {
+    class MyComponent {
+    }
+
+    validateComp.withArgs(MyComponent).throws(new Error('invalid'));
+
+    assert.throws(
+      () => factory.build(MyComponent),
+      (err) => err.message === 'invalid');
   });
 
   it('should fail if type is unknown', () => {
@@ -41,7 +55,7 @@ describe('Factory', () => {
       }
     }
 
-    validateName.returns(false);
+    validateName.withArgs('Invalid_Name').returns(false);
 
     assert.throws(
       () => factory.build(Invalid_NameComponent),
