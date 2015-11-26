@@ -40,7 +40,6 @@
     "build": "gulp default"
   },
   "dependencies": {
-    "agenda": "^0.7.3",
     "immutable": "^3.7.5",
     "lodash": "^3.10.1"
   }
