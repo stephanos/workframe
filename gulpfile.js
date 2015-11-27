@@ -84,7 +84,7 @@ gulp.task('coveralls', function (done) {
 
 
 gulp.task('watch', function () {
-  gulp.watch(['src/**/*.js'], gulp.series('package'));
+  gulp.watch(['src/**/*.js', 'lib/**/*.js'], gulp.series('package'));
 });
 
 gulp.task('_daemon', (done) => {

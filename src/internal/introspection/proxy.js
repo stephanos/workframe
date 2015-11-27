@@ -1,9 +1,11 @@
-import {isFunction} from 'lodash';
+/* @flow */
+
+import util from 'util';
+
+import Collector from './collector';
 
 
-function proxy(target) {
-  target.calls = [];
-
+function proxy(target: Object, collector: Collector): Object {
   const proto = Object.getPrototypeOf(target);
   Object.getOwnPropertyNames(proto).forEach((key) => {
     if (key === 'constructor') {
@@ -11,18 +13,19 @@ function proxy(target) {
     }
 
     const prop = target[key];
-    if (!isFunction(prop)) {
+    if (!util.isFunction(prop)) {
       return;
     }
 
     target[key] = (...args) => {
-      target.calls.push({
+      collector.add({
         method: key,
         arguments: args,
       });
       return prop.apply(target, args);
     };
   });
+
   return target;
 }
 

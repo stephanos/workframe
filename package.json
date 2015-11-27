@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "immutable": "^3.7.5",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "object-sizeof": "^1.0.6"
   }
 }
