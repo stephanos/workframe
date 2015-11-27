@@ -1,20 +1,23 @@
 /* @flow */
 
-type Call = {
+type Actio = {
   method: string;
   arguments: Array<any>;
+};
+
+type Reactio = {
 };
 
 
 class Collector {
 
-  _heap: Array<Call>;
+  _heap: Array<Actio | Reactio>;
 
   constructor() {
     this._heap = [];
   }
 
-  add(call: Call) {
+  add(call: Actio | Reactio) {
     this._heap.push(call);
   }
 }

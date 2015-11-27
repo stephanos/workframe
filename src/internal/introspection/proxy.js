@@ -5,9 +5,11 @@ import util from 'util';
 import Collector from './collector';
 
 
-function proxy(target: Object, collector: Collector): Object {
+function proxy(target: Object,
+               idGenerator: () => string,
+               collector: Collector): Object {
   const proto = Object.getPrototypeOf(target);
-  Object.getOwnPropertyNames(proto).forEach((key) => {
+  Object.getOwnPropertyNames(proto).forEach((key: string) => {
     if (key === 'constructor') {
       return;
     }
@@ -18,11 +20,18 @@ function proxy(target: Object, collector: Collector): Object {
     }
 
     target[key] = (...args) => {
+      const id = idGenerator();
       collector.add({
+        id: id,
         method: key,
         arguments: args,
       });
-      return prop.apply(target, args);
+      const result = prop.apply(target, args);
+      collector.add({
+        id: id,
+        result: result,
+      });
+      return result;
     };
   });
 
