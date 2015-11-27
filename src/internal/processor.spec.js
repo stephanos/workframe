@@ -8,7 +8,7 @@ describe('ProcessorComponentType', () => {
   it('should whitelist allowed injectable types', () => {
     const allowedTypes = ProcessorComponentType.injectTypeWhitelist;
 
-    assert.deepEqual(allowedTypes, ['Behavior', 'Loader', 'Mutator', 'Processor']);
+    assert.deepEqual(allowedTypes, ['Behavior', 'Mutator', 'Processor', 'Viewer']);
     assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
   });
 

@@ -8,16 +8,16 @@ describe('MutatorComponentType', () => {
   it('should whitelist allowed injectable types', () => {
     const allowedTypes = MutatorComponentType.injectTypeWhitelist;
 
-    assert.deepEqual(allowedTypes, ['Loader', 'System']);
+    assert.deepEqual(allowedTypes, ['System', 'Viewer']);
     assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
   });
 
   describe('validation', () => {
     it('should always succeed', () => {
-      class Loader {
+      class Mutator {
       }
 
-      MutatorComponentType.verify(Loader);
+      MutatorComponentType.verify(Mutator);
     });
   });
 });

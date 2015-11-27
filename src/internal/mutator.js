@@ -1,7 +1,7 @@
 class MutatorComponentType {
 
   static typeName = 'Mutator';
-  static injectTypeWhitelist = ['Loader', 'System'];
+  static injectTypeWhitelist = ['System', 'Viewer'];
 
   static verify() {
   }

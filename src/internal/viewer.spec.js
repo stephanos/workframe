@@ -1,12 +1,12 @@
 import assert from 'assert';
 
 import ComponentValidator from './util';
-import LoaderDefinitionType from './loader';
+import ViewerDefinitionType from './viewer';
 
 
-describe('LoaderDefinitionType', () => {
+describe('ViewerDefinitionType', () => {
   it('should whitelist allowed injectable types', () => {
-    const allowedTypes = LoaderDefinitionType.injectTypeWhitelist;
+    const allowedTypes = ViewerDefinitionType.injectTypeWhitelist;
 
     assert.deepEqual(allowedTypes, ['System']);
     assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
@@ -14,10 +14,10 @@ describe('LoaderDefinitionType', () => {
 
   describe('validation', () => {
     it('should always succeed', () => {
-      class Loader {
+      class Viewer {
       }
 
-      LoaderDefinitionType.verify(Loader);
+      ViewerDefinitionType.verify(Viewer);
     });
   });
 });

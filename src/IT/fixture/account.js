@@ -16,25 +16,25 @@ component()(DatabaseSystem);
 inject(ConnectionState)(DatabaseSystem, 'connectionState');
 
 
-class UserLoader {
+class UserViewer {
 
   databaseSystem
 
 }
-component()(UserLoader);
-inject(DatabaseSystem)(UserLoader, 'databaseSystem');
+component()(UserViewer);
+inject(DatabaseSystem)(UserViewer, 'databaseSystem');
 
 
 class AccountAccessor {
 
-  userLoader
+  userViewer
 
   access(signal) {
     this.signal = signal;
   }
 }
 component()(AccountAccessor);
-inject(UserLoader)(AccountAccessor, 'userLoader');
+inject(UserViewer)(AccountAccessor, 'userViewer');
 
 
 class UserMutator {
