@@ -1,15 +1,9 @@
-/* @flow */
-
 import util from 'util';
 
-import Collector from './collector';
 
-
-function proxy(target: Object,
-               idGenerator: () => string,
-               collector: Collector): Object {
+function proxy(target, idGenerator, collector) {
   const proto = Object.getPrototypeOf(target);
-  Object.getOwnPropertyNames(proto).forEach((key: string) => {
+  Object.getOwnPropertyNames(proto).forEach((key) => {
     if (key === 'constructor') {
       return;
     }
