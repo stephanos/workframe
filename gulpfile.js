@@ -27,7 +27,7 @@ function handleError(err, options) {
 
 
 gulp.task('clean', function(done) {
-  del.sync(['dist']);
+  del.sync(['dist', 'coverage']);
   done();
 });
 
@@ -55,21 +55,27 @@ gulp.task('typecheck', function () {
     }));
 });
 
-gulp.task('test', function () {
-  return gulp.src('src/**/*.spec.js')
-    .pipe(mocha({
-      ui: 'bdd',
-      reporter: 'dot'
+gulp.task('test', function (done) {
+  gulp.src(['src/**/*.js', '!src/**/*.spec.js'])
+    .pipe(istanbul({
+      instrumenter: isparta.Instrumenter,
+      includeUntested: true
     }))
-    .on('error', handleError);
-});
-
-gulp.task('pre-test', function (done) {
-  done()
-  // return gulp.src(['src/**/*.js'])
-  //   .pipe(babel())
-  //   .pipe(istanbul({includeUntested: true, instrumenter: isparta.Instrumenter}))
-  //   .pipe(istanbul.hookRequire());
+    .pipe(istanbul.hookRequire())
+    .on('finish', function() {
+      gulp.src('src/**/*.spec.js', {read: false})
+        .pipe(mocha({
+          ui: 'bdd',
+          reporter: 'dot'
+        }))
+        .on('error', handleError)
+        .pipe(istanbul.writeReports({
+          dir: 'coverage',
+          reportOpts: {dir: 'coverage'},
+          reporters: ['lcov']
+        }))
+        .on('end', done);
+    });
 });
 
 gulp.task('coveralls', function (done) {
@@ -94,7 +100,7 @@ gulp.task('_daemon', (done) => {
 
 
 gulp.task('package',
-  gulp.series('build', 'lint', 'typecheck', 'pre-test', 'test'));
+  gulp.series('build', 'lint', 'typecheck', 'test', 'coveralls'));
 
 gulp.task('dev',
   gulp.series('_daemon', 'clean', 'package', 'watch'));
