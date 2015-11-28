@@ -5,13 +5,13 @@ import Registry from './registry';
 
 
 let registry;
-let optsForComponent;
+let componentDescriptor;
 
 describe('Registry', () => {
   beforeEach(() => {
     registry = new Registry();
 
-    optsForComponent = {
+    componentDescriptor = {
       namespace: 'ns',
       type: 'type',
       name: 'name',
@@ -23,7 +23,7 @@ describe('Registry', () => {
       class Component {
       }
 
-      registry.add(Component, optsForComponent);
+      registry.add(Component, componentDescriptor);
     });
 
     where([
@@ -31,7 +31,7 @@ describe('Registry', () => {
     ], () => {
       it('should fail for invalid Component', (ctx) => {
         assert.throws(
-          () => registry.add(ctx.value, optsForComponent),
+          () => registry.add(ctx.value, componentDescriptor),
           (err) => err.message === `can not add '${ctx.value}': invalid value`);
       });
     });
@@ -40,10 +40,10 @@ describe('Registry', () => {
       class Component {
       }
 
-      registry.add(Component, optsForComponent);
+      registry.add(Component, componentDescriptor);
 
       assert.throws(
-        () => registry.add(Component, optsForComponent),
+        () => registry.add(Component, componentDescriptor),
         (err) => err.message === `can not register 'Component': 'ns:name:type' is already registered`);
     });
 
@@ -51,9 +51,9 @@ describe('Registry', () => {
       it('should succeed', () => {
         class Component {
         }
-        optsForComponent.isSingleton = true;
+        componentDescriptor.isSingleton = true;
 
-        registry.add(Component, optsForComponent);
+        registry.add(Component, componentDescriptor);
       });
     });
   });
@@ -61,7 +61,7 @@ describe('Registry', () => {
   describe('resolving a component', () => {
     class DepA {
     }
-    const optsForDepA = {
+    const descriptorDepA = {
       namespace: 'ns',
       type: 'type',
       name: 'depA',
@@ -71,7 +71,7 @@ describe('Registry', () => {
     class DepB {
       dependencyA = null
     }
-    const optsForDepB = {
+    const descriptorDepB = {
       namespace: 'ns',
       type: 'type',
       name: 'depB',
@@ -86,9 +86,8 @@ describe('Registry', () => {
       class Component {
       }
 
-      registry.add(Component, optsForComponent);
-
-      assert.ok(registry.get('ns:name:type'));
+      registry.add(Component, componentDescriptor);
+      assert.ok(registry.get(componentDescriptor));
     });
 
     it('should succeed for component with one direct dependency', () => {
@@ -96,15 +95,15 @@ describe('Registry', () => {
         dependencyA
       }
 
-      optsForComponent.dependencies = new Map([['dependencyA', {
+      componentDescriptor.dependencies = new Map([['dependencyA', {
         namespace: 'ns',
         type: 'type',
         name: 'depA',
       }]]);
 
-      registry.add(DepA, optsForDepA);
-      registry.add(Component, optsForComponent);
-      const resolved = registry.get('ns:name:type');
+      registry.add(DepA, descriptorDepA);
+      registry.add(Component, componentDescriptor);
+      const resolved = registry.get(componentDescriptor);
 
       assert.ok(resolved);
       assert.ok(resolved.dependencyA);
@@ -115,16 +114,16 @@ describe('Registry', () => {
         dependencyB
       }
 
-      optsForComponent.dependencies = new Map([['dependencyB', {
+      componentDescriptor.dependencies = new Map([['dependencyB', {
         namespace: 'ns',
         type: 'type',
         name: 'depB',
       }]]);
 
-      registry.add(DepA, optsForDepA);
-      registry.add(DepB, optsForDepB);
-      registry.add(Component, optsForComponent);
-      const resolved = registry.get('ns:name:type');
+      registry.add(DepA, descriptorDepA);
+      registry.add(DepB, descriptorDepB);
+      registry.add(Component, componentDescriptor);
+      const resolved = registry.get(componentDescriptor);
 
       assert.ok(resolved);
       assert.ok(resolved.dependencyB);
@@ -137,7 +136,7 @@ describe('Registry', () => {
         dependencyB = null
       }
 
-      optsForComponent.dependencies = new Map([
+      componentDescriptor.dependencies = new Map([
         ['dependencyA', {
           namespace: 'ns',
           type: 'type',
@@ -150,18 +149,18 @@ describe('Registry', () => {
         }],
       ]);
 
-      registry.add(DepA, optsForDepA);
-      registry.add(DepB, optsForDepB);
-      registry.add(Component, optsForComponent);
-      const resolved = registry.get('ns:name:type');
+      registry.add(DepA, descriptorDepA);
+      registry.add(DepB, descriptorDepB);
+      registry.add(Component, componentDescriptor);
+      const resolved = registry.get(componentDescriptor);
 
       assert.equal(resolved.dependencyB.dependencyA, resolved.dependencyA);
     });
 
     it('should fail for non-existing component', () => {
       assert.throws(
-        () => registry.get('ns:type:missing'),
-        (err) => err.message === `unable to resolve ID 'ns:type:missing': not found`);
+        () => registry.get(componentDescriptor),
+        (err) => err.message === `unable to resolve ID 'ns:name:type': not found`);
     });
 
     it('should fail for non-existing direct dependency', () => {
@@ -169,16 +168,16 @@ describe('Registry', () => {
         dependencyA = null
       }
 
-      optsForComponent.dependencies = new Map([['dependencyA', {
+      componentDescriptor.dependencies = new Map([['dependencyA', {
         namespace: 'ns',
         type: 'type',
         name: 'depA',
       }]]);
 
-      registry.add(Component, optsForComponent);
+      registry.add(Component, componentDescriptor);
 
       assert.throws(
-        () => registry.get('ns:name:type'),
+        () => registry.get(componentDescriptor),
         (err) => err.message === `unable to resolve ID 'ns:depA:type': not found (trace: 'ns:name:type')`);
     });
 
@@ -187,17 +186,17 @@ describe('Registry', () => {
         dependencyB = null
       }
 
-      optsForComponent.dependencies = new Map([['dependencyB', {
+      componentDescriptor.dependencies = new Map([['dependencyB', {
         namespace: 'ns',
         name: 'depB',
         type: 'type',
       }]]);
 
-      registry.add(DepB, optsForDepB);
-      registry.add(Component, optsForComponent);
+      registry.add(DepB, descriptorDepB);
+      registry.add(Component, componentDescriptor);
 
       assert.throws(
-        () => registry.get('ns:name:type'),
+        () => registry.get(componentDescriptor),
         (err) => err.message === `unable to resolve ID 'ns:depA:type': not found (trace: 'ns:name:type' -> 'ns:depB:type')`);
     });
 
@@ -206,24 +205,24 @@ describe('Registry', () => {
         dependencyB = null
       }
 
-      optsForComponent.dependencies = new Map([['dependencyB', {
+      componentDescriptor.dependencies = new Map([['dependencyB', {
         namespace: 'ns',
         type: 'type',
         name: 'depB',
       }]]);
 
-      optsForDepA.dependencies = new Map([['dependencyB', {
+      descriptorDepA.dependencies = new Map([['dependencyB', {
         namespace: 'ns',
         type: 'type',
         name: 'depB',
       }]]);
 
-      registry.add(DepA, optsForDepA);
-      registry.add(DepB, optsForDepB);
-      registry.add(Component, optsForComponent);
+      registry.add(DepA, descriptorDepA);
+      registry.add(DepB, descriptorDepB);
+      registry.add(Component, componentDescriptor);
 
       assert.throws(
-        () => registry.get('ns:name:type'),
+        () => registry.get(componentDescriptor),
         (err) => err.message === `unable to resolve ID 'ns:depB:type': circular dependency 'ns:name:type' -> 'ns:depB:type' -> 'ns:depA:type' -> 'ns:depB:type'`);
     });
 
@@ -231,11 +230,11 @@ describe('Registry', () => {
       it('should succeed', () => {
         class Component {
         }
-        optsForComponent.isSingleton = true;
+        componentDescriptor.isSingleton = true;
 
-        registry.add(Component, optsForComponent);
-        const resolved1 = registry.get('ns:name:type');
-        const resolved2 = registry.get('ns:name:type');
+        registry.add(Component, componentDescriptor);
+        const resolved1 = registry.get(componentDescriptor);
+        const resolved2 = registry.get(componentDescriptor);
 
         assert.equal(resolved1, resolved2);
       });

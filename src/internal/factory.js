@@ -71,9 +71,9 @@ class ComponentFactory {
     this.registry.add(input, {
       isSingleton: type.isSingleton,
       dependencies: input._dependencies,
-      namespace: namespace,
+      namespace: namespace || 'default',
       name: name,
-      type: type,
+      type: type.typeName,
     });
   }
 }

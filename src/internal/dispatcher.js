@@ -1,8 +1,8 @@
 class Dispatcher {
 
-  constructor(componentValidator, componentRegistry) {
-    this.validator = componentValidator;
+  constructor(componentRegistry, componentValidator) {
     this.registry = componentRegistry;
+    this.validator = componentValidator;
   }
 
   handle(Component, signal) {
@@ -10,13 +10,18 @@ class Dispatcher {
       throw new Error(`unable to handle signal: invalid Component '${Component.name}'`);
     }
 
-    const getInstance = () => this.registry.get(Component.id);
-    if (Component.type === 'Accessor') {
+    const getInstance = () => this.registry.get({
+      namespace: Component._namespace,
+      name: Component._name,
+      type: Component._type,
+    });
+
+    if (Component._type === 'Accessor') {
       return getInstance().access(signal);
-    } else if (Component.type === 'Processor') {
+    } else if (Component._type === 'Processor') {
       return getInstance().process(signal);
     }
-    throw new Error(`unable to handle signal: Component must be Accessor or Processor but is ${Component.type}`);
+    throw new Error(`unable to handle signal: Component must be Accessor or Processor but is ${Component._type}`);
   }
 }
 

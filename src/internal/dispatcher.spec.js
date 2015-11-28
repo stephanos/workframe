@@ -14,21 +14,22 @@ describe('Dispatcher', () => {
     isComponent = sinon.stub().returns(true);
     getComponent = sinon.stub();
     dispatcher = new Dispatcher({
-      isComponent: isComponent,
-    }, {
       get: getComponent,
+    }, {
+      isComponent: isComponent,
     });
   });
 
   it('should call a Processor', () => {
     const Component = {
-      id: 'my-id',
-      type: 'Processor',
+      _namespace: 'ns',
+      _name: 'my-name',
+      _type: 'Processor',
     };
 
-    getComponent.withArgs('my-id').returns({
-      process: sinon.stub().returns('success'),
-    });
+    getComponent
+      .withArgs({ namespace: 'ns', name: 'my-name', type: 'Processor' })
+      .returns({ process: sinon.stub().returns('success') });
 
     const result = dispatcher.handle(Component, {});
     assert.equal(result, 'success');
@@ -36,13 +37,14 @@ describe('Dispatcher', () => {
 
   it('should call an Accessor', () => {
     const Component = {
-      id: 'my-id',
-      type: 'Accessor',
+      _namespace: 'ns',
+      _name: 'my-name',
+      _type: 'Accessor',
     };
 
-    getComponent.withArgs('my-id').returns({
-      access: sinon.stub().returns('success'),
-    });
+    getComponent
+      .withArgs({ namespace: 'ns', name: 'my-name', type: 'Accessor' })
+      .returns({ access: sinon.stub().returns('success') });
 
     const result = dispatcher.handle(Component, {});
     assert.equal(result, 'success');
@@ -50,8 +52,9 @@ describe('Dispatcher', () => {
 
   it('should fail for other components', () => {
     const Component = {
-      id: 'my-id',
-      type: 'Behavior',
+      _namespace: 'ns',
+      _name: 'my-name',
+      _type: 'Behavior',
     };
 
     assert.throws(
@@ -74,11 +77,14 @@ describe('Dispatcher', () => {
 
   it('should fail for unknown component', () => {
     const Component = {
-      id: 'my-id',
-      type: 'Accessor',
+      _namespace: 'ns',
+      _name: 'my-name',
+      _type: 'Accessor',
     };
 
-    getComponent.withArgs('my-id').throws({ message: 'not found' });
+    getComponent
+      .withArgs({ namespace: 'ns', name: 'my-name', type: 'Accessor' })
+      .returns({ access: sinon.stub().throws({ message: 'not found' }) });
 
     assert.throws(
       () => dispatcher.handle(Component, {}),

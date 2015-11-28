@@ -171,4 +171,21 @@ describe('Factory', () => {
 
     assert.deepEqual(MyComponent._injectTypeWhitelist, ['Component']);
   });
+
+  it('should add Component to registry', () => {
+    class MyComponent {
+    }
+
+    factory.build(MyComponent);
+
+    assert.ok(addToRegistry.calledOnce);
+    assert.deepEqual(addToRegistry.firstCall.args[0], MyComponent);
+    assert.deepEqual(addToRegistry.firstCall.args[1], {
+      isSingleton: undefined,
+      dependencies: undefined,
+      namespace: 'default',
+      name: 'My',
+      type: 'Component',
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import {isFunction} from 'lodash';
+import {isFunction, isObject} from 'util';
 import {List} from 'immutable';
 
 
@@ -80,11 +80,9 @@ function createInstance(container, rootId) {
 
 class Registry {
 
-  constructor() {
-    this._valueById = {};
-    this._factoryById = {};
-    this._dependenciesById = {};
-  }
+  _valueById = {};
+  _factoryById = {};
+  _dependenciesById = {};
 
   add(Factory, opts) {
     const id = generateId(opts);
@@ -98,8 +96,12 @@ class Registry {
     }
   }
 
-  get(id) {
-    return createInstance(this, id);
+  get(descriptor) {
+    if (!isObject(descriptor)) {
+      throw new ResolveError(`unable to resolve: invalid descriptor '${descriptor}'`);
+    }
+
+    return createInstance(this, generateId(descriptor));
   }
 }
 
