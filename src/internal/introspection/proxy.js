@@ -1,36 +1,47 @@
 import util from 'util';
 
 
-function proxy(target, idGenerator, collector) {
-  const proto = Object.getPrototypeOf(target);
-  Object.getOwnPropertyNames(proto).forEach((key) => {
-    if (key === 'constructor') {
-      return;
-    }
+class Proxy {
 
-    const prop = target[key];
-    if (!util.isFunction(prop)) {
-      return;
-    }
+  constructor(collector, idGenerator, clock) {
+    this.collector = collector;
+    this.idGenerator = idGenerator;
+    this.clock = clock;
+  }
 
-    target[key] = (...args) => {
-      const id = idGenerator();
-      collector.add({
-        id: id,
-        method: key,
-        arguments: args,
-      });
-      const result = prop.apply(target, args);
-      collector.add({
-        id: id,
-        result: result,
-      });
-      return result;
-    };
-  });
+  wrap(target) {
+    const proto = Object.getPrototypeOf(target);
+    Object.getOwnPropertyNames(proto).forEach((key) => {
+      if (key === 'constructor') {
+        return;
+      }
 
-  return target;
+      const prop = target[key];
+      if (!util.isFunction(prop)) {
+        return;
+      }
+
+      target[key] = (...args) => {
+        const id = this.idGenerator.next();
+        this.collector.add({
+          id: id,
+          method: key,
+          arguments: args,
+          time: this.clock.now(),
+        });
+        const result = prop.apply(target, args);
+        this.collector.add({
+          id: id,
+          result: result,
+          time: this.clock.now(),
+        });
+        return result;
+      };
+    });
+
+    return target;
+  }
 }
 
 
-export default proxy;
+export default Proxy;

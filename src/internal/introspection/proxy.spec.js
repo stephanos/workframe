@@ -1,18 +1,24 @@
 import assert from 'assert';
 import sinon from 'sinon';
 
-import proxy from './proxy';
+import Proxy from './proxy';
 
 
+let proxy;
 let collector;
-let idGenerator;
 
-describe('proxy', () => {
+describe('Proxy', () => {
   beforeEach(() => {
     collector = {
       add: sinon.spy(),
     };
-    idGenerator = sinon.stub().returns(101);
+    const idGenerator = {
+      next: sinon.stub().returns(101),
+    };
+    const clock = {
+      now: sinon.stub().returns(1234567890),
+    };
+    proxy = new Proxy(collector, idGenerator, clock);
   });
 
   it('should still return original return value', () => {
@@ -22,7 +28,7 @@ describe('proxy', () => {
       }
     }
 
-    const instance = proxy(new Component(), idGenerator, collector);
+    const instance = proxy.wrap(new Component());
     const ret = instance.doSomething();
 
     assert.equal(ret, 42);
@@ -35,7 +41,7 @@ describe('proxy', () => {
       }
     }
 
-    const instance = proxy(new Component(), idGenerator, collector);
+    const instance = proxy.wrap(new Component());
     instance.doSomething();
 
     assert.ok(collector.add.calledTwice);
@@ -43,10 +49,12 @@ describe('proxy', () => {
       id: 101,
       method: 'doSomething',
       arguments: [],
+      time: 1234567890,
     }]);
     assert.deepEqual(collector.add.secondCall.args, [{
       id: 101,
       result: 42,
+      time: 1234567890,
     }]);
   });
 
@@ -57,7 +65,7 @@ describe('proxy', () => {
       }
     }
 
-    const instance = proxy(new Component(), idGenerator, collector);
+    const instance = proxy.wrap(new Component());
     instance.doSomething('arg1', 'arg2');
 
     assert.ok(collector.add.calledTwice);
@@ -65,10 +73,12 @@ describe('proxy', () => {
       id: 101,
       method: 'doSomething',
       arguments: ['arg1', 'arg2'],
+      time: 1234567890,
     }]);
     assert.deepEqual(collector.add.secondCall.args, [{
       id: 101,
       result: 42,
+      time: 1234567890,
     }]);
   });
 
@@ -77,7 +87,7 @@ describe('proxy', () => {
       prop = 42;
     }
 
-    const instance = proxy(new Component(), idGenerator, collector);
+    const instance = proxy.wrap(new Component());
     const prop = instance.prop;
 
     assert.equal(collector.add.callCount, 0);

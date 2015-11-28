@@ -1,6 +1,9 @@
 import idGenerator from 'node-uuid';
 
 
-export default function uuid() {
-  return idGenerator.v1();
-}
+export default {
+
+  next: () => {
+    return idGenerator.v1();
+  },
+};
