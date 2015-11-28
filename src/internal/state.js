@@ -3,16 +3,15 @@ import Immutable from 'immutable';
 
 class State {
 
-  _data;
-
-  constructor() {
-    this._data = Immutable.Map();
-  }
-
+  _data = Immutable.Map();
 
   update(fn) {
     // TODO: validate it's still a Map()
-    this._data = fn(this._data);
+    const result = fn(this._data);
+    if (!(result instanceof Immutable.Map)) {
+      throw new Error(`invalid state update: must be Immutable.Map`);
+    }
+    this._data = result;
   }
 
   get() {

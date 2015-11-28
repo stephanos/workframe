@@ -50,4 +50,12 @@ describe('State', () => {
 
     assert.deepEqual(state.get().toJS(), Immutable.Map({key: 'value'}).toJS());
   });
+
+  it('should fail to update for invalid value', () => {
+    const state = new State();
+
+    assert.throws(
+      () => state.update(() => undefined),
+      (err) => err.message === `invalid state update: must be Immutable.Map`);
+  });
 });
