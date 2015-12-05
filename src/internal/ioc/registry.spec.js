@@ -1,240 +1,175 @@
 import assert from 'assert';
-import where from 'data-driven';
 
 import Registry from './registry';
 
 
+let type;
 let registry;
-let componentDescriptor;
+let myComponent;
 
 describe('Registry', () => {
+  class MyComponent {
+  }
+
   beforeEach(() => {
     registry = new Registry();
-
-    componentDescriptor = {
+    type = {
+      typeName: 'Component',
+      injectTypeWhitelist: ['Component'],
+    };
+    myComponent = {
+      id: 0,
+      factory: MyComponent,
       namespace: 'ns',
-      type: 'type',
-      name: 'name',
+      name: 'my',
+      type: type,
+      dependencies: {},
     };
   });
 
   describe('adding a component', () => {
     it('should succeed', () => {
-      class Component {
-      }
-
-      registry.add(Component, componentDescriptor);
-    });
-
-    where([
-      {value: 0}, {value: null}, {value: []}, {value: ''},
-    ], () => {
-      it('should fail for invalid Component', (ctx) => {
-        assert.throws(
-          () => registry.add(ctx.value, componentDescriptor),
-          (err) => err.message === `can not add '${ctx.value}': invalid value`);
-      });
+      registry.add(myComponent);
     });
 
     it('should fail for already existing ID', () => {
-      class Component {
-      }
-
-      registry.add(Component, componentDescriptor);
+      registry.add(myComponent);
 
       assert.throws(
-        () => registry.add(Component, componentDescriptor),
-        (err) => err.message === `can not register 'Component': 'ns:name:type' is already registered`);
+        () => registry.add(myComponent),
+        (err) => err.message === `can not register 'my': already registered`);
     });
 
     describe('that is a singleton', () => {
       it('should succeed', () => {
-        class Component {
-        }
-        componentDescriptor.isSingleton = true;
+        type.isSingleton = true;
 
-        registry.add(Component, componentDescriptor);
+        registry.add(myComponent);
       });
     });
   });
 
   describe('resolving a component', () => {
-    class DepA {
-    }
-    const descriptorDepA = {
-      namespace: 'ns',
-      type: 'type',
-      name: 'depA',
-      dependencies: new Map(),
-    };
+    class ComponentA {}
+    let componentA;
 
-    class DepB {
-      dependencyA = null
-    }
-    const descriptorDepB = {
-      namespace: 'ns',
-      type: 'type',
-      name: 'depB',
-      dependencies: new Map([['dependencyA', {
+    class ComponentB {}
+    let componentB;
+
+    beforeEach(() => {
+      componentA = {
+        id: 1,
+        factory: ComponentA,
         namespace: 'ns',
-        type: 'type',
-        name: 'depA',
-      }]]),
-    };
+        name: 'A',
+        type: type,
+        dependencies: {},
+      };
+      componentB = {
+        id: 2,
+        factory: ComponentB,
+        namespace: 'ns',
+        name: 'B',
+        type: type,
+        dependencies: { 'dependencyA': componentA },
+      };
+    });
 
     it('should succeed for component without dependencies', () => {
-      class Component {
-      }
+      registry.add(myComponent);
 
-      registry.add(Component, componentDescriptor);
-      assert.ok(registry.get(componentDescriptor));
+      const resolved = registry.get(myComponent);
+
+      assert.ok(resolved);
+      assert.ok(resolved instanceof MyComponent);
     });
 
     it('should succeed for component with one direct dependency', () => {
-      class Component {
-        dependencyA
-      }
+      myComponent.dependencies = { 'dependencyA': componentA };
 
-      componentDescriptor.dependencies = new Map([['dependencyA', {
-        namespace: 'ns',
-        type: 'type',
-        name: 'depA',
-      }]]);
-
-      registry.add(DepA, descriptorDepA);
-      registry.add(Component, componentDescriptor);
-      const resolved = registry.get(componentDescriptor);
+      registry.add(componentA);
+      registry.add(myComponent);
+      const resolved = registry.get(myComponent);
 
       assert.ok(resolved);
       assert.ok(resolved.dependencyA);
     });
 
     it('should succeed for component with transitive dependencies', () => {
-      class Component {
-        dependencyB
-      }
+      myComponent.dependencies = { 'dependencyB': componentB };
 
-      componentDescriptor.dependencies = new Map([['dependencyB', {
-        namespace: 'ns',
-        type: 'type',
-        name: 'depB',
-      }]]);
-
-      registry.add(DepA, descriptorDepA);
-      registry.add(DepB, descriptorDepB);
-      registry.add(Component, componentDescriptor);
-      const resolved = registry.get(componentDescriptor);
+      registry.add(componentA);
+      registry.add(componentB);
+      registry.add(myComponent);
+      const resolved = registry.get(myComponent);
 
       assert.ok(resolved);
       assert.ok(resolved.dependencyB);
       assert.ok(resolved.dependencyB.dependencyA);
     });
 
-    it('should only create each dependency once', () => {
-      class Component {
-        dependencyA = null
-        dependencyB = null
-      }
+    it('should only create each dependency only once', () => {
+      myComponent.dependencies = {
+        'dependencyA': componentA,
+        'dependencyB': componentB,
+      };
 
-      componentDescriptor.dependencies = new Map([
-        ['dependencyA', {
-          namespace: 'ns',
-          type: 'type',
-          name: 'depA',
-        }],
-        ['dependencyB', {
-          namespace: 'ns',
-          type: 'type',
-          name: 'depB',
-        }],
-      ]);
-
-      registry.add(DepA, descriptorDepA);
-      registry.add(DepB, descriptorDepB);
-      registry.add(Component, componentDescriptor);
-      const resolved = registry.get(componentDescriptor);
+      registry.add(componentA);
+      registry.add(componentB);
+      registry.add(myComponent);
+      const resolved = registry.get(myComponent);
 
       assert.equal(resolved.dependencyB.dependencyA, resolved.dependencyA);
     });
 
-    it('should fail for non-existing component', () => {
+    it('should fail for missing component', () => {
       assert.throws(
-        () => registry.get(componentDescriptor),
-        (err) => err.message === `unable to resolve ID 'ns:name:type': not found`);
+        () => registry.get(myComponent),
+        (err) => err.message === `unable to resolve 'MyComponent': not found`);
     });
 
-    it('should fail for non-existing direct dependency', () => {
-      class Component {
-        dependencyA = null
-      }
+    it('should fail for missing direct dependency', () => {
+      myComponent.dependencies = { 'dependencyA': componentA };
 
-      componentDescriptor.dependencies = new Map([['dependencyA', {
-        namespace: 'ns',
-        type: 'type',
-        name: 'depA',
-      }]]);
-
-      registry.add(Component, componentDescriptor);
+      registry.add(myComponent);
 
       assert.throws(
-        () => registry.get(componentDescriptor),
-        (err) => err.message === `unable to resolve ID 'ns:depA:type': not found (trace: 'ns:name:type')`);
+        () => registry.get(myComponent),
+        (err) => err.message === `unable to resolve 'ComponentA': not found (trace: 'MyComponent')`);
     });
 
-    it('should fail for non-existing transitive dependency', () => {
-      class Component {
-        dependencyB = null
-      }
+    it('should fail for missing transitive dependency', () => {
+      myComponent.dependencies = { 'dependencyB': componentB };
 
-      componentDescriptor.dependencies = new Map([['dependencyB', {
-        namespace: 'ns',
-        name: 'depB',
-        type: 'type',
-      }]]);
-
-      registry.add(DepB, descriptorDepB);
-      registry.add(Component, componentDescriptor);
+      registry.add(componentB);
+      registry.add(myComponent);
 
       assert.throws(
-        () => registry.get(componentDescriptor),
-        (err) => err.message === `unable to resolve ID 'ns:depA:type': not found (trace: 'ns:name:type' -> 'ns:depB:type')`);
+        () => registry.get(myComponent),
+        (err) => err.message === `unable to resolve 'ComponentA': not found (trace: 'MyComponent' -> 'ComponentB')`);
     });
 
     it('should fail for circular dependency', () => {
-      class Component {
-        dependencyB = null
-      }
+      myComponent.dependencies = { 'dependencyB': componentB };
+      componentB.dependencies = { 'dependencyA': componentA };
+      componentA.dependencies = { 'dependencyB': componentB };
 
-      componentDescriptor.dependencies = new Map([['dependencyB', {
-        namespace: 'ns',
-        type: 'type',
-        name: 'depB',
-      }]]);
-
-      descriptorDepA.dependencies = new Map([['dependencyB', {
-        namespace: 'ns',
-        type: 'type',
-        name: 'depB',
-      }]]);
-
-      registry.add(DepA, descriptorDepA);
-      registry.add(DepB, descriptorDepB);
-      registry.add(Component, componentDescriptor);
+      registry.add(componentA);
+      registry.add(componentB);
+      registry.add(myComponent);
 
       assert.throws(
-        () => registry.get(componentDescriptor),
-        (err) => err.message === `unable to resolve ID 'ns:depB:type': circular dependency 'ns:name:type' -> 'ns:depB:type' -> 'ns:depA:type' -> 'ns:depB:type'`);
+        () => registry.get(myComponent),
+        (err) => err.message === `unable to resolve 'ComponentB': circular dependency 'MyComponent' -> 'ComponentB' -> 'ComponentA' -> 'ComponentB'`);
     });
 
     describe('that is a singleton', () => {
       it('should succeed', () => {
-        class Component {
-        }
-        componentDescriptor.isSingleton = true;
+        type.isSingleton = true;
 
-        registry.add(Component, componentDescriptor);
-        const resolved1 = registry.get(componentDescriptor);
-        const resolved2 = registry.get(componentDescriptor);
+        registry.add(myComponent);
+        const resolved1 = registry.get(myComponent);
+        const resolved2 = registry.get(myComponent);
 
         assert.equal(resolved1, resolved2);
       });

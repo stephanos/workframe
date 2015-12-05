@@ -1,6 +1,5 @@
 import assert from 'assert';
 
-import ComponentValidator from './util';
 import ProcessorComponentType from './processor';
 
 
@@ -9,7 +8,6 @@ describe('ProcessorComponentType', () => {
     const allowedTypes = ProcessorComponentType.injectTypeWhitelist;
 
     assert.deepEqual(allowedTypes, ['Behavior', 'Mutator', 'Processor', 'Viewer']);
-    assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
   });
 
   describe('validation', () => {

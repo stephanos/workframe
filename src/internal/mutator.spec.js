@@ -1,6 +1,5 @@
 import assert from 'assert';
 
-import ComponentValidator from './util';
 import MutatorComponentType from './mutator';
 
 
@@ -9,7 +8,6 @@ describe('MutatorComponentType', () => {
     const allowedTypes = MutatorComponentType.injectTypeWhitelist;
 
     assert.deepEqual(allowedTypes, ['System', 'Viewer']);
-    assert.ok((new ComponentValidator()).isValidInjectTypeWhitelist(allowedTypes));
   });
 
   describe('validation', () => {

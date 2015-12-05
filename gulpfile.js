@@ -18,7 +18,7 @@ require("babel-core/register");
 process.env.FLOW_BIN = path.join(process.cwd(), 'node_modules/flow-bin/vendor/flow');
 
 
-function handleError(err, options) {
+function handleError(err) {
   gutil.log(err);
   if (!daemon) {
     process.exit(1);
@@ -41,21 +41,21 @@ gulp.task('build', function () {
 });
 
 gulp.task('lint', function () {
-  return gulp.src(['src/**/*.js'])
+  return gulp.src(['src/**/*.js', 'it/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(gulpif(!daemon, eslint.failAfterError()));
 });
 
 gulp.task('typecheck', function () {
-  return gulp.src(['src/**/*.js'])
+  return gulp.src(['src/**/*.js', 'it/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(flowtype({
       abort: !daemon
     }));
 });
 
-gulp.task('test', function (done) {
+gulp.task('unit-test', function (done) {
   gulp.src(['src/**/*.js', '!src/**/*.spec.js'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
@@ -68,7 +68,10 @@ gulp.task('test', function (done) {
           ui: 'bdd',
           reporter: 'dot'
         }))
-        .on('error', handleError)
+        .on('error', (err) => {
+          handleError(err);
+          done();
+        })
         .pipe(istanbul.writeReports({
           dir: 'coverage',
           reportOpts: {dir: 'coverage'},
@@ -76,6 +79,19 @@ gulp.task('test', function (done) {
         }))
         .on('end', done);
     });
+});
+
+gulp.task('integration-test', function (done) {
+  gulp.src('it/**/*.spec.js', {read: false})
+    .pipe(mocha({
+      ui: 'bdd',
+      reporter: 'dot'
+    }))
+    .on('error', (err) => {
+      handleError(err);
+      done();
+    })
+    .pipe(require('gulp-callback')(done));
 });
 
 gulp.task('coveralls', function (done) {
@@ -90,7 +106,8 @@ gulp.task('coveralls', function (done) {
 
 
 gulp.task('watch', function () {
-  gulp.watch(['src/**/*.js', 'lib/**/*.js'], gulp.series('package'));
+  gulp.watch(['src/**/*.js', 'lib/**/*.js', 'it/**/*.js'],
+    gulp.series('package'));
 });
 
 gulp.task('_daemon', (done) => {
@@ -100,7 +117,7 @@ gulp.task('_daemon', (done) => {
 
 
 gulp.task('package',
-  gulp.series('build', 'lint', 'typecheck', 'test', 'coveralls'));
+  gulp.series('build', 'lint', 'typecheck', 'unit-test', 'integration-test', 'coveralls'));
 
 gulp.task('dev',
   gulp.series('_daemon', 'clean', 'package', 'watch'));

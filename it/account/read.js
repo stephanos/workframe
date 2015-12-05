@@ -1,4 +1,4 @@
-import {component, inject} from '../../../index.js';
+import {component, inject} from '../../src/index.js';
 import {DatabaseSystem} from './database';
 
 
@@ -6,9 +6,12 @@ class UserViewer {
 
   databaseSystem
 
+  getById(id) {
+    return this.databaseSystem.getById('user', id);
+  }
 }
-component()(UserViewer);
 inject(DatabaseSystem)(UserViewer, 'databaseSystem');
+component()(UserViewer);
 
 
 export class AccountAccessor {
@@ -16,8 +19,8 @@ export class AccountAccessor {
   userViewer
 
   access(signal) {
-    this.signal = signal;
+    return this.userViewer.getById(signal.userId);
   }
 }
-component()(AccountAccessor);
 inject(UserViewer)(AccountAccessor, 'userViewer');
+component()(AccountAccessor);

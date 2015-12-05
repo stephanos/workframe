@@ -1,4 +1,4 @@
-import {component, inject} from '../../../index.js';
+import {component, inject} from '../../src/index.js';
 import {DatabaseSystem} from './database';
 
 
@@ -7,8 +7,8 @@ class UserMutator {
   databaseSystem
 
 }
-component()(UserMutator);
 inject(DatabaseSystem)(UserMutator, 'databaseSystem');
+component()(UserMutator);
 
 
 export class ChangeEmailProcessor {
@@ -19,5 +19,5 @@ export class ChangeEmailProcessor {
     this.signal = signal;
   }
 }
-component()(ChangeEmailProcessor);
 inject(UserMutator)(ChangeEmailProcessor, 'userMutator');
+component()(ChangeEmailProcessor);

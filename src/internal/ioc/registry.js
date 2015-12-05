@@ -1,107 +1,76 @@
-import {isFunction, isObject} from 'util';
 import {List} from 'immutable';
 
+import {ResolveError, KeyError} from './errors';
 
-export class ResolveError extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.name = 'ResolveError';
-  }
-}
-
-export class EntryError extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.name = 'EntryError';
-  }
-}
-
-export class KeyError extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.name = 'KeyError';
-  }
-}
-
-function generateId(descriptor) {
-  return descriptor.namespace + ':' + descriptor.name + ':' + descriptor.type;
-}
-
-function checkIsFactory(container, id, Factory) {
-  if (!isFunction(Factory)) {
-    throw new EntryError(`can not add '${Factory}': invalid value`);
-  }
-}
 
 function checkIsNoDuplicate(container, id, Factory) {
-  if (container._valueById[id] || container._factoryById[id]) {
-    throw new KeyError(`can not register '${Factory.name}': '${id}' is already registered`);
+  if (container._valueById[id] || container._componentById[id]) {
+    throw new KeyError(`can not register '${Factory.name}': already registered`);
   }
 }
 
-function createInstance(container, rootId) {
+function createInstance(container, rootComponent) {
   const cache = {};
 
-  function resolve(id, trace) {
-    if (trace.contains(id)) {
-      throw new ResolveError(`unable to resolve ID '${id}': ` +
-        `circular dependency '${trace.push(id).join('\' -> \'')}'`);
+  function resolve(component, trace) {
+    function traceToString(list) {
+      return `'${list.map((c) => c.factory.name).join('\' -> \'')}'`;
     }
 
-    const Factory = container._factoryById[id];
-    if (!Factory) {
-      let message = `unable to resolve ID '${id}': not found`;
+    if (trace.contains(component)) {
+      throw new ResolveError(`unable to resolve '${component.factory.name}': ` +
+        `circular dependency ${traceToString(trace.push(component))}`);
+    }
+
+    if (container._componentById[component.id] === undefined) {
+      let message = `unable to resolve '${component.factory.name}': not found`;
       if (!trace.isEmpty()) {
-        message += ` (trace: '${trace.join('\' -> \'')}')`;
+        message += ` (trace: ${traceToString(trace)})`;
       }
       throw new ResolveError(message);
     }
 
-    const instance = container._valueById[id] || new Factory();
+    const instance = container._valueById[component.id] || new component.factory();
 
-    const dependencies = container._dependenciesById[id];
+    const dependencies = container._dependenciesById[component.id];
     if (dependencies) {
-      for (const [property, depDescr] of dependencies) {
-        const depId = generateId(depDescr);
-        const depVal = cache[depId] || resolve(depId, trace.push(id));
-        cache[depId] = depVal;
-        instance[property] = depVal;
+      for (const property in dependencies) {
+        if (dependencies.hasOwnProperty(property)) {
+          const depComp = dependencies[property];
+          const depVal = cache[depComp.id] || resolve(depComp, trace.push(component));
+          instance[property] = depVal;
+          cache[depComp.id] = depVal;
+        }
       }
     }
     return instance;
   }
 
-  return resolve(rootId, List());
+  return resolve(rootComponent, List());
 }
 
 
 class Registry {
 
   _valueById = {};
-  _factoryById = {};
+  _idByComponent = {};
+  _componentById = {};
   _dependenciesById = {};
 
-  add(Factory, opts) {
-    const id = generateId(opts);
-    checkIsFactory(this, id, Factory);
-    checkIsNoDuplicate(this, id, Factory);
+  add(component) {
+    const id = component.id;
+    checkIsNoDuplicate(this, id, component);
 
-    this._factoryById[id] = Factory;
-    this._dependenciesById[id] = opts.dependencies;
-    if (opts.isSingleton) {
-      this._valueById[id] = createInstance(this, id);
+    this._componentById[id] = component.factory;
+    this._idByComponent[component.factory] = id;
+    this._dependenciesById[id] = component.dependencies;
+    if (component.type.isSingleton) {
+      this._valueById[id] = createInstance(this, component);
     }
   }
 
-  get(descriptor) {
-    if (!isObject(descriptor)) {
-      throw new ResolveError(`unable to resolve: invalid descriptor '${descriptor}'`);
-    }
-
-    return createInstance(this, generateId(descriptor));
+  get(component) {
+    return createInstance(this, component);
   }
 }
 

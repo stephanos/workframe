@@ -1,3 +1,6 @@
+import assert from 'assert';
+
+
 describe('Integration Test', () => {
   describe('with fixture "account"', () => {
     let app;
@@ -5,7 +8,7 @@ describe('Integration Test', () => {
     // let Processor;
 
     it('should load', () => {
-      const ns = require('./fixture/account');
+      const ns = require('./main.js');
 
       app = ns.default;
       Accessor = ns.AccountAccessor;
@@ -13,8 +16,10 @@ describe('Integration Test', () => {
     });
 
     it('should handle query', () => {
-      app.dispatch(Accessor, {
-        userId: 42,
+      const result = app.dispatch(Accessor, { userId: '42' });
+      assert.deepEqual(result, {
+        name: 'Arthur Dent',
+        email: 'arthur@earth.com',
       });
     });
 
