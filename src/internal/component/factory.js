@@ -1,6 +1,6 @@
-import {endsWith} from 'lodash';
+import { endsWith } from 'lodash';
 
-import {CreateComponentError} from './errors';
+import { CreateComponentError } from './errors';
 import Component from './component';
 
 

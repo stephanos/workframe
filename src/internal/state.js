@@ -34,4 +34,4 @@ class StateComponentType {
 }
 
 
-export {State, StateComponentType};
+export { State, StateComponentType };

@@ -1,6 +1,6 @@
-import {List} from 'immutable';
+import { List } from 'immutable';
 
-import {ResolveError, KeyError} from './errors';
+import { ResolveError, KeyError } from './errors';
 
 
 function checkIsNoDuplicate(container, id, Factory) {

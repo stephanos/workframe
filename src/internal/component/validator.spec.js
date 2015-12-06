@@ -14,8 +14,8 @@ describe('Validator', () => {
     });
 
     where([
-      {value: undefined}, {value: 0}, {value: null}, {value: ''},
-      {value: 'invalid-name'}, {value: 'invalid_name'}, {value: 'invalid:name'},
+      { value: undefined }, { value: 0 }, { value: null }, { value: '' },
+      { value: 'invalid-name' }, { value: 'invalid_name' }, { value: 'invalid:name' },
     ], () => {
       it('should fail for invalid value', (ctx) => {
         assert.throws(
@@ -31,8 +31,8 @@ describe('Validator', () => {
     });
 
     where([
-      {value: undefined}, {value: 0}, {value: null}, {value: ''},
-      {value: 'Invalid'}, {value: 'invalid-ns'}, {value: 'invalid_ns'}, {value: 'invalid:ns'},
+      { value: undefined }, { value: 0 }, { value: null }, { value: '' },
+      { value: 'Invalid' }, { value: 'invalid-ns' }, { value: 'invalid_ns' }, { value: 'invalid:ns' },
     ], () => {
       it('should fail for invalid value', (ctx) => {
         assert.throws(

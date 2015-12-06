@@ -1,5 +1,5 @@
-import {component, inject} from '../../src/index.js';
-import {DatabaseSystem} from './database';
+import { component, inject } from '../../src/index.js';
+import { DatabaseSystem } from './database';
 
 
 class UserMutator {

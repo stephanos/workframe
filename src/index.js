@@ -6,7 +6,7 @@ import Injector from './internal/ioc/injector';
 import Registry from './internal/ioc/registry';
 
 import Dispatcher from './internal/dispatcher';
-import {State} from './internal/state';
+import { State } from './internal/state';
 import API from './internal/api';
 
 
@@ -34,4 +34,4 @@ export function bootstrap() {
   return new API(dispatcher);
 }
 
-export {State};
+export { State };

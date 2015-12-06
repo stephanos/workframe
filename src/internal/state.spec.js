@@ -1,7 +1,7 @@
 import assert from 'assert';
 import Immutable from 'immutable';
 
-import {State, StateComponentType} from './state';
+import { State, StateComponentType } from './state';
 
 
 describe('StateComponentType', () => {
@@ -48,7 +48,7 @@ describe('State', () => {
 
     state.update((map) => map.set('key', 'value'));
 
-    assert.deepEqual(state.get().toJS(), Immutable.Map({key: 'value'}).toJS());
+    assert.deepEqual(state.get().toJS(), Immutable.Map({ key: 'value' }).toJS());
   });
 
   it('should fail to update for invalid value', () => {

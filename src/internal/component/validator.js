@@ -1,6 +1,6 @@
-import {isString} from 'util';
+import { isString } from 'util';
 
-import {CreateComponentError} from './errors';
+import { CreateComponentError } from './errors';
 
 
 const nameRegex = new RegExp('^([a-zA-Z])+$');
