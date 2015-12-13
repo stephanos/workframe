@@ -2,7 +2,7 @@
 import assert from 'assert';
 
 import Injector from './injector';
-import Component from '../component/Component';
+import Component from '../component/component';
 
 
 class MyDependency {
