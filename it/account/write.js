@@ -2,22 +2,22 @@ import { component, inject } from '../../src/index.js';
 import { DatabaseSystem } from './database';
 
 
+@component()
 class UserMutator {
 
+  @inject(DatabaseSystem)
   databaseSystem
 
 }
-inject(DatabaseSystem)(UserMutator, 'databaseSystem');
-component()(UserMutator);
 
 
+@component()
 export class ChangeEmailProcessor {
 
+  @inject(UserMutator)
   userMutator
 
   process(signal) {
     this.signal = signal;
   }
 }
-inject(UserMutator)(ChangeEmailProcessor, 'userMutator');
-component()(ChangeEmailProcessor);

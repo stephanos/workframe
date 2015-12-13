@@ -1,6 +1,7 @@
 import { component, inject, State } from '../../src/index.js';
 
 
+@component()
 class ConnectionState extends State {
 
   constructor() {
@@ -18,16 +19,15 @@ class ConnectionState extends State {
   }
 
 }
-component()(ConnectionState);
 
 
+@component()
 export class DatabaseSystem {
 
+  @inject(ConnectionState)
   connectionState
 
   getById(collection, id) {
     return this.connectionState.get().getIn([collection, id]).toJS();
   }
 }
-component()(DatabaseSystem);
-inject(ConnectionState)(DatabaseSystem, 'connectionState');

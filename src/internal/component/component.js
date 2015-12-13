@@ -1,3 +1,4 @@
+import util from 'util';
 import uuid from '../util/uuid';
 
 const metaKey = '__meta';
@@ -6,6 +7,10 @@ const metaKey = '__meta';
 class Component {
 
   constructor(Factory) {
+    if (!util.isFunction(Factory)) {
+      throw new Error(`invalid factory: ${Factory} not a function`);
+    }
+
     this.factory = Factory;
     this.factory[metaKey] = this.factory[metaKey] || {
       id: uuid.next(),

@@ -13,11 +13,9 @@ describe('Component', () => {
   });
 
   it('should return "id"', () => {
-    class MyClass {
-    }
-
-    const comp = new Component(MyClass);
-    assert.ok(comp.id);
+    assert.throws(
+      () => new Component('dummy'),
+      (err) => err.message === `invalid factory: dummy not a function`);
   });
 
   it('should set and get "namespace"', () => {

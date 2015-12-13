@@ -1,37 +1,35 @@
+/* eslint no-unused-vars: 0 */
 import assert from 'assert';
 
 import Injector from './injector';
+import Component from '../component/Component';
 
 
-class Dependency {
+class MyDependency {
   static __id = 'my-dep';
 }
 
-let injector;
-
 describe('inject', () => {
-  beforeEach(() => {
-    injector = new Injector();
-  });
-
   it('should add dependency', () => {
     class MyComponent {
+
+      @Injector.inject(MyDependency)
+      dependency;
     }
 
-    const component = injector.inject(MyComponent, 'dependency', Dependency);
-
-    assert.deepEqual(Object.keys(component.dependencies), ['dependency']);
-    assert.deepEqual(component.dependencies.dependency.factory, Dependency);
+    const comp = new Component(MyComponent);
+    assert.deepEqual(Object.keys(comp.dependencies), ['dependency']);
+    assert.deepEqual(comp.dependencies.dependency.factory, MyDependency);
   });
 
   it('should fail when a property was already injected', () => {
-    class MyComponent {
-    }
+    assert.throws(() => {
+      class MyComponent {
 
-    injector.inject(MyComponent, 'dependency', Dependency);
-
-    assert.throws(
-      () => injector.inject(MyComponent, 'dependency', Dependency),
-      (err) => err.message === `unable to inject into 'dependency' of 'MyComponent': conflicting dependency`);
+        @Injector.inject(MyDependency)
+        @Injector.inject(MyDependency)
+        dependency;
+      }
+    });
   });
 });

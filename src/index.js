@@ -16,18 +16,13 @@ const componentValidator = new Validator();
 const componentFactory = new ComponentFactory(types, componentRegistry, componentValidator);
 export function component(...args) {
   return (target) => {
-    return componentFactory.build(target, ...args);
+    componentFactory.build(target, ...args);
   };
 }
 
-
-const injector = new Injector();
 export function inject(...args) {
-  return (target, key) => {
-    return injector.inject(target, key, ...args);
-  };
+  return Injector.inject(...args);
 }
-
 
 const dispatcher = new Dispatcher(componentRegistry);
 export function bootstrap() {

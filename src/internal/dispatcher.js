@@ -3,8 +3,8 @@ import Component from './component/component';
 
 class Dispatcher {
 
-  constructor(componentRegistry) {
-    this.registry = componentRegistry;
+  constructor(registry) {
+    this.registry = registry;
   }
 
   handle(factory, signal) {

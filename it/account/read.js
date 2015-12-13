@@ -1,26 +1,25 @@
 import { component, inject } from '../../src/index.js';
 import { DatabaseSystem } from './database';
 
-
+@component()
 class UserViewer {
 
+  @inject(DatabaseSystem)
   databaseSystem
 
   getById(id) {
     return this.databaseSystem.getById('user', id);
   }
 }
-inject(DatabaseSystem)(UserViewer, 'databaseSystem');
-component()(UserViewer);
 
 
+@component()
 export class AccountAccessor {
 
-  userViewer
+  @inject(UserViewer)
+  userViewer;
 
   access(signal) {
     return this.userViewer.getById(signal.userId);
   }
 }
-inject(UserViewer)(AccountAccessor, 'userViewer');
-component()(AccountAccessor);
