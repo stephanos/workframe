@@ -30,7 +30,7 @@ function createInstance(container, rootComponent) {
       throw new ResolveError(message);
     }
 
-    const instance = container._valueById[component.id] || new component.factory();
+    const instance = container._valueById[component.id] || component.newInstance();
 
     const dependencies = container._dependenciesById[component.id];
     if (dependencies) {

@@ -24,6 +24,7 @@ describe('Registry', () => {
       name: 'my',
       type,
       dependencies: {},
+      newInstance: () => new MyComponent(),
     };
   });
 
@@ -64,6 +65,7 @@ describe('Registry', () => {
         name: 'A',
         type,
         dependencies: {},
+        newInstance: () => new ComponentA(),
       };
       componentB = {
         id: 2,
@@ -72,6 +74,7 @@ describe('Registry', () => {
         name: 'B',
         type,
         dependencies: { dependencyA: componentA },
+        newInstance: () => new ComponentB(),
       };
     });
 

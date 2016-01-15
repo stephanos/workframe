@@ -18,6 +18,12 @@ class Component {
     };
   }
 
+
+  newInstance() {
+    return new this.factory();
+  }
+
+
   get id() {
     return this.factory[metaKey].id;
   }
@@ -52,7 +58,6 @@ class Component {
   set type(type) {
     this.factory[metaKey].type = type;
   }
-
 
   get dependencies() {
     return this.factory[metaKey].dependencies;
