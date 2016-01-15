@@ -1,3 +1,4 @@
+/* eslint no-param-reassign:0 */
 import Component from '../component/component';
 
 
@@ -11,6 +12,7 @@ class Injector {
       } catch (err) {
         throw new Error(`unable to inject into '${key}' of '${target.name}': conflicting dependency`);
       }
+      descriptor.writable = true;
       descriptor.initializer = () => undefined;
       return descriptor;
     };

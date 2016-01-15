@@ -8,7 +8,7 @@ class ConnectionState extends State {
     super();
     this.update((state) => {
       return state.merge({
-        'user': {
+        user: {
           42: {
             name: 'Arthur Dent',
             email: 'arthur@earth.com',
@@ -25,7 +25,7 @@ class ConnectionState extends State {
 export class DatabaseSystem {
 
   @inject(ConnectionState)
-  connectionState
+  connectionState;
 
   getById(collection, id) {
     return this.connectionState.get().getIn([collection, id]).toJS();

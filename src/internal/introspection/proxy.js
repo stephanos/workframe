@@ -1,3 +1,4 @@
+/* eslint no-param-reassign:0 */
 import util from 'util';
 
 
@@ -24,15 +25,15 @@ class Proxy {
       target[key] = (...args) => {
         const id = this.idGenerator.next();
         this.collector.add({
-          id: id,
+          id,
           method: key,
           arguments: args,
           time: this.clock.now(),
         });
         const result = prop.apply(target, args);
         this.collector.add({
-          id: id,
-          result: result,
+          id,
+          result,
           time: this.clock.now(),
         });
         return result;

@@ -22,7 +22,7 @@ describe('Registry', () => {
       factory: MyComponent,
       namespace: 'ns',
       name: 'my',
-      type: type,
+      type,
       dependencies: {},
     };
   });
@@ -62,7 +62,7 @@ describe('Registry', () => {
         factory: ComponentA,
         namespace: 'ns',
         name: 'A',
-        type: type,
+        type,
         dependencies: {},
       };
       componentB = {
@@ -70,8 +70,8 @@ describe('Registry', () => {
         factory: ComponentB,
         namespace: 'ns',
         name: 'B',
-        type: type,
-        dependencies: { 'dependencyA': componentA },
+        type,
+        dependencies: { dependencyA: componentA },
       };
     });
 
@@ -85,7 +85,7 @@ describe('Registry', () => {
     });
 
     it('should succeed for component with one direct dependency', () => {
-      myComponent.dependencies = { 'dependencyA': componentA };
+      myComponent.dependencies = { dependencyA: componentA };
 
       registry.add(componentA);
       registry.add(myComponent);
@@ -96,7 +96,7 @@ describe('Registry', () => {
     });
 
     it('should succeed for component with transitive dependencies', () => {
-      myComponent.dependencies = { 'dependencyB': componentB };
+      myComponent.dependencies = { dependencyB: componentB };
 
       registry.add(componentA);
       registry.add(componentB);
@@ -110,8 +110,8 @@ describe('Registry', () => {
 
     it('should only create each dependency only once', () => {
       myComponent.dependencies = {
-        'dependencyA': componentA,
-        'dependencyB': componentB,
+        dependencyA: componentA,
+        dependencyB: componentB,
       };
 
       registry.add(componentA);
@@ -129,7 +129,7 @@ describe('Registry', () => {
     });
 
     it('should fail for missing direct dependency', () => {
-      myComponent.dependencies = { 'dependencyA': componentA };
+      myComponent.dependencies = { dependencyA: componentA };
 
       registry.add(myComponent);
 
@@ -139,7 +139,7 @@ describe('Registry', () => {
     });
 
     it('should fail for missing transitive dependency', () => {
-      myComponent.dependencies = { 'dependencyB': componentB };
+      myComponent.dependencies = { dependencyB: componentB };
 
       registry.add(componentB);
       registry.add(myComponent);
@@ -150,9 +150,9 @@ describe('Registry', () => {
     });
 
     it('should fail for circular dependency', () => {
-      myComponent.dependencies = { 'dependencyB': componentB };
-      componentB.dependencies = { 'dependencyA': componentA };
-      componentA.dependencies = { 'dependencyB': componentB };
+      myComponent.dependencies = { dependencyB: componentB };
+      componentB.dependencies = { dependencyA: componentA };
+      componentA.dependencies = { dependencyB: componentB };
 
       registry.add(componentA);
       registry.add(componentB);

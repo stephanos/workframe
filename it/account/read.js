@@ -5,7 +5,7 @@ import { DatabaseSystem } from './database';
 class UserViewer {
 
   @inject(DatabaseSystem)
-  databaseSystem
+  databaseSystem;
 
   getById(id) {
     return this.databaseSystem.getById('user', id);

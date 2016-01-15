@@ -6,7 +6,7 @@ import { DatabaseSystem } from './database';
 class UserMutator {
 
   @inject(DatabaseSystem)
-  databaseSystem
+  databaseSystem;
 
 }
 
@@ -15,7 +15,7 @@ class UserMutator {
 export class ChangeEmailProcessor {
 
   @inject(UserMutator)
-  userMutator
+  userMutator;
 
   process(signal) {
     this.signal = signal;
