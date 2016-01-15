@@ -27,7 +27,14 @@ export class DatabaseSystem {
   @inject(ConnectionState)
   connectionState;
 
+
   getById(collection, id) {
     return this.connectionState.get().getIn([collection, id]).toJS();
+  }
+
+  setById(collection, id, data) {
+    this.connectionState.update((db) => {
+      return db.mergeDeepIn([collection, id], data);
+    });
   }
 }

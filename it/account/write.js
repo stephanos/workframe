@@ -8,6 +8,9 @@ class UserMutator {
   @inject(DatabaseSystem)
   databaseSystem;
 
+  setById(id, data) {
+    return this.databaseSystem.setById('user', id, data);
+  }
 }
 
 
@@ -18,6 +21,6 @@ export class ChangeEmailProcessor {
   userMutator;
 
   process(signal) {
-    this.signal = signal;
+    this.userMutator.setById(signal.userId, { email: signal.newEmail });
   }
 }

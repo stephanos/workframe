@@ -4,14 +4,14 @@ import assert from 'assert';
 describe('Integration Test "Account"', () => {
   let app;
   let Accessor;
-  // let Processor;
+  let Processor;
 
   it('should load', () => {
     const ns = require('./main.js');
 
     app = ns.default;
     Accessor = ns.AccountAccessor;
-    // Processor = ns.ChangeEmailProcessor;
+    Processor = ns.ChangeEmailProcessor;
   });
 
   it('should handle query', () => {
@@ -22,8 +22,13 @@ describe('Integration Test "Account"', () => {
     });
   });
 
-  // it('should handle command', () => {
-  //   app.dispatch(Processor, {
-  //   });
-  // });
+  it('should handle command', () => {
+    app.dispatch(Processor, { userId: '42', newEmail: 'arthur@ship.com' });
+
+    const result = app.dispatch(Accessor, { userId: '42' });
+    assert.deepEqual(result, {
+      name: 'Arthur Dent',
+      email: 'arthur@ship.com',
+    });
+  });
 });
