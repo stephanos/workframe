@@ -1,12 +1,12 @@
 import ComponentFactory from './internal/component/factory';
 import Validator from './internal/component/validator';
 import types from './internal/component/types';
+import { State } from './internal/component/types/state';
 
 import Injector from './internal/ioc/injector';
 import Registry from './internal/ioc/registry';
 
 import Dispatcher from './internal/dispatcher';
-import { State } from './internal/state';
 import API from './internal/api';
 
 

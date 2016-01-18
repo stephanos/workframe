@@ -3,9 +3,9 @@ import { List } from 'immutable';
 import { ResolveError, KeyError } from './errors';
 
 
-function checkIsNoDuplicate(container, id, Factory) {
+function checkIsNoDuplicate(container, id, component) {
   if (container._valueById[id] || container._componentById[id]) {
-    throw new KeyError(`can not register '${Factory.name}': already registered`);
+    throw new KeyError(`can not register '${component.name}': already registered`);
   }
 }
 
