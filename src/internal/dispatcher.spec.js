@@ -30,7 +30,7 @@ describe('Dispatcher', () => {
 
     getComponent.returns(new MyComponent());
 
-    const result = dispatcher.handle(MyComponent, {});
+    const { result } = dispatcher.handle(MyComponent, {});
     assert.equal(result, 'success');
   });
 
@@ -49,7 +49,7 @@ describe('Dispatcher', () => {
 
     getComponent.returns(new MyComponent());
 
-    const result = dispatcher.handle(MyComponent, {});
+    const { result } = dispatcher.handle(MyComponent, {});
     assert.equal(result, 'success');
   });
 

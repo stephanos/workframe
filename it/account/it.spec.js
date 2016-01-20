@@ -15,7 +15,7 @@ describe('Integration Test "Account"', () => {
   });
 
   it('should handle query', () => {
-    const result = app.dispatch(Accessor, { userId: '42' });
+    const { result } = app.dispatch(Accessor, { userId: '42' });
     assert.deepEqual(result, {
       name: 'Arthur Dent',
       email: 'arthur@earth.com',
@@ -25,7 +25,7 @@ describe('Integration Test "Account"', () => {
   it('should handle command', () => {
     app.dispatch(Processor, { userId: '42', newEmail: 'arthur@ship.com' });
 
-    const result = app.dispatch(Accessor, { userId: '42' });
+    const { result } = app.dispatch(Accessor, { userId: '42' });
     assert.deepEqual(result, {
       name: 'Arthur Dent',
       email: 'arthur@ship.com',
