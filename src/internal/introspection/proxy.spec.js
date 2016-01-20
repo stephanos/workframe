@@ -58,6 +58,7 @@ describe('Proxy', () => {
     assert.ok(collector.add.calledTwice);
     assert.deepEqual(collector.add.firstCall.args, [{
       id: 101,
+      component: 'Component',
       method: 'doSomething',
       arguments: [],
       time: 1234567890,
@@ -87,6 +88,7 @@ describe('Proxy', () => {
     assert.ok(collector.add.calledTwice);
     assert.deepEqual(collector.add.firstCall.args, [{
       id: 101,
+      component: 'Component',
       method: 'doSomething',
       arguments: [],
       time: 1234567890,
@@ -111,6 +113,7 @@ describe('Proxy', () => {
     assert.ok(collector.add.calledTwice);
     assert.deepEqual(collector.add.firstCall.args, [{
       id: 101,
+      component: 'Component',
       method: 'doSomething',
       arguments: ['arg1', 'arg2'],
       time: 1234567890,

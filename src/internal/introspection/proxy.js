@@ -12,6 +12,7 @@ class Proxy {
 
   wrap(target) {
     const proto = Object.getPrototypeOf(target);
+    const componentName = proto.constructor.name;
     Object.getOwnPropertyNames(proto).forEach((key) => {
       if (key === 'constructor') {
         return;
@@ -26,6 +27,7 @@ class Proxy {
         const id = this.idGenerator.next();
         this.collector.add({
           id,
+          component: componentName,
           method: key,
           arguments: args,
           time: this.clock.now(),
