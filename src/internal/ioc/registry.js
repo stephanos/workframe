@@ -10,7 +10,7 @@ function checkIsNoDuplicate(container, id, component) {
   }
 }
 
-function createInstance(container, rootComponent) {
+function createInstance(container, rootComponent, proxyFn) {
   const cache = {};
 
   function resolve(component, trace) {
@@ -45,7 +45,8 @@ function createInstance(container, rootComponent) {
         }
       }
     }
-    return instance;
+
+    return proxyFn(instance);
   }
 
   return resolve(rootComponent, List());
@@ -68,8 +69,8 @@ class Registry {
     this._dependenciesById[id] = component.dependencies;
   }
 
-  get(component) {
-    return createInstance(this, component);
+  get(component, proxyFn = (input) => input) {
+    return createInstance(this, component, proxyFn);
   }
 }
 
