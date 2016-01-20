@@ -30,7 +30,19 @@ class Proxy {
           arguments: args,
           time: this.clock.now(),
         });
-        const result = prop.apply(target, args);
+
+        let result;
+        try {
+          result = prop.apply(target, args);
+        } catch (err) {
+          this.collector.add({
+            id,
+            error: err,
+            time: this.clock.now(),
+          });
+          throw err;
+        }
+
         this.collector.add({
           id,
           result,
