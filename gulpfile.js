@@ -49,9 +49,8 @@ gulp.task('lint', function () {
 
 gulp.task('typecheck', function () {
   return gulp.src(['src/**/*.js', 'it/**/*.js'])
-    .pipe(sourcemaps.init())
     .pipe(flowtype({
-      abort: !daemon
+      abort: !daemon,
     }));
 });
 
