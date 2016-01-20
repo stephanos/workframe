@@ -10,10 +10,6 @@ describe('StateComponentType', () => {
     assert.equal(allowedTypes.length, 0);
   });
 
-  it('should be a singleton', () => {
-    assert.ok(StateComponentType.isSingleton);
-  });
-
   describe('validation', () => {
     it('should succeed when type of "State"', () => {
       class MyState extends State {

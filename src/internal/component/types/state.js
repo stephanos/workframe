@@ -23,7 +23,6 @@ class State {
 class StateComponentType {
 
   static typeName = 'State';
-  static isSingleton = true;
   static injectTypeWhitelist = [];
 
   static verify(target) {

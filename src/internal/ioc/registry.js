@@ -1,3 +1,4 @@
+/* eslint no-param-reassign:0 */
 import { List } from 'immutable';
 
 import { ResolveError, KeyError } from './errors';
@@ -31,6 +32,7 @@ function createInstance(container, rootComponent) {
     }
 
     const instance = container._valueById[component.id] || component.newInstance();
+    container._valueById[component.id] = instance;
 
     const dependencies = container._dependenciesById[component.id];
     if (dependencies) {
@@ -64,9 +66,6 @@ class Registry {
     this._componentById[id] = component.factory;
     this._idByComponent[component.factory] = id;
     this._dependenciesById[id] = component.dependencies;
-    if (component.type.isSingleton) {
-      this._valueById[id] = createInstance(this, component);
-    }
   }
 
   get(component) {
