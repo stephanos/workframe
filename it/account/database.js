@@ -6,16 +6,16 @@ class ConnectionState extends State {
 
   constructor() {
     super();
-    this.update((state) => {
-      return state.merge({
+    this.update((state) =>
+      state.merge({
         user: {
           42: {
             name: 'Arthur Dent',
             email: 'arthur@earth.com',
           },
         },
-      });
-    });
+      })
+    );
   }
 
 }
@@ -33,8 +33,6 @@ export class DatabaseSystem {
   }
 
   setById(collection, id, data) {
-    this.connectionState.update((db) => {
-      return db.mergeDeepIn([collection, id], data);
-    });
+    this.connectionState.update((db) => db.mergeDeepIn([collection, id], data));
   }
 }
