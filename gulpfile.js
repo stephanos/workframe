@@ -32,7 +32,7 @@ gulp.task('clean', function(done) {
 });
 
 gulp.task('build', function () {
-  return gulp.src(['src/**/*.js'])
+  return gulp.src(['src/**/*.js', 'it/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel())
     .on('error', handleError)
