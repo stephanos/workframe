@@ -5,7 +5,7 @@ class State {
 
   _data = Immutable.Map();
 
-  update(fn) {
+  update(__dispatcher, fn) {
     // TODO: validate it's still a Map()
     const result = fn(this._data);
     if (!(result instanceof Immutable.Map)) {

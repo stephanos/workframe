@@ -6,9 +6,9 @@ function verifyAccessorFunc(input) {
   if (!isFunction(accessFunc)) {
     throw new Error(`method 'access' must be defined`);
   }
-  if (accessFunc.length !== 1) {
-    throw new Error(`method 'access' must have exactly 1 parameter`);
-  }
+  // if (accessFunc.length !== 1) {
+  //   throw new Error(`method 'access' must have exactly 1 parameter`);
+  // }
 }
 
 

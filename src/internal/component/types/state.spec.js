@@ -42,7 +42,7 @@ describe('State', () => {
   it('should update', () => {
     const state = new State();
 
-    state.update((map) => map.set('key', 'value'));
+    state.update(null, (map) => map.set('key', 'value'));
 
     assert.deepEqual(state.get().toJS(), Immutable.Map({ key: 'value' }).toJS());
   });
@@ -51,7 +51,7 @@ describe('State', () => {
     const state = new State();
 
     assert.throws(
-      () => state.update(() => undefined),
+      () => state.update(null, () => undefined),
       (err) => err.message === `invalid state update: must be Immutable.Map`);
   });
 });

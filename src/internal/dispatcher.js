@@ -1,7 +1,3 @@
-import clock from './util/clock';
-import idGenerator from './util/uuid';
-
-import Proxy from './introspection/proxy';
 import Collector from './introspection/collector';
 import Component from './component/component';
 
@@ -14,17 +10,16 @@ class Dispatcher {
 
   handle(factory, signal) {
     const collector = new Collector();
-    const proxy = new Proxy(collector, idGenerator, clock);
 
     const component = new Component(factory);
-    const getInstance = () => this.registry.get(component, (input) => proxy.wrap(input));
+    const getInstance = () => this.registry.get(component);
 
     let result;
     const type = component.type.typeName;
     if (type === 'Accessor') {
-      result = getInstance().access(signal);
+      result = getInstance().access(this, signal);
     } else if (type === 'Processor') {
-      result = getInstance().process(signal);
+      result = getInstance().process(this, signal);
     } else {
       throw new Error(`unable to handle signal: Component must be 'Accessor' or 'Processor' but is '${type}'`);
     }
@@ -33,6 +28,12 @@ class Dispatcher {
       result,
       collector,
     };
+  }
+
+  invoke(file, component, func, args) {
+    args.unshift(this);
+    const result = func.apply(component, args);
+    return result;
   }
 }
 

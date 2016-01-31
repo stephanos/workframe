@@ -6,7 +6,7 @@ class ConnectionState extends State {
 
   constructor() {
     super();
-    this.update((state) =>
+    super.update(null, (state) =>
       state.merge({
         user: {
           42: {

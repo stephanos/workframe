@@ -4,6 +4,7 @@
     "stage-1"
   ],
   "plugins": [
+    "workframe",
     "transform-flow-strip-types",
     "transform-decorators-legacy",
     "transform-async-to-generator",

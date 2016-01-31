@@ -6,9 +6,9 @@ function verifyProcessFunc(input) {
   if (!isFunction(processFunc)) {
     throw new Error(`method 'process' must be defined`);
   }
-  if (processFunc.length !== 1) {
-    throw new Error(`method 'process' must have exactly 1 parameter`);
-  }
+  // if (processFunc.length !== 1) {
+  //   throw new Error(`method 'process' must have exactly 1 parameter`);
+  // }
 }
 
 
