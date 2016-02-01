@@ -1,39 +1,63 @@
-import Collector from './introspection/collector';
-import Component from './component/component';
-
-
 class Dispatcher {
 
-  constructor(registry) {
-    this.registry = registry;
+  constructor(parentId, collector, idGenerator, clock) {
+    this.collector = collector;
+    this.idGenerator = idGenerator;
+    this.clock = clock;
+
+    this.id = idGenerator.next();
+    this.parentId = parentId;
+    this.createdAt = clock.now();
   }
 
-  handle(factory, signal) {
-    const collector = new Collector();
 
-    const component = new Component(factory);
-    const getInstance = () => this.registry.get(component);
+  invoke(module, component, func, args) {
+    this._trackCall(module, component, func, args);
 
     let result;
-    const type = component.type.typeName;
-    if (type === 'Accessor') {
-      result = getInstance().access(this, signal);
-    } else if (type === 'Processor') {
-      result = getInstance().process(this, signal);
-    } else {
-      throw new Error(`unable to handle signal: Component must be 'Accessor' or 'Processor' but is '${type}'`);
+    try {
+      const newArgs = args.slice();
+      newArgs.unshift(this._fork());
+      result = func.apply(component, newArgs);
+    } catch (err) {
+      this._trackError(err);
+      throw err;
     }
 
-    return {
-      result,
-      collector,
-    };
+    this._trackResult(result);
+    return result;
   }
 
-  invoke(file, component, func, args) {
-    args.unshift(this);
-    const result = func.apply(component, args);
-    return result;
+
+  _trackCall(module, component, func, args) {
+    this.collector.add({
+      id: this.id,
+      parentId: this.parentId,
+      component: component.constructor.name,
+      method: func.name,
+      arguments: args,
+      time: this.clock.now(),
+    });
+  }
+
+  _trackError(err) {
+    this.collector.add({
+      id: this.id,
+      error: err,
+      time: this.clock.now(),
+    });
+  }
+
+  _trackResult(result) {
+    this.collector.add({
+      id: this.id,
+      result,
+      time: this.clock.now(),
+    });
+  }
+
+  _fork() {
+    return new Dispatcher(this.id, this.collector, this.idGenerator, this.clock);
   }
 }
 

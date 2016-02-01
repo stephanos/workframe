@@ -5,82 +5,160 @@ import Dispatcher from './dispatcher';
 
 
 let dispatcher;
-let getComponent;
+let collector;
 
 describe('Dispatcher', () => {
   beforeEach(() => {
-    getComponent = sinon.stub();
-    dispatcher = new Dispatcher({
-      get: getComponent,
+    collector = {
+      add: sinon.spy(),
+    };
+
+    const nextId = sinon.stub();
+    nextId.onFirstCall().returns(1);
+    nextId.onSecondCall().returns(2);
+    const idGenerator = {
+      next: nextId,
+    };
+
+    const clock = {
+      now: sinon.stub().returns(1234567890),
+    };
+
+    dispatcher = new Dispatcher(null, collector, idGenerator, clock);
+  });
+
+  describe('should invoke', () => {
+    it('method', () => {
+      let called;
+      class Component {
+        doSomething() {
+          called = true;
+        }
+      }
+
+      const comp = new Component();
+      dispatcher.invoke({}, comp, comp.doSomething, []);
+
+      assert.ok(called);
+    });
+
+    it('method with for of dispatcher as first argument', () => {
+      let args;
+      class Component {
+        doSomething() {
+          args = arguments;
+        }
+      }
+
+      const comp = new Component();
+      dispatcher.invoke({}, comp, comp.doSomething, []);
+
+      assert.equal(args[0].id, 2);
+      assert.equal(args[0].parentId, 1);
+    });
+
+    it('method and return its value', () => {
+      class Component {
+        doSomething() {
+          return 42;
+        }
+      }
+
+      const comp = new Component();
+      const ret = dispatcher.invoke({}, comp, comp.doSomething, []);
+
+      assert.equal(ret, 42);
+    });
+
+    it('method and yield thrown exception', () => {
+      class Component {
+        doSomething() {
+          throw new Error('oops');
+        }
+      }
+
+      const comp = new Component();
+      assert.throws(() => dispatcher.invoke({}, comp, comp.doSomething, []), Error);
     });
   });
 
-  it('should call a Processor', () => {
-    class MyComponent {
-      static __meta = {
-        type: {
-          typeName: 'Processor',
-        },
-      };
-
-      process() {
-        return 'success';
+  describe('should track', () => {
+    it('invocation call', () => {
+      class Component {
+        doSomething() {
+          return 42;
+        }
       }
-    }
 
-    getComponent.returns(new MyComponent());
+      const comp = new Component();
+      dispatcher.invoke({}, comp, comp.doSomething, []);
 
-    const { result } = dispatcher.handle(MyComponent, {});
-    assert.equal(result, 'success');
-  });
+      assert.deepEqual(collector.add.firstCall.args, [{
+        id: 1,
+        parentId: null,
+        component: 'Component',
+        method: 'doSomething',
+        arguments: [],
+        time: 1234567890,
+      }]);
+    });
 
-  it('should call an Accessor', () => {
-    class MyComponent {
-      static __meta = {
-        type: {
-          typeName: 'Accessor',
-        },
-      };
-
-      access() {
-        return 'success';
+    it('invocation call with arguments', () => {
+      class Component {
+        doSomething() {
+          return 42;
+        }
       }
-    }
 
-    getComponent.returns(new MyComponent());
+      const comp = new Component();
+      dispatcher.invoke({}, comp, comp.doSomething, ['arg1', 'arg2']);
 
-    const { result } = dispatcher.handle(MyComponent, {});
-    assert.equal(result, 'success');
-  });
+      assert.deepEqual(collector.add.firstCall.args, [{
+        id: 1,
+        parentId: null,
+        component: 'Component',
+        method: 'doSomething',
+        arguments: ['arg1', 'arg2'],
+        time: 1234567890,
+      }]);
+    });
 
-  it('should fail for invalid component type', () => {
-    class MyComponent {
-      static __meta = {
-        type: {
-          typeName: 'Behavior',
-        },
-      };
-    }
+    it('invocation result', () => {
+      class Component {
+        doSomething() {
+          return 42;
+        }
+      }
 
-    assert.throws(
-      () => dispatcher.handle(MyComponent, {}),
-      (err) =>
-        err.message === `unable to handle signal: Component must be 'Accessor' or 'Processor' but is 'Behavior'`);
-  });
+      const comp = new Component();
+      dispatcher.invoke({}, comp, comp.doSomething, []);
 
-  it('should fail for unknown component', () => {
-    class MyComponent {
-      static __meta = {
-        type: {
-          typeName: 'Processor',
-        },
-      };
-    }
+      assert.deepEqual(collector.add.secondCall.args, [{
+        id: 1,
+        result: 42,
+        time: 1234567890,
+      }]);
+    });
 
-    getComponent.throws(new Error('not found'));
+    it('invocation exception', () => {
+      class Component {
+        doSomething() {
+          throw new Error('oops');
+        }
+      }
 
-    assert.throws(
-      () => dispatcher.handle(MyComponent, {}),
-      (err) => err.message === `not found`);
+      const comp = new Component();
+      try {
+        dispatcher.invoke({}, comp, comp.doSomething, []);
+      } catch (err) {
+        // ignore
+      }
+
+      assert.deepEqual(collector.add.secondCall.args, [{
+        id: 1,
+        error: new Error('oops'),
+        time: 1234567890,
+      }]);
+    });
   });
 });

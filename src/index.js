@@ -6,7 +6,7 @@ import { State } from './internal/component/types/state';
 import Injector from './internal/ioc/injector';
 import Registry from './internal/ioc/registry';
 
-import Dispatcher from './internal/dispatcher';
+import Router from './internal/router';
 import API from './internal/api';
 
 
@@ -24,9 +24,9 @@ export function inject(...args) {
   return Injector.inject(...args);
 }
 
-const dispatcher = new Dispatcher(componentRegistry);
+const router = new Router(componentRegistry);
 export function bootstrap() {
-  return new API(dispatcher);
+  return new API(router);
 }
 
 export { State };
