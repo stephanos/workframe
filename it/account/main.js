@@ -1,7 +1,7 @@
 import { bootstrap } from '../../src';
 
-import { AccountAccessor } from './read';
-import { ChangeEmailProcessor } from './write';
+import { AccountAccessor } from './read/user.accessor';
+import { ChangeEmailProcessor } from './write/user-change-email.processor';
 
 
 const App = bootstrap();

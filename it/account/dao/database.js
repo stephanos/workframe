@@ -1,4 +1,4 @@
-import { Component, Inject, State } from '../../src';
+import { Component, Inject, State } from '../../../src';
 
 
 @Component()
@@ -22,7 +22,7 @@ class ConnectionState extends State {
 
 
 @Component()
-export class DatabaseSystem {
+class DatabaseSystem {
 
   @Inject(ConnectionState)
   connectionState;
@@ -36,3 +36,6 @@ export class DatabaseSystem {
     this.connectionState.update((db) => db.mergeDeepIn([collection, id], data));
   }
 }
+
+
+export default DatabaseSystem;

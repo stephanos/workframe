@@ -1,5 +1,5 @@
 import assert from 'assert';
-import ChangeEmailCommand from './change-email';
+import ChangeEmailCommand from './write/user-change-email.command';
 
 
 describe('Integration Test "Account"', () => {
