@@ -1,7 +1,7 @@
-import { component, inject, State } from '../../src';
+import { Component, Inject, State } from '../../src';
 
 
-@component()
+@Component()
 class ConnectionState extends State {
 
   constructor() {
@@ -21,10 +21,10 @@ class ConnectionState extends State {
 }
 
 
-@component()
+@Component()
 export class DatabaseSystem {
 
-  @inject(ConnectionState)
+  @Inject(ConnectionState)
   connectionState;
 
 

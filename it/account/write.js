@@ -1,11 +1,11 @@
-import { component, inject } from '../../src';
+import { Component, Inject } from '../../src';
 import { DatabaseSystem } from './database';
 
 
-@component()
+@Component()
 class UserMutator {
 
-  @inject(DatabaseSystem)
+  @Inject(DatabaseSystem)
   databaseSystem;
 
   setById(id, data) {
@@ -14,10 +14,10 @@ class UserMutator {
 }
 
 
-@component()
+@Component()
 export class ChangeEmailProcessor {
 
-  @inject(UserMutator)
+  @Inject(UserMutator)
   userMutator;
 
   process(signal) {

@@ -1,10 +1,10 @@
-import { component, inject } from '../../src';
+import { Component, Inject } from '../../src';
 import { DatabaseSystem } from './database';
 
-@component()
+@Component()
 class UserViewer {
 
-  @inject(DatabaseSystem)
+  @Inject(DatabaseSystem)
   databaseSystem;
 
   getById(id) {
@@ -13,10 +13,10 @@ class UserViewer {
 }
 
 
-@component()
+@Component()
 export class AccountAccessor {
 
-  @inject(UserViewer)
+  @Inject(UserViewer)
   userViewer;
 
   access(signal) {

@@ -14,13 +14,13 @@ const componentRegistry = new Registry();
 const componentValidator = new Validator();
 
 const componentFactory = new ComponentFactory(types, componentRegistry, componentValidator);
-export function component(...args) {
+export function Component(...args) {
   return (target) => {
     componentFactory.build(target, ...args);
   };
 }
 
-export function inject(...args) {
+export function Inject(...args) {
   return Injector.inject(...args);
 }
 

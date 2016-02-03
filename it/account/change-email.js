@@ -1,7 +1,7 @@
-import { component } from '../../src';
+import { Component } from '../../src';
 
 
-@component()
+@Component()
 class ChangeEmailCommand {
 
   userId;
