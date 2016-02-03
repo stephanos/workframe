@@ -1,4 +1,4 @@
-import { component, inject } from '../../src/index.js';
+import { component, inject } from '../../src';
 import { DatabaseSystem } from './database';
 
 @component()

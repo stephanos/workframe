@@ -1,4 +1,4 @@
-import { component, inject, State } from '../../src/index.js';
+import { component, inject, State } from '../../src';
 
 
 @component()

@@ -1,4 +1,4 @@
-import { component, inject } from '../../src/index.js';
+import { component, inject } from '../../src';
 import { DatabaseSystem } from './database';
 
 
@@ -21,6 +21,6 @@ export class ChangeEmailProcessor {
   userMutator;
 
   process(signal) {
-    this.userMutator.setById(signal.userId, { email: signal.newEmail });
+    this.userMutator.setById(signal.userId, { email: signal.newEmailAddress });
   }
 }

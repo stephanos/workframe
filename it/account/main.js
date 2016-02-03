@@ -1,4 +1,4 @@
-import { bootstrap } from '../../src/index.js';
+import { bootstrap } from '../../src';
 
 import { AccountAccessor } from './read';
 import { ChangeEmailProcessor } from './write';

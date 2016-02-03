@@ -1,4 +1,5 @@
 import assert from 'assert';
+import ChangeEmailCommand from './change-email';
 
 
 describe('Integration Test "Account"', () => {
@@ -23,7 +24,10 @@ describe('Integration Test "Account"', () => {
   });
 
   it('should handle command', () => {
-    app.dispatch(Processor, { userId: '42', newEmail: 'arthur@ship.com' });
+    const cmd = new ChangeEmailCommand();
+    cmd.userId = '42';
+    cmd.newEmailAddress = 'arthur@ship.com';
+    app.dispatch(Processor, cmd);
 
     const { result } = app.dispatch(Accessor, { userId: '42' });
     assert.deepEqual(result, {
