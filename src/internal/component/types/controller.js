@@ -18,7 +18,7 @@ class ControllerComponentType {
   }
 
   static initialize(context, component) {
-    const basePath = component.opts[0];
+    const basePath = component.opts[1];
     const proto = component.factory.prototype;
     Object.getOwnPropertyNames(proto).forEach((key) => {
       const path = proto[key].path;
