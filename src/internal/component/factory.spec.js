@@ -39,13 +39,6 @@ describe('Factory', () => {
       assert.equal(component.name, 'My');
     });
 
-    it('with correct namespace', () => {
-      class MyComponent {}
-      const component = factory.build(MyComponent);
-
-      assert.equal(component.namespace, 'default');
-    });
-
     it('with correct type', () => {
       class MyComponent {}
       const component = factory.build(MyComponent);
@@ -86,64 +79,27 @@ describe('Factory', () => {
       assert.throws(
         () => factory.build(Invalid),
         (err) =>
-          err.message === `invalid component: not a known type`);
-    });
-
-    it('when namespace is invalid', () => {
-      class MyComponent {}
-
-      validator.validateName.throws(new Error('invalid namespace'));
-
-      assert.throws(
-        () => factory.build(MyComponent, 'invalid-namespace'),
-        (err) => err.message === `invalid namespace`);
+          err.message === `invalid component: 'Invalid' is not a known type`);
     });
 
     it('when name is invalid', () => {
       class Invalid_NameComponent {}
 
-      validator.validateNamespace.throws(new Error('invalid name'));
+      validator.validateName.throws(new Error('invalid name'));
 
       assert.throws(
         () => factory.build(Invalid_NameComponent),
         (err) => err.message === `invalid name`);
     });
-  });
 
-  // it('should fail when a dependency is not a component ', () => {
-  //   class Dependency {
-  //   }
-  //
-  //   class MyComponent {
-  //     static __meta = fromJS({
-  //       dependencies: { 'dependency': Dependency },
-  //     });
-  //   }
-  //
-  //   validateComp.withArgs(Dependency).returns(false);
-  //
-  //   assert.throws(
-  //     () => factory.build(MyComponent),
-  //     (err) =>
-  //       err.message === `invalid dependency 'Dependency' of 'dependency' in 'MyComponent': not a component`);
-  // });
-  //
-  // it('should fail when an injected value has forbidden type', () => {
-  //   class Dependency {
-  //     static __meta = fromJS({
-  //       type: 'Invalid',
-  //     });
-  //   }
-  //
-  //   class MyComponent {
-  //     static __meta = fromJS({
-  //       dependencies: { 'dependency': Dependency },
-  //     });
-  //   }
-  //
-  //   assert.throws(
-  //     () => factory.build(MyComponent),
-  //     (err) =>
-  //       err.message === `invalid dependency 'Dependency' of 'dependency' in 'MyComponent': type 'Invalid' is not allowed`);
-  // });
+    it('when dependencies are invalid', () => {
+      class MyComponent {}
+
+      validator.validateDependencies.throws(new Error('invalid dependencies'));
+
+      assert.throws(
+        () => factory.build(MyComponent),
+        (err) => err.message === `invalid dependencies`);
+    });
+  });
 });

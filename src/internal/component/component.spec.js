@@ -15,7 +15,7 @@ describe('Component', () => {
   it('should return "id"', () => {
     assert.throws(
       () => new Component('dummy'),
-      (err) => err.message === `invalid factory: dummy not a function`);
+      (err) => err.message === `'dummy' is not a function`);
   });
 
   it('should set and get "namespace"', () => {

@@ -25,23 +25,6 @@ describe('Validator', () => {
     });
   });
 
-  describe('validation of "namespace"', () => {
-    it('should succeed for valid value', () => {
-      validator.validateName(MyComponent, 'namespace');
-    });
-
-    where([
-      { value: undefined }, { value: 0 }, { value: null }, { value: '' },
-      { value: 'Invalid' }, { value: 'invalid-ns' }, { value: 'invalid_ns' }, { value: 'invalid:ns' },
-    ], () => {
-      it('should fail for invalid value', (ctx) => {
-        assert.throws(
-          () => validator.validateNamespace(MyComponent, ctx.value),
-          (err) => err.message === `invalid component: namespace '${ctx.value}' must be string with lowercase characters only`);
-      });
-    });
-  });
-
   describe('validation of "dependencies"', () => {
     const MyType = {
       injectTypeWhitelist: ['Type'],

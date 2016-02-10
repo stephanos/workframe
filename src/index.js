@@ -16,7 +16,7 @@ const componentValidator = new Validator();
 const componentFactory = new ComponentFactory(types, componentRegistry, componentValidator);
 export function Component(...args) {
   return (target) => {
-    componentFactory.build(target, ...args);
+    componentFactory.build(target, args);
   };
 }
 
@@ -25,8 +25,8 @@ export function Inject(...args) {
 }
 
 const router = new Router(componentRegistry);
-export function bootstrap() {
-  return new API(router);
+export function bootstrap(opts) {
+  return new API(types, router, componentFactory, opts);
 }
 
 export { State };

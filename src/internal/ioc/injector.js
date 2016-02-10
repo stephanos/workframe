@@ -10,7 +10,7 @@ class Injector {
       try {
         component.addDependency(key, reference);
       } catch (err) {
-        throw new Error(`unable to inject into '${key}' of '${target.name}': conflicting dependency`);
+        throw new Error(`unable to inject into '${key}' of '${target.constructor.name}': ${err.message}`);
       }
       descriptor.writable = true;
       descriptor.initializer = () => undefined;

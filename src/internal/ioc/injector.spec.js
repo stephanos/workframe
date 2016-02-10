@@ -30,6 +30,7 @@ describe('inject', () => {
         @Injector.inject(MyDependency)
         dependency;
       }
-    });
+    }, (err) =>
+      err.message === `unable to inject into 'dependency' of 'MyComponent': dependency already exists`);
   });
 });

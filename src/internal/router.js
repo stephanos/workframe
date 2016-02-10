@@ -21,24 +21,25 @@ class Router {
     this.registry = registry;
   }
 
-  handle(factory, signal) {
+  invoke(component, fn, args) {
     const collector = new Collector();
-    const getDispatcher = () => new Dispatcher(null, collector, idGenerator, clock);
+    const dispatcher = new Dispatcher(null, collector, idGenerator, clock);
+    const instance = this.registry.get(component);
+    args.unshift(dispatcher);
+    const result = instance[fn].apply(instance, args);
+    return new Result(result, collector);
+  }
 
+  handle(factory, signal) {
     const component = new Component(factory);
-    const getInstance = () => this.registry.get(component);
-
-    let result;
     const type = component.type.typeName;
     if (type === 'Accessor') {
-      result = getInstance().access(getDispatcher(), signal);
+      return this.invoke(component, 'access', [signal]);
     } else if (type === 'Processor') {
-      result = getInstance().process(getDispatcher(), signal);
-    } else {
-      throw new Error(`unable to handle signal: Component must be 'Accessor' or 'Processor' but is '${type}'`);
+      return this.invoke(component, 'process', [signal]);
     }
 
-    return new Result(result, collector);
+    throw new Error(`unable to handle signal: Component must be 'Accessor' or 'Processor' but is '${type}'`);
   }
 }
 

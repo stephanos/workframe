@@ -8,7 +8,7 @@ class Component {
 
   constructor(Factory) {
     if (!util.isFunction(Factory)) {
-      throw new Error(`invalid factory: ${Factory} not a function`);
+      throw new Error(`'${Factory}' is not a function`);
     }
 
     this.factory = Factory;
@@ -20,7 +20,7 @@ class Component {
 
 
   newInstance() {
-    return new this.factory();
+    return new this.factory(this.opts);
   }
 
 
@@ -33,12 +33,12 @@ class Component {
   }
 
 
-  get namespace() {
-    return this.factory[metaKey].namespace;
+  get opts() {
+    return this.factory[metaKey].opts;
   }
 
-  set namespace(ns) {
-    this.factory[metaKey].namespace = ns;
+  set opts(opts) {
+    this.factory[metaKey].opts = opts;
   }
 
 
@@ -58,6 +58,7 @@ class Component {
   set type(type) {
     this.factory[metaKey].type = type;
   }
+
 
   get dependencies() {
     return this.factory[metaKey].dependencies;
