@@ -55,7 +55,7 @@ gulp.task('typecheck', function () {
 });
 
 gulp.task('unit-test', function (done) {
-  gulp.src(['src/**/*.js', '!src/**/*.spec.js'])
+  gulp.src(['src/**/*.js', '!src/**/*.spec.js', '!src/**/*.it.js'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
       includeUntested: true
@@ -81,7 +81,7 @@ gulp.task('unit-test', function (done) {
 });
 
 gulp.task('integration-test', function (done) {
-  gulp.src('it/**/*.spec.js', {read: false})
+  gulp.src('src/**/*.it.js', {read: false})
     .pipe(mocha({
       ui: 'bdd',
       reporter: 'dot'
