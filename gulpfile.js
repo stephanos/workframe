@@ -1,3 +1,5 @@
+'use strict';
+
 const del = require('del');
 const gulp = require('gulp');
 const path = require('path');
@@ -13,8 +15,8 @@ const istanbul = require('gulp-istanbul');
 const coveralls = require('gulp-coveralls');
 const sourcemaps = require('gulp-sourcemaps');
 
-var daemon = false
-require("babel-core/register");
+let daemon = false;
+require('babel-core/register');
 process.env.FLOW_BIN = path.join(process.cwd(), 'node_modules/flow-bin/vendor/flow');
 
 
@@ -26,46 +28,47 @@ function handleError(err) {
 }
 
 
-gulp.task('clean', function(done) {
+gulp.task('clean', (done) => {
   del.sync(['dist', 'coverage']);
   done();
 });
 
-gulp.task('build', function () {
-  return gulp.src(['src/**/*.js', 'it/**/*.js'])
+gulp.task('build', () =>
+  gulp.src(['src/**/*.js', 'it/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel())
     .on('error', handleError)
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist'));
-});
+    .pipe(gulp.dest('dist'))
+);
 
-gulp.task('lint', function () {
-  return gulp.src(['src/**/*.js', 'it/**/*.js'])
+gulp.task('lint', () =>
+  gulp.src(['src/**/*.js', 'it/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(gulpif(!daemon, eslint.failAfterError()));
-});
+    .pipe(gulpif(!daemon, eslint.failAfterError()))
+);
 
-gulp.task('typecheck', function () {
-  return gulp.src(['src/**/*.js', 'it/**/*.js'])
+gulp.task('typecheck', () =>
+  gulp.src(['src/**/*.js', 'it/**/*.js'])
     .pipe(flowtype({
       abort: !daemon,
-    }));
-});
+    }))
+);
 
-gulp.task('unit-test', function (done) {
+gulp.task('unit-test', (done) => {
   gulp.src(['src/**/*.js', '!src/**/*.spec.js', '!src/**/*.it.js'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
-      includeUntested: true
+      includeUntested: true,
     }))
     .pipe(istanbul.hookRequire())
-    .on('finish', function() {
-      gulp.src('src/**/*.spec.js', {read: false})
+    .on('finish', () => {
+      gulp.src('src/**/*.spec.js', { read: false })
+        .pipe(espower())
         .pipe(mocha({
           ui: 'bdd',
-          reporter: 'dot'
+          reporter: 'dot',
         }))
         .on('error', (err) => {
           handleError(err);
@@ -73,18 +76,19 @@ gulp.task('unit-test', function (done) {
         })
         .pipe(istanbul.writeReports({
           dir: 'coverage',
-          reportOpts: {dir: 'coverage'},
-          reporters: ['lcov']
+          reportOpts: { dir: 'coverage' },
+          reporters: ['lcov'],
         }))
         .on('end', done);
     });
 });
 
-gulp.task('integration-test', function (done) {
-  gulp.src('src/**/*.it.js', {read: false})
+gulp.task('integration-test', (done) => {
+  gulp.src('src/**/*.it.js', { read: false })
+    .pipe(espower())
     .pipe(mocha({
       ui: 'bdd',
-      reporter: 'dot'
+      reporter: 'dot',
     }))
     .on('error', (err) => {
       handleError(err);
@@ -93,9 +97,9 @@ gulp.task('integration-test', function (done) {
     .pipe(require('gulp-callback')(done));
 });
 
-gulp.task('coveralls', function (done) {
+gulp.task('coveralls', (done) => {
   if (!process.env.CI) {
-    return done()
+    return done();
   }
 
   return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
@@ -104,15 +108,15 @@ gulp.task('coveralls', function (done) {
 });
 
 
-gulp.task('watch', function () {
+gulp.task('watch', () => {
   gulp.watch(['src/**/*.js', 'lib/**/*.js', 'it/**/*.js'],
     gulp.series('package'));
 });
 
 gulp.task('_daemon', (done) => {
-  daemon = true
-  done()
-})
+  daemon = true;
+  done();
+});
 
 
 gulp.task('package',
