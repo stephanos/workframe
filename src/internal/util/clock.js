@@ -1,4 +1,6 @@
+/* @flow */
+
 export default {
 
-  now: () => new Date().getTime(),
+  now: (): number => new Date().getTime(),
 };
