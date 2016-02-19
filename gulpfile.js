@@ -84,7 +84,7 @@ gulp.task('unit-test', (done) => {
 });
 
 gulp.task('integration-test', (done) => {
-  gulp.src('src/**/*.it.js', { read: false })
+  gulp.src(['it/**/*.js', 'src/**/*.it.js'], { read: false })
     .pipe(espower())
     .pipe(mocha({
       ui: 'bdd',
