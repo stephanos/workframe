@@ -1,8 +1,0 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-let EventStream = class EventStream {};
-exports.default = EventStream;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImludGVybmFsL2VzL3N0b3JlL3N0cmVhbS5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztJQUFNLGNBQU4sTUFBTSxXQUFOLENBQWtCLEVBQWxCO2tCQVdlIiwiZmlsZSI6ImludGVybmFsL2VzL3N0b3JlL3N0cmVhbS5qcyIsInNvdXJjZXNDb250ZW50IjpbImNsYXNzIEV2ZW50U3RyZWFtIHtcblxuICBhZ2dyZWdhdGVDb250ZXh0O1xuICBhZ2dyZWdhdGVOYW1lO1xuICBhZ2dyZWdhdGVJZDtcbiAgYWdncmVnYXRlUmV2aXNpb247XG5cbiAgZXZlbnRzO1xufVxuXG5cbmV4cG9ydCBkZWZhdWx0IEV2ZW50U3RyZWFtO1xuIl0sInNvdXJjZVJvb3QiOiIvc291cmNlLyJ9
