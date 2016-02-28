@@ -1,9 +1,9 @@
-import Collector from './introspection/collector';
 import Component from './component/component';
+import Collector from './introspection/collector';
 import Dispatcher from './dispatcher';
 
-import clock from './util/clock';
-import idGenerator from './util/uuid';
+import idGenerator from '../internal/util/uuid';
+import clock from '../internal/util/clock';
 
 
 class Result {
@@ -17,29 +17,34 @@ class Result {
 
 class Router {
 
-  constructor(registry) {
+  constructor(registry, commandHandler, queryHandler) {
     this.registry = registry;
+    this.commandHandler = commandHandler;
+    this.queryHandler = queryHandler;
   }
 
-  invoke(component, fn, args) {
-    const collector = new Collector();
-    const dispatcher = new Dispatcher(null, collector, idGenerator, clock);
-    const instance = this.registry.get(component);
-    args.unshift(dispatcher);
-    const result = instance[fn].apply(instance, args);
-    return new Result(result, collector);
-  }
-
-  handle(factory, signal) {
-    const component = new Component(factory);
-    const type = component.type.typeName;
-    if (type === 'Accessor') {
-      return this.invoke(component, 'access', [signal]);
-    } else if (type === 'Processor') {
-      return this.invoke(component, 'process', [signal]);
+  async handle(signal) {
+    const component = new Component(this.registry.getConnection('handles', signal.constructor));
+    if (!component) {
+      throw new Error(`unable to handle signal: no matching handler found for '${signal.constructor.name}'`);
     }
 
-    throw new Error(`unable to handle signal: Component must be 'Accessor' or 'Processor' but is '${type}'`);
+    const collector = new Collector();
+    const dispatcher = new Dispatcher(null, collector, idGenerator, clock);
+    const handler = this.registry.get(component);
+    const handleFn = (aggregate, command) => handler.process(dispatcher, aggregate, command);
+
+    let result;
+    const type = component.type.typeName;
+    if (type === 'Accessor') {
+      result = await this.queryHandler.handle(handleFn, signal);
+    } else if (type === 'Processor') {
+      result = await this.commandHandler.handle(handleFn, signal);
+    } else {
+      throw new Error(`unable to handle signal: Component must be 'Accessor' or 'Processor' but is '${type}'`);
+    }
+
+    return new Result(result, collector);
   }
 }
 

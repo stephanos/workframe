@@ -60,6 +60,10 @@ class Registry {
   _componentById = {};
   _dependenciesById = {};
 
+  // TODO: use something like https://github.com/cpettitt/graphlib
+  _connectionByActor = {};
+  _connectionBySubject = {};
+
   add(component) {
     const id = component.id;
     checkIsNoDuplicate(this, id, component);
@@ -71,6 +75,17 @@ class Registry {
 
   get(component, proxyFn = (input) => input) {
     return createInstance(this, component, proxyFn);
+  }
+
+  setConnection(actor, kind, subject) {
+    this._connectionByActor[actor] = subject;
+
+    this._connectionBySubject[subject] = this._connectionBySubject[subject] || [];
+    this._connectionBySubject[subject].push(actor);
+  }
+
+  getConnection(kind, component) {
+    return this._connectionBySubject[component][0];
   }
 }
 

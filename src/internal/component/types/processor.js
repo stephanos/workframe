@@ -20,6 +20,10 @@ class ProcessorComponentType {
   static verify(target) {
     verifyProcessFunc(target);
   }
+
+  static addRelation(registry, input, opts) {
+    registry.setConnection(input, 'handles', opts[1]);
+  }
 }
 
 

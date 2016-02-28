@@ -1,0 +1,20 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _class, _temp;
+
+let AggregatorComponentType = (_temp = _class = class AggregatorComponentType {
+
+  static verify() {
+    // TODO: verify that opts[1] is an Event
+  }
+
+  static addRelation(registry, input, opts) {
+    registry.setConnection(input, 'aggregates', opts[1]);
+  }
+}, _class.typeName = 'Aggregator', _class.injectTypeWhitelist = [], _temp);
+exports.default = AggregatorComponentType;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImludGVybmFsL2NvbXBvbmVudC90eXBlcy9hZ2dyZWdhdG9yLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7O0lBQU0sNENBQU4sTUFBTSx1QkFBTixDQUE4Qjs7QUFLNUIsU0FBTyxNQUFQLEdBQWdCOztHQUFoQjs7QUFJQSxTQUFPLFdBQVAsQ0FBbUIsUUFBbkIsRUFBNkIsS0FBN0IsRUFBb0MsSUFBcEMsRUFBMEM7QUFDeEMsYUFBUyxhQUFULENBQXVCLEtBQXZCLEVBQThCLFlBQTlCLEVBQTRDLEtBQUssQ0FBTCxDQUE1QyxFQUR3QztHQUExQztDQVRGLFNBRVMsV0FBVyxxQkFDWCxzQkFBc0I7a0JBWWhCIiwiZmlsZSI6ImludGVybmFsL2NvbXBvbmVudC90eXBlcy9hZ2dyZWdhdG9yLmpzIiwic291cmNlc0NvbnRlbnQiOlsiY2xhc3MgQWdncmVnYXRvckNvbXBvbmVudFR5cGUge1xuXG4gIHN0YXRpYyB0eXBlTmFtZSA9ICdBZ2dyZWdhdG9yJztcbiAgc3RhdGljIGluamVjdFR5cGVXaGl0ZWxpc3QgPSBbXTtcblxuICBzdGF0aWMgdmVyaWZ5KCkge1xuICAgIC8vIFRPRE86IHZlcmlmeSB0aGF0IG9wdHNbMV0gaXMgYW4gRXZlbnRcbiAgfVxuXG4gIHN0YXRpYyBhZGRSZWxhdGlvbihyZWdpc3RyeSwgaW5wdXQsIG9wdHMpIHtcbiAgICByZWdpc3RyeS5zZXRDb25uZWN0aW9uKGlucHV0LCAnYWdncmVnYXRlcycsIG9wdHNbMV0pO1xuICB9XG59XG5cblxuZXhwb3J0IGRlZmF1bHQgQWdncmVnYXRvckNvbXBvbmVudFR5cGU7XG4iXSwic291cmNlUm9vdCI6Ii9zb3VyY2UvIn0=

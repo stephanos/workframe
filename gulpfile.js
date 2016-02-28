@@ -8,6 +8,7 @@ const isparta = require('isparta');
 const gulpif = require('gulp-if');
 const babel = require('gulp-babel');
 const mocha = require('gulp-mocha');
+const cache = require('gulp-cached');
 const eslint = require('gulp-eslint');
 const espower = require('gulp-espower');
 const flowtype = require('gulp-flowtype');
@@ -16,7 +17,6 @@ const coveralls = require('gulp-coveralls');
 const sourcemaps = require('gulp-sourcemaps');
 
 let daemon = false;
-require('babel-core/register');
 process.env.FLOW_BIN = path.join(process.cwd(), 'node_modules/flow-bin/vendor/flow');
 
 
@@ -29,21 +29,32 @@ function handleError(err) {
 
 
 gulp.task('clean', (done) => {
-  del.sync(['dist', 'coverage']);
+  del.sync(['build', 'coverage']);
   done();
 });
 
 gulp.task('build', () =>
   gulp.src(['src/**/*.js', 'it/**/*.js'])
+    .pipe(cache('build'))
     .pipe(sourcemaps.init())
-    .pipe(babel())
+    .pipe(babel({
+      presets: [
+        'node5',
+        'stage-1',
+      ],
+      plugins: [
+        'workframe',
+        'transform-decorators-legacy',
+      ],
+    }))
     .on('error', handleError)
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('build/test'))
 );
 
 gulp.task('lint', () =>
   gulp.src(['src/**/*.js', 'it/**/*.js'])
+    .pipe(cache('lint'))
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(gulpif(!daemon, eslint.failAfterError()))
@@ -51,20 +62,34 @@ gulp.task('lint', () =>
 
 gulp.task('typecheck', () =>
   gulp.src(['src/**/*.js', 'it/**/*.js'])
+    .pipe(cache('flow'))
+    .pipe(babel({
+      plugins: [
+        'syntax-async-functions',
+        'syntax-class-properties',
+        'syntax-decorators',
+        'syntax-flow',
+        ['workframe', {
+          typecheckOnly: true,
+        }],
+      ],
+    }))
+    .on('error', handleError)
+    .pipe(gulp.dest('build/chk'))
     .pipe(flowtype({
       abort: !daemon,
     }))
 );
 
 gulp.task('unit-test', (done) => {
-  gulp.src(['src/**/*.js', '!src/**/*.spec.js', '!src/**/*.it.js'])
+  gulp.src(['build/test/**/*.js', '!build/test/**/*.spec.js', '!build/test/**/*.it.js'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
       includeUntested: true,
     }))
     .pipe(istanbul.hookRequire())
     .on('finish', () => {
-      gulp.src('src/**/*.spec.js', { read: false })
+      gulp.src('build/test/**/*.spec.js', { read: false })
         .pipe(espower())
         .pipe(mocha({
           ui: 'bdd',
@@ -84,7 +109,7 @@ gulp.task('unit-test', (done) => {
 });
 
 gulp.task('integration-test', (done) => {
-  gulp.src(['it/**/*.js', 'src/**/*.it.js'], { read: false })
+  gulp.src(['build/test/**/*.it.js'], { read: false })
     .pipe(espower())
     .pipe(mocha({
       ui: 'bdd',

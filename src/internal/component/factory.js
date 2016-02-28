@@ -38,6 +38,9 @@ class ComponentFactory {
 
     component.type = getTypeFor(input, this.types);
     component.type.verify(input);
+    if (component.type.addRelation) {
+      component.type.addRelation(this.registry, input, opts);
+    }
 
     component.name = getNameFor(input, component.type);
     this.validator.validateName(input, component.name);

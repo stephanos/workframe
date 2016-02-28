@@ -1,0 +1,14 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _class, _temp;
+
+let ProjectorComponentType = (_temp = _class = class ProjectorComponentType {
+
+  static verify() {}
+}, _class.typeName = 'Projector', _class.injectTypeWhitelist = [], _temp);
+exports.default = ProjectorComponentType;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImludGVybmFsL2NvbXBvbmVudC90eXBlcy9wcm9qZWN0b3IuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7SUFBTSwyQ0FBTixNQUFNLHNCQUFOLENBQTZCOztBQUszQixTQUFPLE1BQVAsR0FBZ0IsRUFBaEI7Q0FMRixTQUVTLFdBQVcsb0JBQ1gsc0JBQXNCO2tCQU9oQiIsImZpbGUiOiJpbnRlcm5hbC9jb21wb25lbnQvdHlwZXMvcHJvamVjdG9yLmpzIiwic291cmNlc0NvbnRlbnQiOlsiY2xhc3MgUHJvamVjdG9yQ29tcG9uZW50VHlwZSB7XG5cbiAgc3RhdGljIHR5cGVOYW1lID0gJ1Byb2plY3Rvcic7XG4gIHN0YXRpYyBpbmplY3RUeXBlV2hpdGVsaXN0ID0gW107XG5cbiAgc3RhdGljIHZlcmlmeSgpIHtcbiAgfVxufVxuXG5cbmV4cG9ydCBkZWZhdWx0IFByb2plY3RvckNvbXBvbmVudFR5cGU7XG4iXSwic291cmNlUm9vdCI6Ii9zb3VyY2UvIn0=

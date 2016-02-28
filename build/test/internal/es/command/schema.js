@@ -1,0 +1,8 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+let Command = class Command {};
+exports.default = Command;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImludGVybmFsL2VzL2NvbW1hbmQvc2NoZW1hLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O0lBQU0sVUFBTixNQUFNLE9BQU4sQ0FBYyxFQUFkO2tCQVllIiwiZmlsZSI6ImludGVybmFsL2VzL2NvbW1hbmQvc2NoZW1hLmpzIiwic291cmNlc0NvbnRlbnQiOlsiY2xhc3MgQ29tbWFuZCB7XG4gIGlkO1xuXG4gIG5hbWU7XG4gIHZlcnNpb247XG5cbiAgYWdncmVnYXRlO1xuXG4gIHBheWxvYWQ7XG59XG5cblxuZXhwb3J0IGRlZmF1bHQgQ29tbWFuZDtcbiJdLCJzb3VyY2VSb290IjoiL3NvdXJjZS8ifQ==

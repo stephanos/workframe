@@ -20,6 +20,10 @@ class AccessorComponentType {
   static verify(target) {
     verifyAccessorFunc(target);
   }
+
+  static addRelation(registry, input, opts) {
+    registry.setConnection(input, 'handles', opts[1]);
+  }
 }
 
 

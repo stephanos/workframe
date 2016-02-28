@@ -1,4 +1,4 @@
-import { bootstrap } from '../src';
+import { bootstrap } from './index';
 
 
 const app = bootstrap({
