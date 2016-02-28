@@ -31,8 +31,6 @@ export function Component(...args) {
 }
 
 class RecordBase {
-  constructor() {
-  }
 }
 
 export function Record(...args) {

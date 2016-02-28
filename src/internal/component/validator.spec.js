@@ -54,7 +54,7 @@ describe('Validator', () => {
             },
           },
         }),
-        (err) => err.message === `invalid dependency 'MyDependency' of 'myDependency' in 'MyComponent': type 'Invalid' is not allowed`);
+        (err) => err.message === 'invalid dependency \'MyDependency\' of \'myDependency\' in \'MyComponent\': type \'Invalid\' is not allowed');
     });
   });
 });

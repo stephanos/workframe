@@ -11,7 +11,7 @@ describe('Component', () => {
   });
 
   it('should return "id"', () => {
-    assert.throws(() => new Component('dummy'), err => err.message === `'dummy' is not a function`);
+    assert.throws(() => new Component('dummy'), err => err.message === '\'dummy\' is not a function');
   });
 
   it('should set and get "namespace"', () => {
@@ -55,6 +55,6 @@ describe('Component', () => {
     comp.addDependency('dep', MyDep);
     assert.deepEqual(comp.dependencies, { dep: new Component(MyDep) });
 
-    assert.throws(() => comp.addDependency('dep', MyDep), err => err.message === `dep already exists`);
+    assert.throws(() => comp.addDependency('dep', MyDep), err => err.message === 'dep already exists');
   });
 });

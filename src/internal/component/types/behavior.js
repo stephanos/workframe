@@ -4,7 +4,7 @@ import { isFunction } from 'lodash';
 function verifyBehaveFunc(input) {
   const behaveFunc = input.prototype.behave;
   if (!isFunction(behaveFunc)) {
-    throw new Error(`method 'behave' must be defined`);
+    throw new Error('method \'behave\' must be defined');
   }
 }
 

@@ -27,7 +27,7 @@ describe('AccessorComponentType', () => {
 
       assert.throws(
         () => AccessorComponentType.verify(Accessor),
-        (err) => err.message === `method 'access' must be defined`);
+        (err) => err.message === 'method \'access\' must be defined');
     });
 
     // it('should fail if "access" method has less than 1 parameter', () => {

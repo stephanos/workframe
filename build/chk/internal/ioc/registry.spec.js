@@ -34,7 +34,7 @@ describe('Registry', () => {
     it('should fail for already existing ID', () => {
       registry.add(myComponent);
 
-      assert.throws(() => registry.add(myComponent), err => err.message === `can not register 'my': already registered`);
+      assert.throws(() => registry.add(myComponent), err => err.message === 'can not register \'my\': already registered');
     });
 
     describe('that is a singleton', () => {
@@ -122,7 +122,7 @@ describe('Registry', () => {
     });
 
     it('should fail for missing component', () => {
-      assert.throws(() => registry.get(myComponent), err => err.message === `unable to resolve 'MyComponent': not found`);
+      assert.throws(() => registry.get(myComponent), err => err.message === 'unable to resolve \'MyComponent\': not found');
     });
 
     it('should fail for missing direct dependency', () => {
@@ -130,7 +130,7 @@ describe('Registry', () => {
 
       registry.add(myComponent);
 
-      assert.throws(() => registry.get(myComponent), err => err.message === `unable to resolve 'ComponentA': not found (trace: 'MyComponent')`);
+      assert.throws(() => registry.get(myComponent), err => err.message === 'unable to resolve \'ComponentA\': not found (trace: \'MyComponent\')');
     });
 
     it('should fail for missing transitive dependency', () => {
@@ -139,7 +139,7 @@ describe('Registry', () => {
       registry.add(componentB);
       registry.add(myComponent);
 
-      assert.throws(() => registry.get(myComponent), err => err.message === `unable to resolve 'ComponentA': not found (trace: 'MyComponent' -> 'ComponentB')`);
+      assert.throws(() => registry.get(myComponent), err => err.message === 'unable to resolve \'ComponentA\': not found (trace: \'MyComponent\' -> \'ComponentB\')');
     });
 
     it('should fail for circular dependency', () => {
@@ -151,7 +151,7 @@ describe('Registry', () => {
       registry.add(componentB);
       registry.add(myComponent);
 
-      assert.throws(() => registry.get(myComponent), err => err.message === `unable to resolve 'ComponentB': circular dependency 'MyComponent' -> 'ComponentB' -> 'ComponentA' -> 'ComponentB'`);
+      assert.throws(() => registry.get(myComponent), err => err.message === 'unable to resolve \'ComponentB\': circular dependency \'MyComponent\' -> \'ComponentB\' -> \'ComponentA\' -> \'ComponentB\'');
     });
 
     describe('that is a singleton', () => {

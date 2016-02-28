@@ -73,7 +73,7 @@ describe('Factory', () => {
     it('when type is unknown', () => {
       class Invalid {}
 
-      assert.throws(() => factory.build(Invalid), err => err.message === `invalid component: 'Invalid' is not a known type`);
+      assert.throws(() => factory.build(Invalid), err => err.message === 'invalid component: \'Invalid\' is not a known type');
     });
 
     it('when name is invalid', () => {
@@ -81,7 +81,7 @@ describe('Factory', () => {
 
       validator.validateName.throws(new Error('invalid name'));
 
-      assert.throws(() => factory.build(Invalid_NameComponent), err => err.message === `invalid name`);
+      assert.throws(() => factory.build(Invalid_NameComponent), err => err.message === 'invalid name');
     });
 
     it('when dependencies are invalid', () => {
@@ -89,7 +89,7 @@ describe('Factory', () => {
 
       validator.validateDependencies.throws(new Error('invalid dependencies'));
 
-      assert.throws(() => factory.build(MyComponent), err => err.message === `invalid dependencies`);
+      assert.throws(() => factory.build(MyComponent), err => err.message === 'invalid dependencies');
     });
   });
 });

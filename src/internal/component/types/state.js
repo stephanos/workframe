@@ -9,7 +9,7 @@ class State {
     // TODO: validate it's still a Map()
     const result = fn(this._data);
     if (!(result instanceof Immutable.Map)) {
-      throw new Error(`invalid state update: must be Immutable.Map`);
+      throw new Error('invalid state update: must be Immutable.Map');
     }
     this._data = result;
   }
@@ -27,7 +27,7 @@ class StateComponentType {
 
   static verify(target) {
     if (!(target.prototype instanceof State)) {
-      throw new Error(`must inherit from 'State'`);
+      throw new Error('must inherit from \'State\'');
     }
   }
 }

@@ -19,7 +19,7 @@ describe('StateComponentType', () => {
     it('should fail when not type of "State"', () => {
       class MyState {}
 
-      assert.throws(() => StateComponentType.verify(MyState), err => err.message === `must inherit from 'State'`);
+      assert.throws(() => StateComponentType.verify(MyState), err => err.message === 'must inherit from \'State\'');
     });
   });
 });
@@ -44,6 +44,6 @@ describe('State', () => {
   it('should fail to update for invalid value', () => {
     const state = new State();
 
-    assert.throws(() => state.update(null, () => undefined), err => err.message === `invalid state update: must be Immutable.Map`);
+    assert.throws(() => state.update(null, () => undefined), err => err.message === 'invalid state update: must be Immutable.Map');
   });
 });

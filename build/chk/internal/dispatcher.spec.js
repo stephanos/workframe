@@ -44,8 +44,8 @@ describe('Dispatcher', () => {
     it('method with for of dispatcher as first argument', () => {
       let args;
       class Component {
-        doSomething() {
-          args = arguments;
+        doSomething(...callArgs) {
+          args = callArgs;
         }
       }
 

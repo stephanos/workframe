@@ -29,9 +29,7 @@ export function Component(...args) {
   };
 }
 
-class RecordBase {
-  constructor() {}
-}
+class RecordBase {}
 
 export function Record(...args) {
   return target => {

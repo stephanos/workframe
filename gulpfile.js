@@ -54,7 +54,6 @@ gulp.task('build', () =>
 
 gulp.task('lint', () =>
   gulp.src(['src/**/*.js', 'it/**/*.js'])
-    .pipe(cache('lint'))
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(gulpif(!daemon, eslint.failAfterError()))
@@ -62,7 +61,6 @@ gulp.task('lint', () =>
 
 gulp.task('typecheck', () =>
   gulp.src(['src/**/*.js', 'it/**/*.js'])
-    .pipe(cache('flow'))
     .pipe(babel({
       plugins: [
         'syntax-async-functions',

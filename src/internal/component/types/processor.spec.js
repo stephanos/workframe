@@ -27,7 +27,7 @@ describe('ProcessorComponentType', () => {
 
       assert.throws(
         () => ProcessorComponentType.verify(Processor),
-        (err) => err.message === `method 'process' must be defined`);
+        (err) => err.message === 'method \'process\' must be defined');
     });
 
     // it('should fail if "process" method has less than 1 parameter', () => {

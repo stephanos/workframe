@@ -4,7 +4,7 @@ import { isFunction } from 'lodash';
 function verifyProcessFunc(input) {
   const processFunc = input.prototype.process;
   if (!isFunction(processFunc)) {
-    throw new Error(`method 'process' must be defined`);
+    throw new Error('method \'process\' must be defined');
   }
   // if (processFunc.length !== 1) {
   //   throw new Error(`method 'process' must have exactly 1 parameter`);

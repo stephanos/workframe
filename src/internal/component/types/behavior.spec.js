@@ -25,7 +25,7 @@ describe('BehaviorComponentType', () => {
 
       assert.throws(
         () => BehaviorComponentType.verify(Behavior),
-        (err) => err.message === `method 'behave' must be defined`);
+        (err) => err.message === 'method \'behave\' must be defined');
     });
   });
 });

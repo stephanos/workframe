@@ -31,6 +31,6 @@ describe('inject', () => {
         dependency;
       }
     }, (err) =>
-      err.message === `unable to inject into 'dependency' of 'MyComponent': dependency already exists`);
+      err.message === 'unable to inject into \'dependency\' of \'MyComponent\': dependency already exists');
   });
 });

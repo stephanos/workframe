@@ -15,7 +15,7 @@ describe('Component', () => {
   it('should return "id"', () => {
     assert.throws(
       () => new Component('dummy'),
-      (err) => err.message === `'dummy' is not a function`);
+      (err) => err.message === '\'dummy\' is not a function');
   });
 
   it('should set and get "namespace"', () => {
@@ -66,6 +66,6 @@ describe('Component', () => {
 
     assert.throws(
       () => comp.addDependency('dep', MyDep),
-      (err) => err.message === `dep already exists`);
+      (err) => err.message === 'dep already exists');
   });
 });

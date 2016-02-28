@@ -20,7 +20,7 @@ describe('BehaviorComponentType', () => {
     it('should fail if "behave" method missing', () => {
       class Behavior {}
 
-      assert.throws(() => BehaviorComponentType.verify(Behavior), err => err.message === `method 'behave' must be defined`);
+      assert.throws(() => BehaviorComponentType.verify(Behavior), err => err.message === 'method \'behave\' must be defined');
     });
   });
 });

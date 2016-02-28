@@ -24,7 +24,7 @@ describe('StateComponentType', () => {
 
       assert.throws(
         () => StateComponentType.verify(MyState),
-        (err) => err.message === `must inherit from 'State'`);
+        (err) => err.message === 'must inherit from \'State\'');
     });
   });
 });
@@ -52,6 +52,6 @@ describe('State', () => {
 
     assert.throws(
       () => state.update(null, () => undefined),
-      (err) => err.message === `invalid state update: must be Immutable.Map`);
+      (err) => err.message === 'invalid state update: must be Immutable.Map');
   });
 });

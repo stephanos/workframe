@@ -55,5 +55,5 @@ type ChangeEmailCommandInit = { id: string;
   aggregateId: string;
   newEmailAddress: string;
 };
-Record('changeEmail', 1)(ChangeEmailCommand);
+Record('changeEmail')(ChangeEmailCommand);
 export default ChangeEmailCommand;

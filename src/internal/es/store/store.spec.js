@@ -6,16 +6,14 @@ import EventStore from './store';
 
 
 describe('Event Store', () => {
-  let clock;
   let store;
   let storage;
-  let idGenerator;
 
   before(() => {
-    clock = {
+    const clock = {
       now: sinon.stub().returns(new Date(0)),
     };
-    idGenerator = {
+    const idGenerator = {
       next: sinon.stub().returns('42'),
     };
     storage = {
