@@ -1,19 +1,19 @@
-import ComponentFactory from './internal/component/factory';
-import Validator from './internal/component/validator';
-import types from './internal/component/types';
+import ComponentFactory from './internal/core/component/factory';
+import Validator from './internal/core/component/validator';
+import types from './internal/core/component/types';
 
 import CommandHandler from './internal/es/command/commandHandler';
 import EventStore from './internal/es/store/store';
 import MemoryStorage from './internal/es/store/storage/memory';
 
-import Injector from './internal/ioc/injector';
-import Registry from './internal/ioc/registry';
+import Injector from './internal/core/ioc/injector';
+import Registry from './internal/core/ioc/registry';
 
-import Router from './internal/router';
+import Router from './internal/core/router';
 import API from './internal/api';
 
-import idGenerator from './internal/util/uuid';
-import clock from './internal/util/clock';
+import idGenerator from './internal/core/util/uuid';
+import clock from './internal/core/util/clock';
 
 
 const componentRegistry = new Registry();

@@ -2,8 +2,8 @@ import Component from './component/component';
 import Collector from './introspection/collector';
 import Dispatcher from './dispatcher';
 
-import idGenerator from '../internal/util/uuid';
-import clock from '../internal/util/clock';
+import idGenerator from './util/uuid';
+import clock from './util/clock';
 
 
 class Result {
