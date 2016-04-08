@@ -1,9 +1,14 @@
 /* @flow */
 
-import idGenerator from 'node-uuid';
+import UUID from 'node-uuid';
 
 
-export default {
+class IdGenerator {
 
-  next: (): string => idGenerator.v1(),
-};
+  static next(): string {
+    return UUID.v1();
+  }
+}
+
+
+export default IdGenerator;

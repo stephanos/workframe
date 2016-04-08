@@ -1,6 +1,11 @@
 /* @flow */
 
-export default {
+class Clock {
 
-  now: (): number => new Date().getTime(),
-};
+  static now(): number {
+    return new Date().getTime();
+  }
+}
+
+
+export default Clock;

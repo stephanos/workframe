@@ -1,5 +1,5 @@
 import util from 'util';
-import uuid from '../util/uuid';
+import idGenerator from '../util/uuid';
 
 const metaKey = '__meta';
 
@@ -13,7 +13,7 @@ class Component {
 
     this.factory = Factory;
     this.factory[metaKey] = this.factory[metaKey] || {
-      id: uuid.next(),
+      id: idGenerator.next(),
       dependencies: {},
     };
   }
