@@ -59,8 +59,6 @@ class Registry {
   _idByComponent = {};
   _componentById = {};
   _dependenciesById = {};
-
-  // TODO: use something like https://github.com/cpettitt/graphlib
   _connectionByActor = {};
   _connectionBySubject = {};
 
