@@ -44,6 +44,7 @@ gulp.task('build', () =>
       ],
       plugins: [
         'workframe',
+        'flow-comments',
         'transform-decorators-legacy',
       ],
     }))
