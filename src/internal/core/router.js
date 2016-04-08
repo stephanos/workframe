@@ -1,5 +1,5 @@
 import Component from './component/component';
-import Collector from './introspection/collector';
+import Collector from './collector';
 import Dispatcher from './dispatcher';
 
 import idGenerator from './util/uuid';
