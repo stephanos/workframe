@@ -3,19 +3,19 @@ import Immutable from 'immutable';
 
 class State {
 
-  _data = Immutable.Map();
+  data = Immutable.Map();
 
   update(__dispatcher, fn) {
     // TODO: validate it's still a Map()
-    const result = fn(this._data);
+    const result = fn(this.data);
     if (!(result instanceof Immutable.Map)) {
       throw new Error('invalid state update: must be Immutable.Map');
     }
-    this._data = result;
+    this.data = result;
   }
 
   get() {
-    return this._data;
+    return this.data;
   }
 }
 

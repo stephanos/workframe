@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint global-require: 0 */
 
 import assert from 'assert';
 // import ChangeEmailCommand from './account/command/changeEmail/command';

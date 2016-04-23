@@ -1,3 +1,4 @@
+
 class Dispatcher {
 
   constructor(parentId, collector, idGenerator, clock) {
@@ -12,24 +13,27 @@ class Dispatcher {
 
 
   invoke(module, component, func, args) {
-    this._trackCall(module, component, func, args);
+    this.trackCall(module, component, func, args);
 
     let result;
     try {
       const newArgs = args.slice();
-      newArgs.unshift(this._fork());
+      newArgs.unshift(this.fork());
       result = func.apply(component, newArgs);
     } catch (err) {
-      this._trackError(err);
+      this.trackError(err);
       throw err;
     }
 
-    this._trackResult(result);
+    this.trackResult(result);
     return result;
   }
 
+  fork() {
+    return new Dispatcher(this.id, this.collector, this.idGenerator, this.clock);
+  }
 
-  _trackCall(module, component, func, args) {
+  trackCall(module, component, func, args) {
     this.collector.add({
       id: this.id,
       parentId: this.parentId,
@@ -40,7 +44,7 @@ class Dispatcher {
     });
   }
 
-  _trackError(err) {
+  trackError(err) {
     this.collector.add({
       id: this.id,
       error: err,
@@ -48,16 +52,12 @@ class Dispatcher {
     });
   }
 
-  _trackResult(result) {
+  trackResult(result) {
     this.collector.add({
       id: this.id,
       result,
       time: this.clock.now(),
     });
-  }
-
-  _fork() {
-    return new Dispatcher(this.id, this.collector, this.idGenerator, this.clock);
   }
 }
 

@@ -22,7 +22,7 @@ function getNameFor(input, type) {
 
 class ComponentFactory {
 
-  _componentsSortedByCreation = [];
+  componentsByCreation = [];
 
   constructor(types, registry, validator) {
     this.types = types;
@@ -32,7 +32,7 @@ class ComponentFactory {
 
   build(input, opts) {
     const component = new Component(input);
-    this._componentsSortedByCreation.push(component);
+    this.componentsByCreation.push(component);
 
     component.opts = opts;
 
@@ -53,7 +53,7 @@ class ComponentFactory {
   }
 
   get componentsSortedByCreation() {
-    return this._componentsSortedByCreation;
+    return this.componentsByCreation;
   }
 }
 

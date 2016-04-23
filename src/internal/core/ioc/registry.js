@@ -5,7 +5,7 @@ import { ResolveError, KeyError } from './errors';
 
 
 function checkIsNoDuplicate(container, id, component) {
-  if (container._valueById[id] || container._componentById[id]) {
+  if (container.valueById[id] || container.componentById[id]) {
     throw new KeyError(`can not register '${component.name}': already registered`);
   }
 }
@@ -23,7 +23,7 @@ function createInstance(container, rootComponent, proxyFn) {
         `circular dependency ${traceToString(trace.push(component))}`);
     }
 
-    if (container._componentById[component.id] === undefined) {
+    if (container.componentById[component.id] === undefined) {
       let message = `unable to resolve '${component.factory.name}': not found`;
       if (!trace.isEmpty()) {
         message += ` (trace: ${traceToString(trace)})`;
@@ -31,19 +31,19 @@ function createInstance(container, rootComponent, proxyFn) {
       throw new ResolveError(message);
     }
 
-    const instance = container._valueById[component.id] || component.newInstance();
-    container._valueById[component.id] = instance;
+    const instance = container.valueById[component.id] || component.newInstance();
+    container.valueById[component.id] = instance;
 
-    const dependencies = container._dependenciesById[component.id];
+    const dependencies = container.dependenciesById[component.id];
     if (dependencies) {
-      for (const property in dependencies) {
+      Object.keys(dependencies).forEach((property) => {
         if (dependencies.hasOwnProperty(property)) {
           const depComp = dependencies[property];
           const depVal = cache[depComp.id] || resolve(depComp, trace.push(component));
           instance[property] = depVal;
           cache[depComp.id] = depVal;
         }
-      }
+      });
     }
 
     return proxyFn(instance);
@@ -55,20 +55,20 @@ function createInstance(container, rootComponent, proxyFn) {
 
 class Registry {
 
-  _valueById = {};
-  _idByComponent = {};
-  _componentById = {};
-  _dependenciesById = {};
-  _connectionByActor = {};
-  _connectionBySubject = {};
+  valueById = {};
+  idByComponent = {};
+  componentById = {};
+  dependenciesById = {};
+  connectionByActor = {};
+  connectionBySubject = {};
 
   add(component) {
     const id = component.id;
     checkIsNoDuplicate(this, id, component);
 
-    this._componentById[id] = component.factory;
-    this._idByComponent[component.factory] = id;
-    this._dependenciesById[id] = component.dependencies;
+    this.componentById[id] = component.factory;
+    this.idByComponent[component.factory] = id;
+    this.dependenciesById[id] = component.dependencies;
   }
 
   get(component, proxyFn = (input) => input) {
@@ -76,14 +76,14 @@ class Registry {
   }
 
   setConnection(actor, kind, subject) {
-    this._connectionByActor[actor] = subject;
+    this.connectionByActor[actor] = subject;
 
-    this._connectionBySubject[subject] = this._connectionBySubject[subject] || [];
-    this._connectionBySubject[subject].push(actor);
+    this.connectionBySubject[subject] = this.connectionBySubject[subject] || [];
+    this.connectionBySubject[subject].push(actor);
   }
 
   getConnection(kind, component) {
-    return this._connectionBySubject[component][0];
+    return this.connectionBySubject[component][0];
   }
 }
 

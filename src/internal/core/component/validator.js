@@ -14,7 +14,7 @@ class Validator {
   }
 
   validateDependencies(input, type, dependencies) {
-    for (const property in dependencies) {
+    Object.keys(dependencies).forEach((property) => {
       if (dependencies.hasOwnProperty(property)) {
         const dependency = dependencies[property];
         const depTypeName = dependency.type.typeName;
@@ -22,7 +22,7 @@ class Validator {
           throw new Error(`invalid dependency '${dependency.name}' of '${property}' in '${input.name}': type '${depTypeName}' is not allowed`);
         }
       }
-    }
+    });
   }
 }
 

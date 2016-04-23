@@ -18,23 +18,24 @@ class Graph {
   }
 
   connect(from, to, relation) {
-    this._getOrCreateNetwork(relation)
+    this.getOrCreateNetwork(relation)
       .setEdge(from, to);
   }
 
   connectionsTo(id, relation) {
-    return this._getOrCreateNetwork(relation)
+    return this.getOrCreateNetwork(relation)
       .outEdges(id)
       .map((edge) => edge.w)
       .map((node) => this.valueById[node]);
   }
 
   cycles(relation) {
-    return alg.findCycles(this._getOrCreateNetwork(relation))
+    return alg.findCycles(this.getOrCreateNetwork(relation))
       .map((cycle) => cycle.map((node) => this.valueById[node]));
   }
 
-  _getOrCreateNetwork(relation) {
+
+  getOrCreateNetwork(relation) {
     if (this.networkbyRelation[relation] === undefined) {
       this.networkbyRelation[relation] = new Network();
     }
