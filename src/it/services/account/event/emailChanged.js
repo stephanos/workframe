@@ -3,14 +3,13 @@
 import { Data } from '../../../../index';
 
 
-@Data('changeEmail')
-class ChangeEmailCommand {
+@Data('emailChanged')
+class EmailChangedEvent {
 
-  id: string;
   aggregateId: string;
 
   newEmailAddress: string;
 }
 
 
-export default ChangeEmailCommand;
+export default EmailChangedEvent;
