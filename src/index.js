@@ -6,7 +6,6 @@ import CommandHandler from './internal/es/command/commandHandler';
 import EventStore from './internal/es/store/store';
 import MemoryStorage from './internal/es/store/storage/memory';
 
-import Injector from './internal/core/ioc/injector';
 import Registry from './internal/core/ioc/registry';
 
 import Router from './internal/core/router';
@@ -24,24 +23,22 @@ const store = new EventStore(storage, idGenerator, clock);
 const commandHandler = new CommandHandler(store, componentRegistry);
 
 const componentFactory = new ComponentFactory(types, componentRegistry, componentValidator);
-export function Component(...args) {
-  return (target) => {
-    componentFactory.build(target, args);
-  };
-}
 
-class RecordBase {
-}
 
-export function Record(...args) {
-  return (target) => {
-    componentFactory.build(target, args);
-  };
+class ComponentBase {}
+export function Component() {
+  return () => {};
 }
-Record.Base = RecordBase;
+Component.Base = ComponentBase;
 
-export function Inject(...args) {
-  return Injector.inject(...args);
+class DataBase {}
+export function Data() {
+  return () => {};
+}
+Data.Base = DataBase;
+
+export function Inject() {
+  // dummy placeholder
 }
 
 const router = new Router(componentRegistry, commandHandler);

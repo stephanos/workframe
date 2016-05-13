@@ -1,9 +1,9 @@
 /* @flow */
 /* eslint global-require: 0 */
 
-import assert from 'assert';
+// import assert from 'assert';
 // import ChangeEmailCommand from './account/command/changeEmail/command';
-import CreateAccountCommand from './account/command/createAccount/command';
+// import CreateAccountCommand from './account/command/createAccount/command';
 
 
 describe('Integration Test "Account"', () => {
@@ -19,32 +19,32 @@ describe('Integration Test "Account"', () => {
     app = require('./main.js').default;
   });
 
-  it('should create account', async () => {
-    const cmd = new CreateAccountCommand({
-      id: '0',
-      givenName: 'Arthur',
-      familyName: 'Dent',
-      emailAddress: 'arthur@earth.com',
-    });
-
-    const { result } = await app.dispatch(cmd);
-
-    assert.deepEqual(result.toJS(), [{
-      aggregate: {
-        revision: 0,
-      },
-      command: {
-        name: 'CreateAccountCommand',
-        id: '0',
-      },
-      payload: {
-        aggregateId: 'TODO',
-        givenName: 'Arthur',
-        familyName: 'Dent',
-        emailAddress: 'arthur@earth.com',
-      },
-    }]);
-  });
+  // it('should create account', async () => {
+  //   const cmd = new CreateAccountCommand({
+  //     id: '0',
+  //     givenName: 'Arthur',
+  //     familyName: 'Dent',
+  //     emailAddress: 'arthur@earth.com',
+  //   });
+  //
+  //   const { result } = await app.dispatch(cmd);
+  //
+  //   assert.deepEqual(result.toJS(), [{
+  //     aggregate: {
+  //       revision: 0,
+  //     },
+  //     command: {
+  //       name: 'CreateAccountCommand',
+  //       id: '0',
+  //     },
+  //     payload: {
+  //       aggregateId: 'TODO',
+  //       givenName: 'Arthur',
+  //       familyName: 'Dent',
+  //       emailAddress: 'arthur@earth.com',
+  //     },
+  //   }]);
+  // });
 
   // it('should handle query', () => {
   //   const { result } = app.dispatch(AccountAccessor, { accountId: '42' });

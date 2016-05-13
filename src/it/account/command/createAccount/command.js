@@ -1,9 +1,9 @@
 /* @flow */
 
-import { Record } from '../../../index';
+import { Data } from '../../../../index';
 
 
-@Record('createAccount')
+@Data('createAccount')
 class CreateAccountCommand {
 
   id: string;

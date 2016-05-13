@@ -21,9 +21,19 @@ function beforeInit(context, types) {
 }
 
 function loadComponents(module) {
+  const components = [];
   requireDirectory(module, {
-    exclude: (path) => /.\.spec.js$/.test(path) || /node_modules$/.test(path),
+    visit: (obj) => {
+      if (obj.default && obj.default.isComponent) {
+        components.push(obj);
+      }
+    },
+    exclude: (path) => /.\.spec.js$/.test(path),
   });
+  // return (target) => {
+  //   componentFactory.build(target, args);
+  // };
+  return components;
 }
 
 function initComponents(context, components) {

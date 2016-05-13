@@ -1,9 +1,9 @@
 /* @flow */
 
-import { Record } from '../../index';
+import { Data } from '../../../index';
 
 
-@Record('emailChanged')
+@Data('emailChanged')
 class EmailChangedEvent {
 
   aggregateId: string;

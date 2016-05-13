@@ -34,7 +34,7 @@ gulp.task('clean', (done) => {
 });
 
 gulp.task('build', () =>
-  gulp.src(['src/**/*.js', 'it/**/*.js'])
+  gulp.src(['src/**/*.js'])
     .pipe(cache('build'))
     .pipe(sourcemaps.init())
     .pipe(babel({
@@ -54,14 +54,14 @@ gulp.task('build', () =>
 );
 
 gulp.task('lint', () =>
-  gulp.src(['src/**/*.js', 'it/**/*.js'])
+  gulp.src(['src/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(gulpif(!daemon, eslint.failAfterError()))
 );
 
 gulp.task('typecheck', () =>
-  gulp.src(['src/**/*.js', 'it/**/*.js'])
+  gulp.src(['src/**/*.js'])
     .pipe(babel({
       plugins: [
         'syntax-async-functions',
@@ -133,7 +133,7 @@ gulp.task('coveralls', (done) => {
 
 
 gulp.task('watch', () => {
-  gulp.watch(['src/**/*.js', 'lib/**/*.js', 'it/**/*.js'],
+  gulp.watch(['src/**/*.js', 'lib/**/*.js'],
     gulp.series('package'));
 });
 

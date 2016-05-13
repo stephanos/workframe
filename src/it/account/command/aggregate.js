@@ -1,9 +1,9 @@
 /* @flow */
 
-import { Record } from '../../index';
+import { Data } from '../../../index';
 
 
-@Record('account')
+@Data('account')
 class AccountAggregateRoot {
 
   id: string;

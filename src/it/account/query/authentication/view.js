@@ -1,9 +1,9 @@
 /* @flow */
 
-import { Record } from '../../../index';
+import { Data } from '../../../../index';
 
 
-@Record('accountAuthentication')
+@Data('accountAuthentication')
 class AccountAuthenticationView {
 
   id: string;
