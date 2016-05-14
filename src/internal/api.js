@@ -1,9 +1,8 @@
 import requireDirectory from 'require-directory';
 
-
 function createContext(types, router) {
   const context = {};
-  types.forEach((t) => {
+  types.forEach(t => {
     context[t.typeName] = {
       router,
     };
@@ -11,9 +10,8 @@ function createContext(types, router) {
   return context;
 }
 
-
 function beforeInit(context, types) {
-  types.forEach((t) => {
+  types.forEach(t => {
     if (t.beforeInitialize) {
       t.beforeInitialize(context[t.typeName]);
     }
@@ -23,12 +21,12 @@ function beforeInit(context, types) {
 function loadComponents(module) {
   const components = [];
   requireDirectory(module, {
-    visit: (obj) => {
+    visit: obj => {
       if (obj.default && obj.default.isComponent) {
         components.push(obj);
       }
     },
-    exclude: (path) => /.\.spec.js$/.test(path),
+    exclude: path => /.\.spec.js$/.test(path),
   });
   // return (target) => {
   //   componentFactory.build(target, args);
@@ -37,7 +35,7 @@ function loadComponents(module) {
 }
 
 function initComponents(context, components) {
-  components.forEach((component) => {
+  components.forEach(component => {
     const type = component.type;
     if (type.initialize) {
       type.initialize(context[type.typeName], component);
@@ -50,13 +48,12 @@ function initComponents(context, components) {
 }
 
 function afterInit(context, types) {
-  types.forEach((t) => {
+  types.forEach(t => {
     if (t.afterInitialize) {
       t.afterInitialize(context[t.typeName]);
     }
   });
 }
-
 
 class API {
 
@@ -76,13 +73,12 @@ class API {
   }
 
   terminate() {
-    this.types.forEach((t) => {
+    this.types.forEach(t => {
       if (t.terminate) {
         t.terminate(this.context[t.typeName]);
       }
     });
   }
 }
-
 
 export default API;

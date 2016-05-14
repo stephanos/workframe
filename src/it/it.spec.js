@@ -5,7 +5,6 @@
 // import ChangeEmailCommand from './account/command/changeEmail/command';
 // import CreateAccountCommand from './account/command/createAccount/command';
 
-
 describe('Integration Test "Account"', () => {
   let app;
 

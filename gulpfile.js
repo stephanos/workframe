@@ -9,6 +9,7 @@ const gulpif = require('gulp-if');
 const babel = require('gulp-babel');
 const mocha = require('gulp-mocha');
 const cache = require('gulp-cached');
+const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
 const espower = require('gulp-espower');
 const flowtype = require('gulp-flowtype');
@@ -29,28 +30,48 @@ function handleError(err) {
 
 
 gulp.task('clean', (done) => {
-  del.sync(['build', 'coverage']);
+  del.sync(['dist', 'coverage']);
   done();
 });
 
 gulp.task('build', () =>
-  gulp.src(['src/**/*.js'])
-    .pipe(cache('build'))
+  gulp.src(['src/**/*.js', '!src/it/**'])
+    .pipe(cache('dist'))
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: [
-        'node5',
+        'node6',
         'stage-1',
       ],
       plugins: [
-        'workframe',
         'flow-comments',
-        'transform-decorators-legacy',
       ],
     }))
     .on('error', handleError)
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('build/test'))
+    .pipe(gulp.dest('dist'))
+);
+
+gulp.task('build-it', () =>
+  gulp.src(['src/it/**/*.js', '!src/**/*.t.js'])
+    .pipe(cache('dist'))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: [
+        'node6',
+        'stage-1',
+      ],
+      plugins: [
+        'decorator-metadata',
+        // 'type-metadata',
+        'transform-decorators-legacy',
+        'flow-comments',
+        'workframe',
+      ],
+    }))
+    .on('error', handleError)
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('dist/it'))
 );
 
 gulp.task('lint', () =>
@@ -60,35 +81,32 @@ gulp.task('lint', () =>
     .pipe(gulpif(!daemon, eslint.failAfterError()))
 );
 
-gulp.task('typecheck', () =>
-  gulp.src(['src/**/*.js'])
+gulp.task('generate', () =>
+  gulp.src('src/**/*.t.js')
     .pipe(babel({
       plugins: [
-        'syntax-async-functions',
-        'syntax-class-properties',
-        'syntax-decorators',
-        'syntax-flow',
-        ['workframe', {
-          typecheckOnly: true,
+        'babel-plugin-syntax-flow',
+        'babel-plugin-syntax-decorators',
+        'babel-plugin-syntax-class-properties',
+        ['immutable-record', {
+          decorator: 'Data',
         }],
       ],
     }))
     .on('error', handleError)
-    .pipe(gulp.dest('build/chk'))
-    .pipe(flowtype({
-      abort: !daemon,
-    }))
+    .pipe(rename((path) => { path.basename = path.basename.replace('.t', '') }))
+    .pipe(gulp.dest('src'))
 );
 
 gulp.task('unit-test', (done) => {
-  gulp.src(['build/test/**/*.js', '!build/test/**/*.spec.js', '!build/test/**/*.it.js'])
+  gulp.src(['dist/**/*.js', '!dist/**/*.spec.js', '!dist/**/*.it.js'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
       includeUntested: true,
     }))
     .pipe(istanbul.hookRequire())
     .on('finish', () => {
-      gulp.src('build/test/**/*.spec.js', { read: false })
+      gulp.src('dist/**/*.spec.js', { read: false })
         .pipe(espower())
         .pipe(mocha({
           ui: 'bdd',
@@ -108,7 +126,7 @@ gulp.task('unit-test', (done) => {
 });
 
 gulp.task('integration-test', (done) => {
-  gulp.src(['build/test/**/*.it.js'], { read: false })
+  gulp.src(['dist/**/*.it.js'], { read: false })
     .pipe(espower())
     .pipe(mocha({
       ui: 'bdd',
@@ -133,8 +151,8 @@ gulp.task('coveralls', (done) => {
 
 
 gulp.task('watch', () => {
-  gulp.watch(['src/**/*.js', 'lib/**/*.js'],
-    gulp.series('package'));
+  gulp.watch(['src/**/*.t.js'], gulp.series('generate'));
+  gulp.watch(['src/**/*.js', 'lib/**/*.js', '!src/**/*.t.js'], gulp.series('package'));
 });
 
 gulp.task('_daemon', (done) => {
@@ -144,10 +162,10 @@ gulp.task('_daemon', (done) => {
 
 
 gulp.task('package',
-  gulp.series('build', 'lint', 'typecheck', 'unit-test', 'integration-test', 'coveralls'));
+  gulp.series('build', 'build-it', 'lint', 'unit-test', 'integration-test', 'coveralls'));
 
 gulp.task('dev',
-  gulp.series('_daemon', 'clean', 'package', 'watch'));
+  gulp.series('_daemon', 'clean', 'generate', 'package', 'watch'));
 
 gulp.task('default',
-  gulp.series('clean', 'package'));
+  gulp.series('clean', 'generate'));

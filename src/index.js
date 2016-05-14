@@ -14,7 +14,6 @@ import API from './internal/api';
 import idGenerator from './internal/core/util/uuid';
 import clock from './internal/core/util/clock';
 
-
 const componentRegistry = new Registry();
 const componentValidator = new Validator();
 
@@ -23,7 +22,6 @@ const store = new EventStore(storage, idGenerator, clock);
 const commandHandler = new CommandHandler(store, componentRegistry);
 
 const componentFactory = new ComponentFactory(types, componentRegistry, componentValidator);
-
 
 class ComponentBase {}
 export function Component() {
