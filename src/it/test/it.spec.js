@@ -15,7 +15,7 @@ describe('Integration Test "Account"', () => {
   });
 
   it('should load', () => {
-    app = require('./main').default;
+    app = require('../').default;
   });
 
   // it('should create account', async () => {
