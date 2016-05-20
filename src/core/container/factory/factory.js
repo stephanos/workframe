@@ -1,4 +1,8 @@
 class Factory {
+
+  constructor(network) {
+    this.network = network;
+  }
 }
 
 

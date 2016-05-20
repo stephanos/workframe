@@ -11,18 +11,12 @@ describe('Registrar', () => {
   beforeEach(() => {
     registrar = new Registrar({
       connect: sinon.spy(),
-    }, {
-      getConnections: sinon.stub(),
     });
   });
 
   it('should register components in network', () => {
-    registrar.componentSchema.getConnections.withArgs(A).returns([{
-      from: A, to: B, relation: 'depends',
-    }]);
-    registrar.componentSchema.getConnections.withArgs(B).returns([]);
-
-    registrar.registerAll([A, B]);
+    const compA = { connections: [{ from: A, to: B, relation: 'depends' }] };
+    registrar.register(compA);
 
     registrar.network.connect.calledWith(A, B, 'depends');
   });
