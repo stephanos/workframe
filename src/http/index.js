@@ -1,5 +1,5 @@
-import Method from '../internal/http/methods';
-import ResourceFactory from '../internal/http/resource';
+import Method from './methods';
+import ResourceFactory from './resource';
 
 export { Method };
 
