@@ -5,10 +5,18 @@ class Registrar {
     this.componentSchema = componentSchema;
   }
 
+
   registerAll(components) {
     components.forEach((component) => {
-      // TODO
-    })
+      this.network.add(component);
+    });
+
+    components.forEach((component) => {
+      const connections = this.componentSchema.getConnections(component);
+      connections.forEach((connection) => {
+        this.network.connect(connection.from, connection.to, connection.relation);
+      });
+    });
   }
 }
 
