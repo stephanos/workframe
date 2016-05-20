@@ -7,19 +7,17 @@ import Registrar from './registrar';
 class Container {
 
   constructor(componentFactory) {
-    const isComponent = (obj) => componentFactory.isComponent(obj);
-    const excludeFiles = (path) => /.\.spec.js$/.test(path); // TODO: make configurable
-    this.scanner = new Scanner(isComponent, excludeFiles);
-
     this.network = new Network();
     this.factory = new Factory(this.network);
-    this.registrar = new Registrar(this.network, componentFactory);
+
+    const isComponent = (obj) => componentFactory.isComponent(obj);
+    const excludeFiles = (path) => /.\.spec.js$/.test(path); // TODO: make configurable
+    const scanner = new Scanner(isComponent, excludeFiles);
+    this.registrar = new Registrar(this.network, scanner, componentFactory);
   }
 
   init(module) {
-    this.scanner.scan(module)
-      .map((obj) => this.componentFactory.create(obj))
-      .forEach((comp) => this.registrar.register(comp));
+    this.registrar.register(module);
   }
 
   start() {

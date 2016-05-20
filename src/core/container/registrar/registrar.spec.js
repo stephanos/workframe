@@ -11,12 +11,21 @@ describe('Registrar', () => {
   beforeEach(() => {
     registrar = new Registrar({
       connect: sinon.spy(),
+    }, {
+      scan: sinon.stub(),
+    }, {
+      create: sinon.stub(),
     });
   });
 
   it('should register components in network', () => {
-    const compA = { connections: [{ from: A, to: B, relation: 'depends' }] };
-    registrar.register(compA);
+    const module = {};
+    const object = {};
+    registrar.scanner.scan.withArgs(module).returns([object]);
+    registrar.componentFactory.create.withArgs(object).returns(
+      { connections: [{ from: A, to: B, relation: 'depends' }] }
+    );
+    registrar.register(module);
 
     registrar.network.connect.calledWith(A, B, 'depends');
   });
