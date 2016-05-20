@@ -8,57 +8,60 @@ describe('Network', () => {
   class Eve {}
   class Snake {}
 
-  describe('add()', () => {
-    it('should add a node', () => {
-      const graph = new Network();
-      graph.add('a', Adam);
-      assert.equal(graph.get('a'), Adam);
+  it('should connect 2 new values', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, 'likes');
+
+    assert.deepEqual(net.connectionsTo(Adam, 'likes'), [Eve]);
+  });
+
+  it('should connect new value with existing value', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, 'likes');
+    net.connect(Snake, Eve, 'hates');
+
+    assert.deepEqual(net.connectionsTo(Adam, 'likes'), [Eve]);
+    assert.deepEqual(net.connectionsTo(Snake, 'hates'), [Eve]);
+  });
+
+  it('should connect existing value with new value', () => {
+    const net = new Network();
+    net.connect(Snake, Adam, 'hates');
+    net.connect(Snake, Eve, 'hates');
+
+    assert.deepEqual(net.connectionsTo(Snake, 'hates'), [Adam, Eve]);
+  });
+
+  it('should fail to return connections to non-existing node', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, 'likes');
+
+    assert.throws(() => net.connectionsTo(Snake, 'likes'));
+  });
+
+  it('should fail to return connections for non-existing relation', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, 'likes');
+
+    assert.throws(() => net.connectionsTo(Adam, 'hates'));
+  });
+
+  describe('without a cycle', () => {
+    it('should return empty cyclic path', () => {
+      const net = new Network();
+      net.connect(Adam, Eve, 'likes');
+
+      assert.deepEqual(net.cycles('likes'), []);
     });
   });
 
-  describe('connect()', () => {
-    it('should connect nodes', () => {
-      const graph = new Network();
-      graph.add('a', Adam);
-      graph.add('e', Eve);
-      graph.add('s', Snake);
+  describe('with a cycle', () => {
+    it('should return path of cycle', () => {
+      const net = new Network();
+      net.connect(Adam, Eve, 'likes');
+      net.connect(Eve, Adam, 'likes');
 
-      graph.connect('a', 'e', 'likes');
-      graph.connect('s', 'a', 'hates');
-      graph.connect('s', 'e', 'hates');
-
-      assert.deepEqual(graph.connectionsTo('a', 'hates'), []);
-      assert.deepEqual(graph.connectionsTo('a', 'likes'), [Eve]);
-      assert.deepEqual(graph.connectionsTo('s', 'hates'), [Adam, Eve]);
-    });
-  });
-
-  describe('cycles()', () => {
-    it('should return cyclic paths', () => {
-      const graph = new Network();
-      graph.add('a', Adam);
-      graph.add('e', Eve);
-
-      graph.connect('a', 'e', 'likes');
-      assert.deepEqual(graph.cycles('likes'), []);
-
-      graph.connect('e', 'a', 'likes');
-      assert.deepEqual(graph.cycles('likes'), [[Eve, Adam]]);
-    });
-  });
-
-  describe('size()', () => {
-    it('should return 0 after initialization', () => {
-      const graph = new Network();
-      assert.equal(graph.size, 0);
-    });
-
-    it('should grow with each added node', () => {
-      const graph = new Network();
-      graph.add('a', Adam);
-      assert.equal(graph.size, 1);
-      graph.add('e', Eve);
-      assert.equal(graph.size, 2);
+      assert.deepEqual(net.cycles('likes'), [[Eve, Adam]]);
     });
   });
 });
