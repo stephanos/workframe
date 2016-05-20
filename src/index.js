@@ -1,18 +1,18 @@
-import ComponentFactory from './internal/core/component/factory';
-import Validator from './internal/core/component/validator';
-import types from './internal/core/component/types';
+import ComponentFactory from './core/component/factory';
+import Validator from './core/component/validator';
+import types from './core/component/types';
 
 import CommandHandler from './es/command/commandHandler';
 import EventStore from './es/store/store';
 import MemoryStorage from './es/store/storage/memory';
 
-import Registry from './internal/core/ioc/registry';
+import Registry from './core/ioc/registry';
 
-import Router from './internal/core/router';
-import API from './internal/api';
+import Router from './core/router';
+import API from './api';
 
-import idGenerator from './internal/core/util/uuid';
-import clock from './internal/core/util/clock';
+import idGenerator from './core/util/uuid';
+import clock from './core/util/clock';
 
 const componentRegistry = new Registry();
 const componentValidator = new Validator();
