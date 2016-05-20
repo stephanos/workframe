@@ -2,9 +2,9 @@ import ComponentFactory from './internal/core/component/factory';
 import Validator from './internal/core/component/validator';
 import types from './internal/core/component/types';
 
-import CommandHandler from './internal/es/command/commandHandler';
-import EventStore from './internal/es/store/store';
-import MemoryStorage from './internal/es/store/storage/memory';
+import CommandHandler from './es/command/commandHandler';
+import EventStore from './es/store/store';
+import MemoryStorage from './es/store/storage/memory';
 
 import Registry from './internal/core/ioc/registry';
 
