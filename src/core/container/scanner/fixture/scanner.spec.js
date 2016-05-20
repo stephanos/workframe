@@ -2,33 +2,33 @@ import assert from 'assert';
 import B, { A } from './abc';
 import Z, { X, Y } from './xyz';
 
-import scan from '../';
+import Scanner from '../';
 
 
-describe('scan', () => {
+describe('Scanner', () => {
   it('should return all exported objects', () => {
-    const result = scan(module,
+    const result = new Scanner(
       () => true,
-      () => false,
-    );
+      () => false
+    ).scan(module);
 
     assert.deepEqual(result, [A, B, X, Y, Z]);
   });
 
   it('should return exported objects from files that are not called "abc.js"', () => {
-    const result = scan(module,
+    const result = new Scanner(
       () => true,
-      (path) => /abc.js$/.test(path),
-    );
+      (path) => /abc.js$/.test(path)
+    ).scan(module);
 
     assert.deepEqual(result, [X, Y, Z]);
   });
 
   it('should return exported objects that are strings', () => {
-    const result = scan(module,
+    const result = new Scanner(
       (obj) => typeof obj === 'string',
       () => false,
-    );
+    ).scan(module);
 
     assert.deepEqual(result, [A, Z]);
   });
