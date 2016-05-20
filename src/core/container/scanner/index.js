@@ -1,2 +1,2 @@
-import Scanner from './scanner';
-export default Scanner;
+import scan from './scan';
+export default scan;
