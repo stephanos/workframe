@@ -1,5 +1,5 @@
 import API from './boot';
-import { Component, Data, Inject } from './core/decorators';
+import { Component, Data, Inject } from './core';
 
 
 export { Component, Data, Inject };
