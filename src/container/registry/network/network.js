@@ -15,20 +15,11 @@ class Network {
   }
 
   connectionsTo(value, relation) {
-    const toId = this.idByValue[value];
-    if (!toId) {
-      throw Error('unknown node');
-    }
+    return this.connectionsOf(value, relation, true);
+  }
 
-    const network = this.networkbyRelation[relation];
-    if (!network) {
-      throw Error('unknown relation');
-    }
-
-    return network
-      .outEdges(toId)
-      .map((edge) => edge.w)
-      .map((fromId) => this.valueById[fromId]);
+  connectionsFrom(value, relation) {
+    return this.connectionsOf(value, relation, false);
   }
 
   cycles(relation) {
@@ -60,6 +51,23 @@ class Network {
     }
 
     return this.networkbyRelation[relation];
+  }
+
+  connectionsOf(value, relation, incoming) {
+    const valueId = this.idByValue[value];
+    if (!valueId) {
+      throw Error('unknown node');
+    }
+
+    const network = this.networkbyRelation[relation];
+    if (!network) {
+      throw Error('unknown relation');
+    }
+
+    const edges = (incoming ? network.inEdges(valueId) : network.outEdges(valueId)) || [];
+    return edges
+      .map((edge) => edge[incoming ? 'v' : 'w'])
+      .map((fromId) => this.valueById[fromId]);
   }
 }
 
