@@ -1,9 +1,9 @@
-import Component from './component/component';
+import Component from '../component/component';
 import Collector from './collector';
 import Dispatcher from './dispatcher';
 
-import idGenerator from './util/uuid';
-import clock from './util/clock';
+import idGenerator from '../util/uuid';
+import clock from '../util/clock';
 
 
 class Result {
