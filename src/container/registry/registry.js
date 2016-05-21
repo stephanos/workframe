@@ -5,7 +5,7 @@ import Registrar from './registrar';
 import ComponentFactory from '../component2/factory';
 
 
-class Container {
+class Registry {
 
   constructor(componentSchema) {
     this.network = new Network();
@@ -28,4 +28,4 @@ class Container {
 }
 
 
-export default Container;
+export default Registry;

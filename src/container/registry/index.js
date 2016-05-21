@@ -1,2 +1,2 @@
-import Container from './container';
-export default Container;
+import Registry from './registry';
+export default Registry;
