@@ -5,7 +5,7 @@ import { alg, Graph } from 'graphlib';
 class Network {
   idByValue = {};
   valueById = {};
-  networkbyRelation = {};
+  networkByRelation = {};
 
 
   connect(from, to, relation) {
@@ -23,7 +23,7 @@ class Network {
   }
 
   cycles(relation) {
-    const network = this.networkbyRelation[relation];
+    const network = this.networkByRelation[relation];
     if (!network) {
       return [];
     }
@@ -46,11 +46,11 @@ class Network {
   }
 
   getOrCreateNetwork(relation) {
-    if (this.networkbyRelation[relation] === undefined) {
-      this.networkbyRelation[relation] = new Graph();
+    if (this.networkByRelation[relation] === undefined) {
+      this.networkByRelation[relation] = new Graph();
     }
 
-    return this.networkbyRelation[relation];
+    return this.networkByRelation[relation];
   }
 
   connectionsOf(value, relation, incoming) {
@@ -59,7 +59,7 @@ class Network {
       throw Error('unknown node');
     }
 
-    const network = this.networkbyRelation[relation];
+    const network = this.networkByRelation[relation];
     if (!network) {
       throw Error('unknown relation');
     }
