@@ -1,4 +1,4 @@
-import { boot } from '../index';
+import { boot } from '../../../';
 
 
 const app = boot({
