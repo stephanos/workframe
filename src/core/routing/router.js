@@ -2,8 +2,7 @@ import Component from '../component/component';
 import Collector from './collector';
 import Dispatcher from './dispatcher';
 
-import idGenerator from '../util/uuid';
-import clock from '../util/clock';
+import { Clock, IdGenerator } from '../../util';
 
 
 class Result {
@@ -30,7 +29,7 @@ class Router {
     }
 
     const collector = new Collector();
-    const dispatcher = new Dispatcher(null, collector, idGenerator, clock);
+    const dispatcher = new Dispatcher(null, collector, IdGenerator, Clock);
     const handler = this.registry.get(component);
     const handleFn = (aggregate, command) => handler.process(dispatcher, aggregate, command);
 
