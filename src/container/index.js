@@ -1,2 +1,2 @@
-import { Component, Data, Inject } from './component2/decorators';
-export { Component, Data, Inject };
+import { Component, Inject } from './component2/decorators';
+export { Component, Inject };

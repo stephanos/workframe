@@ -1,5 +1,6 @@
 import API from './boot';
-import { Component, Data, Inject } from './container';
+import { Data } from './util';
+import { Component, Inject } from './container';
 
 
 export { Component, Data, Inject };
