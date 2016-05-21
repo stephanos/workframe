@@ -8,10 +8,10 @@ class Network {
   networkByRelation = {};
 
 
-  connect(from, to, relation) {
+  connect(from, to, relation, props) {
     const fromId = this.getOrAdd(from);
     const toId = this.getOrAdd(to);
-    this.getOrCreateNetwork(relation).setEdge(fromId, toId);
+    this.getOrCreateNetwork(relation).setEdge(fromId, toId, props);
   }
 
   connectionsTo(value, relation) {
@@ -54,9 +54,9 @@ class Network {
   }
 
   connectionsOf(value, relation, incoming) {
-    const valueId = this.idByValue[value];
-    if (!valueId) {
-      throw Error('unknown node');
+    const valueNodeId = this.idByValue[value];
+    if (!valueNodeId) {
+      throw Error('unknown value');
     }
 
     const network = this.networkByRelation[relation];
@@ -64,10 +64,19 @@ class Network {
       throw Error('unknown relation');
     }
 
-    const edges = network[incoming ? 'inEdges' : 'outEdges'](valueId) || [];
+    const edges = network[incoming ? 'inEdges' : 'outEdges'](valueNodeId) || [];
     return edges
-      .map((edge) => edge[incoming ? 'v' : 'w'])
-      .map((fromId) => this.valueById[fromId]);
+      .map((edge) => {
+        const connection = {};
+        const connectedNodeId = edge[incoming ? 'v' : 'w'];
+        connection[incoming ? 'from' : 'to'] = this.valueById[connectedNodeId];
+        const props = network.edge(connectedNodeId, valueNodeId)
+          || network.edge(valueNodeId, connectedNodeId);
+        if (props) {
+          connection.props = props;
+        }
+        return connection;
+      });
   }
 }
 

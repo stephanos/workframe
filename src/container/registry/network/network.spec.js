@@ -12,8 +12,18 @@ describe('Network', () => {
     const net = new Network();
     net.connect(Adam, Eve, 'like');
 
-    assert.deepEqual(net.connectionsTo(Eve, 'like'), [Adam]);
-    assert.deepEqual(net.connectionsFrom(Adam, 'like'), [Eve]);
+    assert.deepEqual(net.connectionsTo(Eve, 'like'), [{ from: Adam }]);
+    assert.deepEqual(net.connectionsFrom(Adam, 'like'), [{ to: Eve }]);
+  });
+
+  it('should connect 2 values with properties', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, 'like', { how: 'very much' });
+
+    assert.deepEqual(net.connectionsTo(Eve, 'like'),
+      [{ from: Adam, props: { how: 'very much' } }]);
+    assert.deepEqual(net.connectionsFrom(Adam, 'like'),
+      [{ to: Eve, props: { how: 'very much' } }]);
   });
 
   it('should connect new value with existing value', () => {
@@ -21,10 +31,10 @@ describe('Network', () => {
     net.connect(Adam, Eve, 'like');
     net.connect(Snake, Eve, 'hate');
 
-    assert.deepEqual(net.connectionsTo(Eve, 'hate'), [Snake]);
+    assert.deepEqual(net.connectionsTo(Eve, 'hate'), [{ from: Snake }]);
     assert.deepEqual(net.connectionsFrom(Eve, 'hate'), []);
     assert.deepEqual(net.connectionsTo(Snake, 'hate'), []);
-    assert.deepEqual(net.connectionsFrom(Snake, 'hate'), [Eve]);
+    assert.deepEqual(net.connectionsFrom(Snake, 'hate'), [{ to: Eve }]);
   });
 
   it('should connect existing value with new value', () => {
@@ -32,10 +42,10 @@ describe('Network', () => {
     net.connect(Snake, Adam, 'hate');
     net.connect(Snake, Eve, 'hate');
 
-    assert.deepEqual(net.connectionsTo(Eve, 'hate'), [Snake]);
+    assert.deepEqual(net.connectionsTo(Eve, 'hate'), [{ from: Snake }]);
     assert.deepEqual(net.connectionsFrom(Eve, 'hate'), []);
-    assert.deepEqual(net.connectionsTo(Adam, 'hate'), [Snake]);
-    assert.deepEqual(net.connectionsFrom(Snake, 'hate'), [Adam, Eve]);
+    assert.deepEqual(net.connectionsTo(Adam, 'hate'), [{ from: Snake }]);
+    assert.deepEqual(net.connectionsFrom(Snake, 'hate'), [{ to: Adam }, { to: Eve }]);
   });
 
   it('should fail to return connections to non-existing node', () => {
