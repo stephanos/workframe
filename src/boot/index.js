@@ -66,9 +66,9 @@ class API {
     // afterInit(this.context, types);
   // }
 
-  dispatch(...args) {
-    // return this.router.handle(...args);
-  }
+  // dispatch(...args) {
+  // return this.router.handle(...args);
+  // }
 
   terminate() {
     // this.types.forEach(t => {
