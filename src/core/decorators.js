@@ -1,8 +1,6 @@
-class ComponentBase {}
 export function Component() {
   return () => {};
 }
-Component.Base = ComponentBase;
 
 
 class DataBase {}
@@ -13,5 +11,5 @@ Data.Base = DataBase;
 
 
 export function Inject() {
-  // dummy placeholder
+  return () => {};
 }
