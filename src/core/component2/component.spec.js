@@ -16,11 +16,4 @@ describe('Component', () => {
     assert.equal(comp.factory, MyClass);
     assert.equal(comp.connections, connections);
   });
-
-  it('should create a new instance', () => {
-    const comp = new Component('42', {}, MyClass, []);
-    const inst = comp.newInstance();
-
-    assert.ok(inst instanceof MyClass);
-  });
 });

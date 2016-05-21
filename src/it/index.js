@@ -1,7 +1,9 @@
-import { bootstrap } from '../index';
+import { boot } from '../index';
 
-const app = bootstrap({
+
+const app = boot({
   module,
 });
+
 
 export default app;

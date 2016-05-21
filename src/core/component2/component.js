@@ -6,10 +6,6 @@ class Component {
     this.factory = factory;
     this.connections = connections;
   }
-
-  newInstance() {
-    return new this.factory();
-  }
 }
 
 
