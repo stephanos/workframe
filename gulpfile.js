@@ -88,9 +88,7 @@ gulp.task('generate', () =>
         'babel-plugin-syntax-flow',
         'babel-plugin-syntax-decorators',
         'babel-plugin-syntax-class-properties',
-        ['immutable-record', {
-          decorator: 'Data',
-        }],
+        'immutable-record',
       ],
     }))
     .on('error', handleError)

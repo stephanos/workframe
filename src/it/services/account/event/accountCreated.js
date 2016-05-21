@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable */
 
-import { Component, Data } from '../../../../index';
+import { Component, Record } from '../../../../index';
 
 import { Iterable, List, Map } from 'immutable';
 
@@ -10,16 +10,16 @@ function toMap(v) {
     return v.map(toMap);
   }
 
-  if (v instanceof Data.Base) {
+  if (v instanceof Record.Base) {
     return v.toMap();
   }
 
   return v;
 }
 
-@Data()
+@Record()
 @Component('accountCreated')
-class AccountCreatedEvent extends Data.Base {
+class AccountCreatedEvent extends Record.Base {
   data: Map<string, any>;
 
   constructor(init: AccountCreatedEventInit) {

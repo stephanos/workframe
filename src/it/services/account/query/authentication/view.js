@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable */
 
-import { Data } from '../../../../../index';
+import { Component, Record } from '../../../../../index';
 
 import { Iterable, List, Map } from 'immutable';
 
@@ -10,16 +10,16 @@ function toMap(v) {
     return v.map(toMap);
   }
 
-  if (v instanceof Data.Base) {
+  if (v instanceof Record.Base) {
     return v.toMap();
   }
 
   return v;
 }
 
-@Data()
+@Record()
 @Component('accountAuthentication')
-class AccountAuthenticationView extends Data.Base {
+class AccountAuthenticationView extends Record.Base {
   data: Map<string, any>;
 
   constructor(init: AccountAuthenticationViewInit) {

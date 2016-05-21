@@ -1,5 +1,5 @@
 import Clock from './clock';
-import Data from './data';
 import IdGenerator from './uuid';
+import Record from './record';
 
-export { Clock, Data, IdGenerator };
+export { Clock, Record, IdGenerator };

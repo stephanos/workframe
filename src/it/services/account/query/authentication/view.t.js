@@ -1,10 +1,10 @@
 /* @flow */
 /* eslint-disable */
 
-import { Data } from '../../../../../index';
+import { Component, Record } from '../../../../../index';
 
 
-@Data()
+@Record()
 @Component('accountAuthentication')
 class AccountAuthenticationView {
 
