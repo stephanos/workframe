@@ -64,7 +64,7 @@ class Network {
       throw Error('unknown relation');
     }
 
-    const edges = (incoming ? network.inEdges(valueId) : network.outEdges(valueId)) || [];
+    const edges = network[incoming ? 'inEdges' : 'outEdges'](valueId) || [];
     return edges
       .map((edge) => edge[incoming ? 'v' : 'w'])
       .map((fromId) => this.valueById[fromId]);
