@@ -1,10 +1,11 @@
 /* @flow */
 /* eslint-disable */
 
-import { Data } from '../../../../../index';
+import { Component, Data } from '../../../../../index';
 
 
-@Data('createAccount')
+@Data()
+@Component('createAccount')
 class CreateAccountCommand {
 
   id: string;

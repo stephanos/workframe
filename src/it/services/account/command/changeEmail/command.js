@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable */
 
-import { Data } from '../../../../../index';
+import { Component, Data } from '../../../../../index';
 
 import { Iterable, List, Map } from 'immutable';
 
@@ -17,8 +17,9 @@ function toMap(v) {
   return v;
 }
 
-/*::`*/@Data('changeEmail')
-/*::`;*/class ChangeEmailCommand extends Data.Base {
+@Data()
+@Component('changeEmail')
+class ChangeEmailCommand extends Data.Base {
   data: Map<string, any>;
 
   constructor(init: ChangeEmailCommandInit) {

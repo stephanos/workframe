@@ -4,7 +4,8 @@
 import { Data } from '../../../../../index';
 
 
-@Data('accountAuthentication')
+@Data()
+@Component('accountAuthentication')
 class AccountAuthenticationView {
 
   id: string;

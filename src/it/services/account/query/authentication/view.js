@@ -17,8 +17,9 @@ function toMap(v) {
   return v;
 }
 
-/*::`*/@Data('accountAuthentication')
-/*::`;*/class AccountAuthenticationView extends Data.Base {
+@Data()
+@Component('accountAuthentication')
+class AccountAuthenticationView extends Data.Base {
   data: Map<string, any>;
 
   constructor(init: AccountAuthenticationViewInit) {
