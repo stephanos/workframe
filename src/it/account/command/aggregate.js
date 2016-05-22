@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Data } from '../../../../index';
+import { Data } from '../';
 
 
 @Data('account')

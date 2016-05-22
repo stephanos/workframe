@@ -1,5 +1,5 @@
-// import { Component, Inject } from '../../src';
-// import { Method, Resource } from '../../src/http';
+// import { Component, Inject } from '../src';
+// import { Method, Resource } from '../src/http';
 //
 // import ChangeEmailProcessor from './changeEmail/processor';
 //

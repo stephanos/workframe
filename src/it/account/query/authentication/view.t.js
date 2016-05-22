@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable */
 
-import { Component, Record } from '../../../../../index';
+import { Component, Record } from '../../../';
 
 
 @Record()
