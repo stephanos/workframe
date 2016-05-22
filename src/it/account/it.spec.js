@@ -1,5 +1,4 @@
-/* @flow */
-/* eslint global-require: 0 */
+import { boot } from '../../';
 
 // import assert from 'assert';
 // import ChangeEmailCommand from './account/command/changeEmail/command';
@@ -14,8 +13,8 @@ describe('Integration Test "Account"', () => {
     }
   });
 
-  it('should load', () => {
-    app = require('../').default;
+  it('should load', async () => {
+    await boot({ module });
   });
 
   // it('should create account', async () => {

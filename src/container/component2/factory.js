@@ -17,7 +17,7 @@ class ComponentFactory {
 
     const type = this.schema.typeOf(factory);
     if (!type) {
-      throw new Error(`'${factory}' can not be identified as any known component type`);
+      throw new Error(`'${factory.name}' can not be identified as any known component type`);
     }
 
     const componentId = this.idGenerator.next();

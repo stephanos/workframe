@@ -1,10 +1,12 @@
-import API from './boot';
+import Boot from './boot';
 import { Component, Inject } from './container';
 import { Record } from './util';
 
 
-function boot(opts) {
-  return new API(opts);
+async function boot(opts) {
+  const app = new Boot(opts);
+  await app.init();
+  return app;
 }
 
 

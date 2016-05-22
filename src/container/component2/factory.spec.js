@@ -18,6 +18,6 @@ describe('Factory', () => {
     class Component {}
     assert.throws(
       () => new Factory({ typeOf: () => undefined }).create(Component),
-      (err) => err.message === '\'class Component {}\' can not be identified as any known component type');
+      (err) => err.message === '\'Component\' can not be identified as any known component type');
   });
 });

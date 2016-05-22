@@ -6,17 +6,25 @@ import { Component } from './decorators';
 
 
 describe('Component Schema', () => {
+  it('should match an input with its type', () => {
+    class MyType {}
+    class MyComponent {}
+    const schema = new Schema([MyType], { test: () => true });
+
+    assert.equal(schema.typeOf(MyComponent), MyType);
+  });
+
   it('should identify an object with the expected decorator as a component', () => {
     class MyComponent {}
     Reflect.defineMetadata('decorator', [{ type: Component }], MyComponent);
-    const schema = new Schema([]);
+    const schema = new Schema();
 
     assert.ok(schema.isComponent(MyComponent));
   });
 
   it('should not identify an object without any decorator as a component', () => {
     class MyComponent {}
-    const schema = new Schema([]);
+    const schema = new Schema();
 
     assert.ok(!schema.isComponent(MyComponent));
   });
@@ -25,7 +33,7 @@ describe('Component Schema', () => {
     class MyComponent {}
     class NotComponentDecorator {}
     Reflect.defineMetadata('decorator', [{ type: NotComponentDecorator }], MyComponent);
-    const schema = new Schema([]);
+    const schema = new Schema();
 
     assert.ok(!schema.isComponent(MyComponent));
   });

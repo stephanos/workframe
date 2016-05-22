@@ -3,8 +3,9 @@ import { Component } from './decorators';
 
 class Schema {
 
-  constructor(types) {
+  constructor(types, identifier) {
     this.types = types;
+    this.identifier = identifier;
   }
 
   isComponent(object) {
@@ -17,8 +18,8 @@ class Schema {
     return decorator !== undefined;
   }
 
-  typeOf(factory) {
-    return this.types.find((t) => t.appliesTo(factory));
+  typeOf(input) {
+    return this.types.find((t) => this.identifier.test(t, input));
   }
 }
 

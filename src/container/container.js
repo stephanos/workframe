@@ -1,5 +1,4 @@
 import ComponentFactory from './component2/factory';
-import ComponentSchema from './component2/schema';
 
 import Registry from './registry';
 import Scanner from './scanner';
@@ -9,14 +8,12 @@ import { IdGenerator } from '../util';
 
 class ContainerLoader {
 
-  constructor(componentTypes) {
-    const schema = new ComponentSchema(componentTypes);
-
-    const isComponent = (obj) => schema.isComponent(obj);
+  constructor(componentSchema) {
+    const isComponent = (obj) => componentSchema.isComponent(obj);
     const excludeFiles = (path) => /.\.spec.js$/.test(path); // TODO: make configurable
     this.scanner = new Scanner(isComponent, excludeFiles);
 
-    this.componentFactory = new ComponentFactory(schema, IdGenerator);
+    this.componentFactory = new ComponentFactory(componentSchema, IdGenerator);
   }
 
   async load(dirPath) {

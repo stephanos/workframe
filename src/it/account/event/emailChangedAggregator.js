@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Component } from '../';
+import { Component } from '../../../';
 import EmailChangedEvent from './emailChanged';
 
 
