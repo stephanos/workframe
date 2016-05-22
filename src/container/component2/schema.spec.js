@@ -2,32 +2,31 @@ import assert from 'assert';
 import Reflect from 'core-js/es7/reflect';
 
 import Schema from './schema';
+import { Component } from './decorators';
 
-
-class ComponentDecorator {}
 
 describe('Component Schema', () => {
   it('should identify an object with the expected decorator as a component', () => {
-    class Component {}
-    Reflect.defineMetadata('decorator', [{ type: ComponentDecorator }], Component);
-    const schema = new Schema([], ComponentDecorator);
+    class MyComponent {}
+    Reflect.defineMetadata('decorator', [{ type: Component }], MyComponent);
+    const schema = new Schema([]);
 
-    assert.ok(schema.isComponent(Component));
+    assert.ok(schema.isComponent(MyComponent));
   });
 
   it('should not identify an object without any decorator as a component', () => {
-    class Component {}
-    const schema = new Schema([], ComponentDecorator);
+    class MyComponent {}
+    const schema = new Schema([]);
 
-    assert.ok(!schema.isComponent(Component));
+    assert.ok(!schema.isComponent(MyComponent));
   });
 
   it('should not identify an object without the expected decorator as a component', () => {
-    class Component {}
+    class MyComponent {}
     class NotComponentDecorator {}
-    Reflect.defineMetadata('decorator', [{ type: NotComponentDecorator }], Component);
-    const schema = new Schema([], ComponentDecorator);
+    Reflect.defineMetadata('decorator', [{ type: NotComponentDecorator }], MyComponent);
+    const schema = new Schema([]);
 
-    assert.ok(!schema.isComponent(Component));
+    assert.ok(!schema.isComponent(MyComponent));
   });
 });

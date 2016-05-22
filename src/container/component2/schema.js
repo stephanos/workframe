@@ -1,8 +1,10 @@
+import { Component } from './decorators';
+
+
 class Schema {
 
-  constructor(types, decorator) {
+  constructor(types) {
     this.types = types;
-    this.decorator = decorator;
   }
 
   isComponent(object) {
@@ -11,7 +13,7 @@ class Schema {
       return false;
     }
 
-    const decorator = decorators.find((d) => d.type === this.decorator);
+    const decorator = decorators.find((d) => d.type === Component);
     return decorator !== undefined;
   }
 
