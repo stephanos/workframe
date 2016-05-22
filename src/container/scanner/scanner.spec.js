@@ -1,3 +1,4 @@
+import path from 'path';
 import assert from 'assert';
 import B, { A } from './fixtures/abc';
 import Z, { X, Y } from './fixtures/xyz';
@@ -5,7 +6,7 @@ import Z, { X, Y } from './fixtures/xyz';
 import Scanner from './scanner';
 
 
-const fixtureDir = `${__dirname}/fixtures`;
+const fixtureDir = path.join(__dirname, 'fixtures');
 
 describe('Scanner', () => {
   it('should return all exported objects', () => {
@@ -20,7 +21,7 @@ describe('Scanner', () => {
   it('should return exported objects from files that are not called "abc.js"', () => {
     const result = new Scanner(
       () => true,
-      (path) => /abc.js$/.test(path)
+      (p) => /abc.js$/.test(p)
     ).scan(fixtureDir);
 
     assert.deepEqual(result, [X, Y, Z]);
@@ -33,5 +34,9 @@ describe('Scanner', () => {
     ).scan(fixtureDir);
 
     assert.deepEqual(result, [A, Z]);
+  });
+
+  it('should fail for relative path', () => {
+    assert.throws(() => new Scanner(() => true, () => false).scan('./relative-path'));
   });
 });

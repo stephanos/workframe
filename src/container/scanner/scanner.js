@@ -1,3 +1,4 @@
+import path from 'path';
 import requireDirectory from 'require-directory';
 
 
@@ -8,10 +9,14 @@ class Scanner {
     this.ignoreFile = ignoreFile;
   }
 
-  scan(dirPath) {
+  scan(filePath) {
+    if (!path.isAbsolute(filePath)) {
+      throw new Error('file path must be absolute');
+    }
+
     const result = [];
 
-    requireDirectory(module, dirPath, {
+    requireDirectory(module, filePath, {
       visit: (obj) => {
         Object.keys(obj).forEach((exportKey) => {
           const exportVal = obj[exportKey];
