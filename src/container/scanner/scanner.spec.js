@@ -1,16 +1,18 @@
 import assert from 'assert';
-import B, { A } from './abc';
-import Z, { X, Y } from './xyz';
+import B, { A } from './fixtures/abc';
+import Z, { X, Y } from './fixtures/xyz';
 
-import Scanner from '../';
+import Scanner from './scanner';
 
+
+const fixtureDir = `${__dirname}/fixtures`;
 
 describe('Scanner', () => {
   it('should return all exported objects', () => {
     const result = new Scanner(
       () => true,
       () => false
-    ).scan(module);
+    ).scan(fixtureDir);
 
     assert.deepEqual(result, [A, B, X, Y, Z]);
   });
@@ -19,7 +21,7 @@ describe('Scanner', () => {
     const result = new Scanner(
       () => true,
       (path) => /abc.js$/.test(path)
-    ).scan(module);
+    ).scan(fixtureDir);
 
     assert.deepEqual(result, [X, Y, Z]);
   });
@@ -28,7 +30,7 @@ describe('Scanner', () => {
     const result = new Scanner(
       (obj) => typeof obj === 'string',
       () => false,
-    ).scan(module);
+    ).scan(fixtureDir);
 
     assert.deepEqual(result, [A, Z]);
   });

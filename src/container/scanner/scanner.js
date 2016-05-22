@@ -8,10 +8,10 @@ class Scanner {
     this.ignoreFile = ignoreFile;
   }
 
-  scan(module) {
+  scan(dirPath) {
     const result = [];
 
-    requireDirectory(module, {
+    requireDirectory(module, dirPath, {
       visit: (obj) => {
         Object.keys(obj).forEach((exportKey) => {
           const exportVal = obj[exportKey];
