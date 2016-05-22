@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import Network from './';
+import Network from './network';
 
 
 describe('Network', () => {
