@@ -18,7 +18,7 @@ class Schema {
   }
 
   typeOf(factory) {
-    return this.schema.types.find((t) => t.appliesTo(factory));
+    return this.types.find((t) => t.appliesTo(factory));
   }
 }
 

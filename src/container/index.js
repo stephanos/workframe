@@ -1,9 +1,8 @@
-import { Container } from './container';
 import { Component, Inject } from './component2/decorators';
-
+import Container from './container';
 
 export {
-  Component,
   Container,
+  Component,
   Inject,
 };
