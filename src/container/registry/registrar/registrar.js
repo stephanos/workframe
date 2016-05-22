@@ -1,20 +1,13 @@
 class Registrar {
 
-  constructor(network, scanner, componentFactory) {
-    this.componentFactory = componentFactory;
+  constructor(network) {
     this.network = network;
-    this.scanner = scanner;
   }
 
-
-  register(module) {
-    this.scanner.scan(module)
-      .map((obj) => this.componentFactory.create(obj))
-      .forEach((component) => {
-        component.connections.forEach((connection) => {
-          this.network.connect(connection.from, connection.to, connection.relation);
-        });
-      });
+  register(component) {
+    component.connections.forEach((connection) => {
+      this.network.connect(connection.from, connection.to, connection.relation);
+    });
   }
 }
 
