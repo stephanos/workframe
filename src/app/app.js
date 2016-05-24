@@ -23,7 +23,7 @@ async function invokeModulePhase(mode) {
 }
 
 
-class Boot {
+class App {
 
   constructor(opts) {
     this.opts = opts;
@@ -53,4 +53,4 @@ class Boot {
 }
 
 
-export default Boot;
+export default App;
