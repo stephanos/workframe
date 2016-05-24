@@ -11,21 +11,11 @@ async function loadComponents() {
   return await this.container.init(initDir);
 }
 
-async function startModules() {
+async function invokeModulePhase(mode) {
   const promises = [];
   Object.keys(this.modules).forEach((key) => {
     if (this.modules.hasOwnProperty(key)) {
-      promises.push(this.modules[key].start());
-    }
-  });
-  await Promise.all(promises);
-}
-
-async function stopModules() {
-  const promises = [];
-  Object.keys(this.modules).forEach((key) => {
-    if (this.modules.hasOwnProperty(key)) {
-      promises.push(this.modules[key].stop());
+      promises.push(this.modules[key][mode]());
     }
   });
   await Promise.all(promises);
@@ -47,7 +37,8 @@ class Boot {
 
   async init() {
     await this::loadComponents();
-    await this::startModules();
+    await this::invokeModulePhase('init');
+    await this::invokeModulePhase('start');
   }
 
   async dispatch(...args) {
@@ -55,7 +46,7 @@ class Boot {
   }
 
   async terminate() {
-    await this::stopModules();
+    await this::invokeModulePhase('stop');
   }
 }
 

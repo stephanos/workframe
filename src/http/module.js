@@ -9,6 +9,10 @@ class Module {
     this.server = new Server(this.router);
   }
 
+  async init() {
+    // TODO
+  }
+
   async start() {
     // TODO
   }

@@ -1,5 +1,9 @@
 class Module {
 
+  async init() {
+    // TODO
+  }
+
   async start() {
     // TODO
   }
