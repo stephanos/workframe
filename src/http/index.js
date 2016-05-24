@@ -1,9 +1,10 @@
 import Method from './methods';
-import ResourceFactory from './resource';
+import Module from './module';
+import { Resource } from './decorators';
 
-export { Method };
 
-const resourceFactory = new ResourceFactory();
-export function Resource(...args) {
-  return resourceFactory.annotate(...args);
-}
+export {
+  Method,
+  Module,
+  Resource,
+};

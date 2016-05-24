@@ -4,7 +4,7 @@ import AggregateComponentType from './aggregate';
 import AggregatorComponentType from './aggregator';
 // import BehaviorComponentType from './behavior';
 import CommandComponentType from './command';
-// import ControllerComponentType from './controller';
+import ControllerComponentType from './controller';
 import EventComponentType from './event';
 // import FilterComponentType from './filter';
 import ProcessorComponentType from './processor';
@@ -22,7 +22,7 @@ const types = [
   // AggregateRootComponentType,
   new AggregatorComponentType(),
   // BehaviorComponentType,
-  // ControllerComponentType,
+  new ControllerComponentType(),
   new CommandComponentType(),
   new EventComponentType(),
   // FilterComponentType,

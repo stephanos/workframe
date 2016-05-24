@@ -45,6 +45,7 @@ gulp.task('build', () =>
       ],
       plugins: [
         'flow-comments',
+        'transform-function-bind',
       ],
     }))
     .on('error', handleError)

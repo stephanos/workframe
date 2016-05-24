@@ -1,5 +1,5 @@
-import Router from './router';
+import Module from './module';
 
 export {
-  Router,
+  Module,
 };
