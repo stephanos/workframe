@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { Module as EventSourceModule } from '../eventsource';
 import { Module as HttpModule } from '../http';
 import { Module as RouterModule } from '../router';
 import { ComponentSchema, Container } from '../container';
@@ -29,6 +30,7 @@ class Boot {
     this.modules = {
       http: new HttpModule(),
       router: new RouterModule(),
+      eventsource: new EventSourceModule(),
     };
 
     const schema = new ComponentSchema(types, new TypeIdentifier());
