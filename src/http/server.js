@@ -1,7 +1,9 @@
 import http from 'http';
-
 import Koa from 'koa';
 import KoaRouter from 'koa-router';
+
+import Router from './router';
+import { Component, Inject } from '../container';
 
 
 function createHttpRouter() {
@@ -22,11 +24,12 @@ function createHttpServer(koaRouter) {
 }
 
 
+@Component()
 class Server {
 
-  constructor(router) {
-    this.router = router;
-  }
+  @Inject()
+  router: Router;
+
 
   async start() {
     const httpRouter = this::createHttpRouter();

@@ -1,5 +1,8 @@
-class Router {
+import { Component } from '../container';
 
+
+@Component()
+class Router {
 }
 
 

@@ -1,25 +1,16 @@
 import Router from './router';
 import Server from './server';
+import { Component, Inject } from '../container';
 
 
+@Component()
 class Module {
 
-  constructor() {
-    this.router = new Router();
-    this.server = new Server(this.router);
-  }
+  @Inject()
+  router: Router;
 
-  async init() {
-    // TODO
-  }
-
-  async start() {
-    // TODO
-  }
-
-  async stop() {
-    // TODO
-  }
+  @Inject()
+  server: Server;
 }
 
 
