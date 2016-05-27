@@ -20,6 +20,21 @@ const sourcemaps = require('gulp-sourcemaps');
 let daemon = false;
 process.env.FLOW_BIN = path.join(process.cwd(), 'node_modules/flow-bin/vendor/flow');
 
+const babelConf = {
+  presets: [
+    'node6',
+    'stage-1',
+  ],
+  plugins: [
+    'decorator-metadata',
+    // 'type-metadata',
+    'transform-function-bind',
+    'transform-decorators-legacy',
+    'flow-comments',
+    'workframe',
+  ],
+};
+
 
 function handleError(err) {
   gutil.log(err);
@@ -38,16 +53,7 @@ gulp.task('build', () =>
   gulp.src(['src/**/*.js', '!src/it/**'])
     .pipe(cache('dist'))
     .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: [
-        'node6',
-        'stage-1',
-      ],
-      plugins: [
-        'flow-comments',
-        'transform-function-bind',
-      ],
-    }))
+    .pipe(babel(babelConf))
     .on('error', handleError)
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'))
@@ -57,19 +63,7 @@ gulp.task('build-it', () =>
   gulp.src(['src/it/**/*.js', '!src/**/*.t.js'])
     .pipe(cache('dist'))
     .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: [
-        'node6',
-        'stage-1',
-      ],
-      plugins: [
-        'decorator-metadata',
-        // 'type-metadata',
-        'transform-decorators-legacy',
-        'flow-comments',
-        'workframe',
-      ],
-    }))
+    .pipe(babel(babelConf))
     .on('error', handleError)
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/it'))
