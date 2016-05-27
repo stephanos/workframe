@@ -6,6 +6,23 @@ import Scanner from './scanner';
 import { IdGenerator } from '../util';
 
 
+async function invokeLifecycleMethod(items, mode) {
+  const promises = [];
+  Object.keys(items).forEach((key) => {
+    if (!items.hasOwnProperty(key)) {
+      return;
+    }
+    const method = items[key][mode];
+    if (!method) {
+      return;
+    }
+
+    promises.push(items[key]::method());
+  });
+  await Promise.all(promises);
+}
+
+
 class ContainerLoader {
 
   constructor(componentSchema) {
@@ -25,22 +42,38 @@ class ContainerLoader {
 
 class Container {
 
-  constructor(componentTypes, parent) {
+  constructor(rootDir, componentSchema, parent) {
+    this.componentSchema = componentSchema;
+    this.rootDir = rootDir;
     this.parent = parent;
-    this.componentTypes = componentTypes;
+    this.children = [];
 
     this.registry = new Registry();
-    this.loader = new ContainerLoader(componentTypes);
+    this.loader = new ContainerLoader(componentSchema);
   }
 
-  async init(dirPath) {
-    const components = await this.loader.load(dirPath);
-    components.forEach((component) => this.registry.add(component));
+  async init() {
+    this.components = await this.loader.load(this.rootDir);
+    this.components.forEach((component) => this.registry.add(component));
+    await invokeLifecycleMethod(this.components, 'init');
+    await invokeLifecycleMethod(this.children, 'init');
   }
 
-  // fork() {
-  //   return new Container(this.componentTypes, this);
-  // }
+  async start() {
+    await invokeLifecycleMethod(this.components, 'start');
+    await invokeLifecycleMethod(this.children, 'start');
+  }
+
+  async stop() {
+    await invokeLifecycleMethod(this.components, 'stop');
+    await invokeLifecycleMethod(this.children, 'stop');
+  }
+
+  fork(rootDir, componentSchema = this.componentSchema) {
+    const forked = new Container(rootDir, componentSchema, this);
+    this.children.push(forked);
+    return forked;
+  }
 }
 
 

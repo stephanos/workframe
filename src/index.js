@@ -5,7 +5,7 @@ import { Record } from './util';
 
 async function boot(opts) {
   const app = new App(opts);
-  await app.init();
+  await app.start();
   return app;
 }
 

@@ -14,6 +14,11 @@ describe('Component Schema', () => {
     assert.equal(schema.typeOf(MyComponent), MyType);
   });
 
+  it('should identify an object that is no Object as a component', () => {
+    const schema = new Schema();
+    assert.ok(!schema.isComponent('not an object'));
+  });
+
   it('should identify an object with the expected decorator as a component', () => {
     class MyComponent {}
     Reflect.defineMetadata('decorator', [{ type: Component }], MyComponent);

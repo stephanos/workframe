@@ -9,6 +9,10 @@ class Schema {
   }
 
   isComponent(object) {
+    if (object !== Object(object)) {
+      return false;
+    }
+
     const decorators = Reflect.getOwnMetadata('decorator', object);
     if (!decorators) {
       return false;

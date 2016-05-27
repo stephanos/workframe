@@ -9,7 +9,7 @@ describe('Integration Test "Account"', () => {
 
   after(() => {
     if (app) {
-      app.terminate();
+      app.stop();
     }
   });
 
