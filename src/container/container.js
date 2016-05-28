@@ -1,78 +1,40 @@
-import ComponentFactory from './component2/factory';
-
+import { load, start, stop } from './lifecycle';
 import Registry from './registry';
-import Scanner from './scanner';
-
-import { IdGenerator } from '../util';
-
-
-async function invokeLifecycleMethod(items, mode) {
-  const promises = [];
-  Object.keys(items).forEach((key) => {
-    if (!items.hasOwnProperty(key)) {
-      return;
-    }
-    const method = items[key][mode];
-    if (!method) {
-      return;
-    }
-
-    promises.push(items[key]::method());
-  });
-  await Promise.all(promises);
-}
-
-
-class ContainerLoader {
-
-  constructor(componentSchema) {
-    const isComponent = (obj) => componentSchema.isComponent(obj);
-    const excludeFiles = (path) => /.\.spec.js$/.test(path); // TODO: make configurable
-    this.scanner = new Scanner(isComponent, excludeFiles);
-
-    this.componentFactory = new ComponentFactory(componentSchema, IdGenerator);
-  }
-
-  async load(dirPath) {
-    return this.scanner.scan(dirPath)
-      .map((obj) => this.componentFactory.create(obj));
-  }
-}
+import Status from './status';
 
 
 class Container {
 
   constructor(rootDir, componentSchema, parent) {
-    this.componentSchema = componentSchema;
     this.rootDir = rootDir;
+    this.componentSchema = componentSchema;
     this.parent = parent;
-    this.children = [];
 
+    this.status = Status.IDLE;
     this.registry = new Registry();
-    this.loader = new ContainerLoader(componentSchema);
-  }
-
-  async init() {
-    this.components = await this.loader.load(this.rootDir);
-    this.components.forEach((component) => this.registry.add(component));
-    await invokeLifecycleMethod(this.components, 'init');
-    await invokeLifecycleMethod(this.children, 'init');
+    this.children = [];
   }
 
   async start() {
-    await invokeLifecycleMethod(this.components, 'start');
-    await invokeLifecycleMethod(this.children, 'start');
+    load(this);
+    await start(this);
   }
 
   async stop() {
-    await invokeLifecycleMethod(this.components, 'stop');
-    await invokeLifecycleMethod(this.children, 'stop');
+    await stop(this);
   }
 
   fork(rootDir, componentSchema = this.componentSchema) {
     const forked = new Container(rootDir, componentSchema, this);
     this.children.push(forked);
     return forked;
+  }
+
+  updateStatus(newStatus) {
+    if (!newStatus) {
+      throw Error(`invalid status "${newStatus}"`);
+    }
+    this.status = newStatus;
   }
 }
 

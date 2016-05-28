@@ -3,7 +3,7 @@ import { Container } from './';
 
 
 describe('Container', () => {
-  it('should initialize', async () => {
+  it('should start', async () => {
     class ServiceType {}
 
     const container = new Container(
@@ -13,6 +13,6 @@ describe('Container', () => {
         typeOf: () => ServiceType,
       },
     );
-    await container.init();
+    await container.start();
   });
 });

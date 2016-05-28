@@ -29,7 +29,6 @@ class App {
   }
 
   async start() {
-    await this.rootContainer.init();
     await this.rootContainer.start();
   }
 

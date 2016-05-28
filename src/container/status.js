@@ -1,0 +1,9 @@
+export default {
+  IDLE: 1,
+  INITIALISING: 2,
+  INITIALISED: 3,
+  STARTING: 4,
+  STARTED: 5,
+  STOPPING: 6,
+  STOPPED: 7,
+};
