@@ -27,8 +27,8 @@ function createHttpServer(koaRouter) {
 @Component()
 class Server {
 
-  @Inject()
-  router: Router;
+  @Inject(Router)
+  router;
 
 
   async start() {

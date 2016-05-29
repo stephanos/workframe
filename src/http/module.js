@@ -6,11 +6,11 @@ import { Component, Inject } from '../container';
 @Component()
 class Module {
 
-  @Inject()
-  router: Router;
+  @Inject(Router)
+  router;
 
-  @Inject()
-  server: Server;
+  @Inject(Server)
+  server;
 }
 
 

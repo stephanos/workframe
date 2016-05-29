@@ -26,12 +26,11 @@ const babelConf = {
     'stage-1',
   ],
   plugins: [
-    'decorator-metadata',
-    // 'type-metadata',
-    'transform-function-bind',
-    'transform-decorators-legacy',
-    'flow-comments',
     'workframe',
+    'decorator-metadata',
+    'transform-function-bind',
+    'transform-flow-strip-types',
+    'transform-decorators-legacy',
   ],
 };
 

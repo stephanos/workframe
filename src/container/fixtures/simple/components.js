@@ -1,4 +1,4 @@
-import { Component, Inject } from '../../component2/decorators';
+import { Component, Inject } from '../../component2';
 
 export class ServiceA {
   depB;

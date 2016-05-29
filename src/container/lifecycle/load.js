@@ -1,4 +1,4 @@
-import ComponentFactory from '../component2/factory';
+import { ComponentFactory } from '../component2';
 import { IdGenerator } from '../../util';
 import Scanner from '../scanner';
 import Status from '../status';

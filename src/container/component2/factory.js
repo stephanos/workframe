@@ -1,6 +1,36 @@
 import util from 'util';
 
 import Component from './component';
+import relations from './relations';
+import { Inject } from './decorators';
+
+
+function findConnections(type, factory) {
+  const connections = [];
+
+  const allDecorated = Reflect.getMetadata('decorated', factory);
+  if (allDecorated) {
+    allDecorated
+      .filter((decorated) => decorated.kind === 'field')
+      .forEach((decorated) => {
+        Reflect.getMetadata('decorator', factory, decorated.name)
+          .filter((decorator) => decorator.type === Inject)
+          .forEach((decorator) => {
+            const dependency = decorator.parameters[0];
+            if (!dependency) {
+              throw new Error(`@Inject in ${factory.name} is missing its dependency reference`);
+            }
+            connections.push({
+              from: factory,
+              to: dependency,
+              relation: relations.DEPENDS,
+            });
+          });
+      });
+  }
+
+  return connections;
+}
 
 
 class ComponentFactory {
@@ -21,7 +51,7 @@ class ComponentFactory {
     }
 
     const componentId = this.idGenerator.next();
-    const connections = []; // TODO
+    const connections = findConnections(type, factory);
     return new Component(componentId, type, factory, connections);
   }
 }
