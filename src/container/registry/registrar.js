@@ -6,7 +6,12 @@ class Registrar {
 
   register(component) {
     component.connections.forEach((connection) => {
-      this.network.connect(connection.from, connection.to, connection.relation);
+      this.network.connect(
+        connection.from,
+        connection.to,
+        connection.relation,
+        connection.properties,
+      );
     });
   }
 }

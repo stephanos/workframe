@@ -1,5 +1,4 @@
 import Status from '../status';
-import { transitionComponentState } from './util';
 
 
 async function startChildren(container) {
@@ -9,7 +8,7 @@ async function startChildren(container) {
 async function start(container) {
   container.updateStatus(Status.STARTING);
 
-  await transitionComponentState(container, 'start');
+  await container.registry.transitionTo('start');
   await startChildren(container);
 
   container.updateStatus(Status.STARTED);

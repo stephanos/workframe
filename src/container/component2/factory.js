@@ -24,6 +24,7 @@ function findConnections(type, factory) {
               from: factory,
               to: dependency,
               relation: relations.DEPENDS,
+              properties: { fieldName: decorated.name },
             });
           });
       });

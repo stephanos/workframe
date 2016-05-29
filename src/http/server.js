@@ -34,7 +34,7 @@ class Server {
   async start() {
     const httpRouter = this::createHttpRouter();
     this.httpServer = this::createHttpServer(httpRouter);
-    this.httpServer.listen(9000);
+    // this.httpServer.listen(9000);
   }
 
   async stop() {

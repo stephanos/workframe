@@ -53,6 +53,10 @@ class Network {
     return this.networkByRelation[relation];
   }
 
+  get values() {
+    return Object.values(this.valueById);
+  }
+
   connectionsOf(value, relation, incoming) {
     const valueNodeId = this.idByValue[value];
     if (!valueNodeId) {
