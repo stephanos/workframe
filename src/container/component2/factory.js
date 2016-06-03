@@ -18,7 +18,7 @@ function findConnections(type, factory) {
           .forEach((decorator) => {
             const dependency = decorator.parameters[0];
             if (!dependency) {
-              throw new Error(`@Inject in ${factory.name} is missing its dependency reference`);
+              throw new Error(`@Inject on '${decorated.name}' in '${factory.name}' is missing its dependency reference`);
             }
             connections.push({
               from: factory,
