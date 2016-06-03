@@ -57,6 +57,10 @@ class Network {
     return Object.values(this.valueById);
   }
 
+  contains(value) {
+    return this.idByValue[value] !== undefined;
+  }
+
   connectionsOf(value, relation, incoming) {
     const valueNodeId = this.idByValue[value];
     if (!valueNodeId) {

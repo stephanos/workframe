@@ -6,10 +6,10 @@ import Transitioner from './transitioner';
 
 class Registry {
 
-  constructor() {
+  constructor(parent) {
     this.network = new Network();
-    this.factory = new Factory(this.network);
     this.registrar = new Registrar(this.network);
+    this.factory = new Factory(this.network, parent ? parent.factory : undefined);
     this.transitioner = new Transitioner(this.network, this.factory);
   }
 

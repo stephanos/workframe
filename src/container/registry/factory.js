@@ -5,12 +5,20 @@ class Factory {
 
   instanceByType = {};
 
-  constructor(network) {
+  constructor(network, parent) {
     this.network = network;
+    this.parent = parent;
   }
 
   create(rootType) {
     const resolve = (type) => {
+      if (!this.network.contains(type)) {
+        if (this.parent) {
+          return this.parent.create(type);
+        }
+        throw new Error(`unable to resolve type '${type}'`);
+      }
+
       const cachedInstance = this.instanceByType[type];
       if (cachedInstance) {
         return cachedInstance;

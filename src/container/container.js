@@ -10,8 +10,8 @@ class Container {
     this.componentSchema = componentSchema;
     this.parent = parent;
 
+    this.registry = new Registry(parent ? parent.registry : undefined);
     this.status = Status.IDLE;
-    this.registry = new Registry();
     this.children = [];
   }
 

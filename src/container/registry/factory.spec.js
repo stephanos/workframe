@@ -12,8 +12,13 @@ let factory;
 describe('Factory', () => {
   beforeEach(() => {
     factory = new Factory({
+      contains: sinon.stub(),
       connectionsFrom: sinon.stub(),
     });
+
+    factory.network.contains.withArgs(A).returns(true);
+    factory.network.contains.withArgs(B).returns(true);
+    factory.network.contains.withArgs(C).returns(true);
   });
 
   it('should create component that has no dependencies', () => {
@@ -66,5 +71,22 @@ describe('Factory', () => {
     const instance = factory.create(A);
 
     assert.equal(instance.dep1, instance.dep2);
+  });
+
+  it('should use parent factory if type unknown', () => {
+    class D {}
+    const network = { contains: sinon.stub() };
+    const parentFactory = { create: sinon.stub() };
+    parentFactory.create.withArgs(D).returns(new D());
+    factory = new Factory(network, parentFactory);
+
+    const instance = factory.create(D);
+    assert.ok(instance);
+    assert.ok(instance instanceof D);
+  });
+
+  it('should fail for unknown type', () => {
+    class D {}
+    assert.throws(() => factory.create(D));
   });
 });

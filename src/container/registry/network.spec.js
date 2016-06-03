@@ -64,6 +64,15 @@ describe('Network', () => {
     assert.throws(() => net.connectionsFrom(Adam, 'hate'));
   });
 
+  it('should return whether contains a value', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, 'like');
+
+    assert.ok(net.contains(Adam));
+    assert.ok(net.contains(Eve));
+    assert.ok(!net.contains(Snake));
+  });
+
   describe('without a cycle', () => {
     it('should return empty cyclic path', () => {
       const net = new Network();
