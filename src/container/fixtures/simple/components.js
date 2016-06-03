@@ -15,4 +15,4 @@ Reflect.defineMetadata('decorator', [{ type: Inject, parameters: [] }], ServiceB
 export class ServiceC {}
 Reflect.defineMetadata('decorator', [{ type: Component, parameters: [] }], ServiceC);
 
-export class UtilD {}
+export class Util {}

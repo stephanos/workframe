@@ -3,16 +3,13 @@ import { Container } from './';
 
 
 describe('Container', () => {
-  it('should start', async () => {
+  it('should start and stop', async () => {
     class ServiceType {}
+    const rootDir = path.join(__dirname, 'fixtures', 'simple');
+    const schema = { isComponent: () => true, typeOf: () => ServiceType };
+    const container = new Container(rootDir, schema);
 
-    const container = new Container(
-      path.join(__dirname, 'fixtures', 'simple'),
-      {
-        isComponent: () => true,
-        typeOf: () => ServiceType,
-      },
-    );
     await container.start();
+    await container.stop();
   });
 });

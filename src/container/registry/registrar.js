@@ -5,6 +5,7 @@ class Registrar {
   }
 
   register(component) {
+    this.network.add(component.factory);
     component.connections.forEach((connection) => {
       this.network.connect(
         connection.from,

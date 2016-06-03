@@ -8,12 +8,20 @@ describe('Network', () => {
   class Eve {}
   class Snake {}
 
+  it('should add a value', () => {
+    const net = new Network();
+    net.add(Adam);
+
+    assert.deepEqual(net.values, [Adam]);
+  });
+
   it('should connect 2 new values', () => {
     const net = new Network();
     net.connect(Adam, Eve, 'like');
 
     assert.deepEqual(net.connectionsTo(Eve, 'like'), [{ from: Adam }]);
     assert.deepEqual(net.connectionsFrom(Adam, 'like'), [{ to: Eve }]);
+    assert.deepEqual(net.values, [Adam, Eve]);
   });
 
   it('should connect 2 values with properties', () => {
@@ -60,8 +68,7 @@ describe('Network', () => {
     const net = new Network();
     net.connect(Adam, Eve, 'like');
 
-    assert.throws(() => net.connectionsTo(Adam, 'hate'));
-    assert.throws(() => net.connectionsFrom(Adam, 'hate'));
+    assert.deepEqual(net.connectionsTo(Adam, 'hate'), []);
   });
 
   it('should return whether contains a value', () => {

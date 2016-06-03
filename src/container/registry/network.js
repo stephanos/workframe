@@ -8,6 +8,10 @@ class Network {
   networkByRelation = {};
 
 
+  add(value) {
+    this.getOrAdd(value);
+  }
+
   connect(from, to, relation, props) {
     const fromId = this.getOrAdd(from);
     const toId = this.getOrAdd(to);
@@ -69,7 +73,7 @@ class Network {
 
     const network = this.networkByRelation[relation];
     if (!network) {
-      throw Error('unknown relation');
+      return [];
     }
 
     const edges = network[incoming ? 'inEdges' : 'outEdges'](valueNodeId) || [];
