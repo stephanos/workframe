@@ -1,10 +1,10 @@
 import Method from './methods';
-import Module from './module';
+import HttpModule from './module';
 import { Resource } from './decorators';
 
 
 export {
+  HttpModule,
   Method,
-  Module,
   Resource,
 };

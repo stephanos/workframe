@@ -4,7 +4,7 @@ import { Component, Inject } from '../container';
 
 
 @Component()
-class Module {
+class HttpModule {
 
   @Inject(Router)
   router;
@@ -14,4 +14,4 @@ class Module {
 }
 
 
-export default Module;
+export default HttpModule;
