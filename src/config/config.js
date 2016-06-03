@@ -2,7 +2,7 @@ import { Component } from '../container';
 
 
 @Component()
-class Module {
+class Config {
 
   async start() {
     /* eslint global-require: 0 */
@@ -20,4 +20,4 @@ class Module {
 }
 
 
-export default Module;
+export default Config;

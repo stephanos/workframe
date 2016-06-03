@@ -1,5 +1,3 @@
-import { Module } from './module';
+import Config from './config';
 
-export {
-  Module,
-};
+export default Config;
