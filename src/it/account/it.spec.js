@@ -7,14 +7,14 @@ import { boot } from '../../';
 describe('Integration Test "Account"', () => {
   let app;
 
-  after(() => {
+  after(async () => {
     if (app) {
-      app.stop();
+      await app.stop();
     }
   });
 
   it('should load', async () => {
-    await boot({ module });
+    app = await boot({ module });
   });
 
   // it('should create account', async () => {
