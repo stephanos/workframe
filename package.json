@@ -48,6 +48,7 @@
     "build": "gulp default"
   },
   "dependencies": {
+    "config": "^1.21.0",
     "core-js": "^2.4.0",
     "graphlib": "^2.1.0",
     "immutable": "^3.8.1",
