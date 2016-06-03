@@ -21,8 +21,12 @@ class Registry {
     this.factory.create(type);
   }
 
-  async transitionTo(state) {
-    await this.transitioner.to(state);
+  async start() {
+    await this.transitioner.start();
+  }
+
+  async stop() {
+    await this.transitioner.stop();
   }
 }
 

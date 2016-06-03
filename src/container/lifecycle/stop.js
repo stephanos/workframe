@@ -8,7 +8,7 @@ async function stopChildren(container) {
 async function stop(container) {
   container.updateStatus(Status.STOPPING);
 
-  await container.registry.transitionTo('stop');
+  await container.registry.stop();
   await stopChildren(container);
 
   container.updateStatus(Status.STOPPED);

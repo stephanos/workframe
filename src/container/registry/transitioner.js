@@ -8,14 +8,22 @@ class Transitioner {
     this.factory = factory;
   }
 
-  async to(state) {
+  async start() {
+    await this.to('start', 'connectionsFrom', 'to');
+  }
+
+  async stop() {
+    await this.to('stop', 'connectionsTo', 'from');
+  }
+
+  async to(state, connection, dir) {
     const promises = [];
 
     const transition = async (values) => {
       const untransitioned = [];
       values.forEach((value) => {
-        const dependsOn = this.network.connectionsFrom(value, relations.DEPENDS);
-        const untransitionedDependency = dependsOn.find((dep) => values.indexOf(dep.to) >= 0);
+        const dependsOn = this.network[connection](value, relations.DEPENDS);
+        const untransitionedDependency = dependsOn.find((dep) => values.indexOf(dep[dir]) >= 0);
         if (untransitionedDependency) {
           untransitioned.push(value);
           return;
