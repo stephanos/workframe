@@ -48,8 +48,8 @@
     "build": "gulp default"
   },
   "dependencies": {
-    "config": "^1.21.0",
     "core-js": "^2.4.0",
+    "fs-extra": "^0.30.0",
     "graphlib": "^2.1.0",
     "immutable": "^3.8.1",
     "koa": "^2.0.0-alpha.3",

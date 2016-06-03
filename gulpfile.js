@@ -48,6 +48,11 @@ gulp.task('clean', (done) => {
   done();
 });
 
+gulp.task('copy', () =>
+  gulp.src(['src/**/*.json'])
+    .pipe(gulp.dest('dist'))
+);
+
 gulp.task('build', () =>
   gulp.src(['src/**/*.js', '!src/it/**'])
     .pipe(cache('dist'))
@@ -91,14 +96,14 @@ gulp.task('generate', () =>
 );
 
 gulp.task('unit-test', (done) => {
-  gulp.src(['dist/**/*.js', '!dist/**/*.spec.js', '!dist/**/*.it.js'])
+  gulp.src(['dist/**/*.js', '!dist/**/*.spec.js', '!dist/it/**/*'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
       includeUntested: true,
     }))
     .pipe(istanbul.hookRequire())
     .on('finish', () => {
-      gulp.src('dist/**/*.spec.js', { read: false })
+      gulp.src(['dist/**/*.spec.js', '!dist/it/**/*'], { read: false })
         .pipe(espower())
         .pipe(mocha({
           ui: 'bdd',
@@ -118,7 +123,7 @@ gulp.task('unit-test', (done) => {
 });
 
 gulp.task('integration-test', (done) => {
-  gulp.src(['dist/**/*.it.js'], { read: false })
+  gulp.src(['dist/it/**/*.spec.js'], { read: false })
     .pipe(espower())
     .pipe(mocha({
       ui: 'bdd',
@@ -154,7 +159,7 @@ gulp.task('_daemon', (done) => {
 
 
 gulp.task('package',
-  gulp.series('build', 'build-it', 'lint', 'unit-test', 'integration-test', 'coveralls'));
+  gulp.series('copy', 'build', 'build-it', 'lint', 'unit-test', 'integration-test', 'coveralls'));
 
 gulp.task('dev',
   gulp.series('_daemon', 'clean', 'generate', 'package', 'watch'));

@@ -26,6 +26,7 @@ class App {
     this.opts = opts;
     this::createRootContainer();
     this::createUserContainer();
+    process.rootContainer = this.rootContainer;
   }
 
   async start() {
