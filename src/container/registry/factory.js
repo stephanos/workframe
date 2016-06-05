@@ -1,4 +1,4 @@
-import { relations } from '../component2';
+import relations from './relations';
 
 
 class Factory {

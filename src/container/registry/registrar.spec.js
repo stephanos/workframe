@@ -1,5 +1,7 @@
+import assert from 'assert';
 import sinon from 'sinon';
 
+import Inject from './decorator';
 import Registrar from './registrar';
 
 
@@ -15,14 +17,26 @@ describe('Registrar', () => {
     });
   });
 
-  it('should register components in network', () => {
+  it('should register component in network', () => {
     registrar.register({
-      factory: A,
-      connections: [{ from: A, to: B, relation: 'depends' }],
+      factory: A, decorations: [],
     });
 
-    registrar.network.add.calledWith(A);
-    registrar.network.connect.calledWith(A, B, 'depends');
+    assert(registrar.network.add.calledWith(A));
+  });
+
+  it('should register component dependencies in network', () => {
+    registrar.register({
+      factory: A,
+      decorations: [{
+        type: Inject,
+        parameters: [B],
+        target: { kind: 'field', name: 'dependency' },
+      }],
+    });
+
+    assert(registrar.network.add.calledWith(A));
+    assert(registrar.network.connect.calledWith(A, B, 'dependsOn', { fieldName: 'dependency' }));
   });
 
   // it('should fail for missing component', () => {

@@ -2,7 +2,7 @@ import assert from 'assert';
 import Reflect from 'core-js/es7/reflect';
 
 import Schema from './schema';
-import { Component } from './decorators';
+import Component from './decorator';
 
 
 describe('Component Schema', () => {

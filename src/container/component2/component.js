@@ -1,10 +1,10 @@
 class Component {
 
-  constructor(id, type, factory, connections) {
+  constructor(id, type, factory, decorations) {
     this.id = id;
     this.type = type;
     this.factory = factory;
-    this.connections = connections;
+    this.decorations = decorations;
   }
 }
 
