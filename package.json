@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "license": "MIT",
   "devDependencies": {
+    "axios": "^0.12.0",
     "babel-core": "^6.9.1",
     "babel-eslint": "^6.0.4",
     "babel-plugin-decorator-metadata": "^0.3.0",

@@ -1,4 +1,5 @@
 import { boot } from '../../';
+// import axios from 'axios';
 
 // import assert from 'assert';
 // import ChangeEmailCommand from './account/command/changeEmail/command';
@@ -15,6 +16,9 @@ describe('Integration Test "Account"', () => {
 
   it('should load', async () => {
     app = await boot({ module });
+
+    // const resp = await axios.get('http://localhost:9000/accounts/hello');
+    // console.log(resp.status);
   });
 
   // it('should create account', async () => {
