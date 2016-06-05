@@ -8,15 +8,15 @@ class Transitioner {
     this.factory = factory;
   }
 
-  async start() {
-    await this.to('start', 'connectionsFrom', 'to');
+  async start(dispatcher) {
+    await this.to(dispatcher, 'start', 'connectionsFrom', 'to');
   }
 
-  async stop() {
-    await this.to('stop', 'connectionsTo', 'from');
+  async stop(dispatcher) {
+    await this.to(dispatcher, 'stop', 'connectionsTo', 'from');
   }
 
-  async to(state, connection, dir) {
+  async to(dispatcher, state, connection, dir) {
     const promises = [];
 
     const transition = async (values) => {
@@ -34,7 +34,7 @@ class Transitioner {
           return;
         }
 
-        const stateChangeP = instance[state]();
+        const stateChangeP = instance[state](dispatcher);
         promises.push(stateChangeP);
       });
 

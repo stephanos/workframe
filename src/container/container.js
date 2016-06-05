@@ -1,6 +1,9 @@
 import { load, start, stop } from './lifecycle';
+import Dispatcher from './dispatcher';
+import Journal from './journal';
 import Registry from './registry';
 import Status from './status';
+import { IdGenerator, Clock } from '../util';
 
 
 class Container {
@@ -11,6 +14,8 @@ class Container {
     this.parent = parent;
 
     this.registry = new Registry(parent ? parent.registry : undefined);
+    this.dispatcher = new Dispatcher(undefined, new Journal(), IdGenerator, Clock);
+
     this.status = Status.IDLE;
     this.children = [];
   }

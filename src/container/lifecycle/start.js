@@ -8,7 +8,7 @@ async function startChildren(container) {
 async function start(container) {
   container.updateStatus(Status.STARTING);
 
-  await container.registry.start();
+  await container.registry.start(container.dispatcher);
   await startChildren(container);
 
   container.updateStatus(Status.STARTED);

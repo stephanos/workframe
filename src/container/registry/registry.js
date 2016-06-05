@@ -21,12 +21,12 @@ class Registry {
     this.factory.create(type);
   }
 
-  async start() {
-    await this.transitioner.start();
+  async start(dispatcher) {
+    await this.transitioner.start(dispatcher);
   }
 
-  async stop() {
-    await this.transitioner.stop();
+  async stop(dispatcher) {
+    await this.transitioner.stop(dispatcher);
   }
 }
 

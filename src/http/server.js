@@ -2,6 +2,7 @@ import http from 'http';
 import Koa from 'koa';
 import KoaRouter from 'koa-router';
 
+import Config from '../config';
 import Router from './router';
 import { Component, Inject } from '../container';
 
@@ -30,11 +31,14 @@ class Server {
   @Inject(Router)
   router;
 
+  @Inject(Config)
+  config;
+
 
   async start() {
     const httpRouter = this::createHttpRouter();
     this.httpServer = this::createHttpServer(httpRouter);
-    // this.httpServer.listen(9000);
+    this.httpServer.listen(this.config.get('http.port'));
   }
 
   async stop() {

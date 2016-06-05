@@ -1,6 +1,6 @@
 // import Component from '../component/component';
 // import Collector from './collector';
-import Dispatcher from './dispatcher';
+// import Dispatcher from './dispatcher';
 
 // import { Clock, IdGenerator } from '../../util';
 //
@@ -15,9 +15,9 @@ import Dispatcher from './dispatcher';
 
 class Router {
 
-  constructor() {
-    this.dispatcher = new Dispatcher();
-  }
+  // constructor() {
+  //   this.dispatcher = new Dispatcher();
+  // }
 
   async dispatch() {
 //     const component = new Component(this.registry.getConnection('handles', signal.constructor));
