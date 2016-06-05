@@ -32,7 +32,6 @@ class Dispatcher {
     this.trackResult(result);
     return result;
   }
-  
 
   trackCall(module, component, func, args) {
     this.journal.add({
