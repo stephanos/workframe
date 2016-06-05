@@ -11,6 +11,11 @@ class Dispatcher {
     this.createdAt = clock.now();
   }
 
+
+  fork() {
+    return new Dispatcher(this.id, this.journal, this.idGenerator, this.clock);
+  }
+
   invoke(module, component, func, args) {
     this.trackCall(module, component, func, args);
 
@@ -27,10 +32,7 @@ class Dispatcher {
     this.trackResult(result);
     return result;
   }
-
-  fork() {
-    return new Dispatcher(this.id, this.journal, this.idGenerator, this.clock);
-  }
+  
 
   trackCall(module, component, func, args) {
     this.journal.add({
