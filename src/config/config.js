@@ -51,7 +51,7 @@ class Config {
   }
 
   get(key) {
-    const val = this.conf.get(key);
+    const val = this.conf.getIn(key.split('.'));
     if (val === undefined) {
       throw new Error(`unknown config key '${key}'`);
     }
