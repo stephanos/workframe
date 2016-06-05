@@ -1,3 +1,7 @@
-import App from './app';
+import Application from './app';
+import ApplicationContext from './context';
 
-export default App;
+export {
+  Application,
+  ApplicationContext,
+};

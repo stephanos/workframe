@@ -2,7 +2,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import { Map, OrderedSet, fromJS } from 'immutable';
 
-import { Component } from '../container';
+import { ApplicationContext } from '../app';
+import { Component, Inject } from '../container';
 
 
 const defaultProfile = 'default';
@@ -41,12 +42,16 @@ function createFileConfig(container, profiles) {
 @Component()
 class Config {
 
+  @Inject(ApplicationContext)
+  appContext;
+
+
   async start() {
     const defaultConf = Map({ profiles: OrderedSet([defaultProfile]) });
     const argsConf = createArgsConfig();
     const envConf = createEnvConfig();
     const tmpConf = defaultConf.mergeDeep(argsConf).mergeDeep(envConf);
-    const fileConf = createFileConfig(process.rootContainer, tmpConf.get('profiles'));
+    const fileConf = createFileConfig(this.appContext.container, tmpConf.get('profiles'));
     this.conf = tmpConf.mergeDeep(fileConf);
   }
 

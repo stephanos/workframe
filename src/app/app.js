@@ -20,7 +20,7 @@ function createUserContainer() {
 }
 
 
-class App {
+class Application {
 
   constructor(opts) {
     this.opts = opts;
@@ -43,4 +43,4 @@ class App {
 }
 
 
-export default App;
+export default Application;
