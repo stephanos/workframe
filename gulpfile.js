@@ -58,7 +58,10 @@ gulp.task('build', () =>
     .pipe(cache('dist'))
     .pipe(sourcemaps.init())
     .pipe(babel(babelConf))
-    .on('error', handleError)
+    .on('error', (err) => {
+      handleError(err.message + "\n" + err.codeFrame);
+    })
+    .pipe(sourcemaps.write())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'))
 );
@@ -68,7 +71,9 @@ gulp.task('build-it', () =>
     .pipe(cache('dist'))
     .pipe(sourcemaps.init())
     .pipe(babel(babelConf))
-    .on('error', handleError)
+    .on('error', (err) => {
+      handleError(err.message + "\n" + err.codeFrame);
+    })
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/it'))
 );
