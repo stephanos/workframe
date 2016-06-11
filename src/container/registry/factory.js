@@ -16,7 +16,7 @@ class Factory {
         if (this.parent) {
           return this.parent.create(type);
         }
-        throw new Error(`unable to resolve type '${type}'`);
+        throw new Error(`unable to resolve type '${type.name ? type.name : type}'`);
       }
 
       const cachedInstance = this.instanceByType[type];
