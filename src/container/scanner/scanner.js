@@ -9,14 +9,14 @@ class Scanner {
     this.ignoreFile = ignoreFile;
   }
 
-  scan(filePath) {
-    if (!path.isAbsolute(filePath)) {
+  scan(rootDir) {
+    if (!path.isAbsolute(rootDir)) {
       throw new Error('file path must be absolute');
     }
 
     const result = [];
 
-    requireDirectory(module, filePath, {
+    requireDirectory(module, rootDir, {
       visit: (obj) => {
         Object.keys(obj).forEach((exportKey) => {
           const exportVal = obj[exportKey];
@@ -25,7 +25,7 @@ class Scanner {
           }
         });
       },
-      exclude: (path) => this.ignoreFile(path, filePath),
+      exclude: (filePath) => this.ignoreFile(filePath, rootDir),
     });
 
     return result;
