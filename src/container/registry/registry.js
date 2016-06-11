@@ -6,6 +6,8 @@ import Transitioner from './transitioner';
 
 class Registry {
 
+  components = [];
+
   constructor(parent) {
     this.network = new Network();
     this.registrar = new Registrar(this.network);
@@ -15,6 +17,7 @@ class Registry {
 
   add(component) {
     this.registrar.register(component);
+    this.components.push(component);
   }
 
   create(type) {
