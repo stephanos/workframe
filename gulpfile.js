@@ -54,7 +54,7 @@ gulp.task('copy', () =>
 );
 
 gulp.task('build', () =>
-  gulp.src(['src/**/*.js', '!src/it/**'])
+  gulp.src(['src/**/*.js', '!src/__tests/**'])
     .pipe(cache('dist'))
     .pipe(sourcemaps.init())
     .pipe(babel(babelConf))
@@ -67,7 +67,7 @@ gulp.task('build', () =>
 );
 
 gulp.task('build-it', () =>
-  gulp.src(['src/it/**/*.js', '!src/**/*.t.js'])
+  gulp.src(['src/__tests/**/*.js', '!src/**/*.t.js'])
     .pipe(cache('dist'))
     .pipe(sourcemaps.init())
     .pipe(babel(babelConf))
@@ -75,7 +75,7 @@ gulp.task('build-it', () =>
       handleError(err.message + "\n" + err.codeFrame);
     })
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/it'))
+    .pipe(gulp.dest('dist/__tests'))
 );
 
 gulp.task('lint', () =>
@@ -101,14 +101,14 @@ gulp.task('generate', () =>
 );
 
 gulp.task('unit-test', (done) => {
-  gulp.src(['dist/**/*.js', '!dist/**/*.spec.js', '!dist/it/**/*'])
+  gulp.src(['dist/**/*.js', '!dist/**/*.spec.js', '!dist/__tests/**/*'])
     .pipe(istanbul({
       instrumenter: isparta.Instrumenter,
       includeUntested: true,
     }))
     .pipe(istanbul.hookRequire())
     .on('finish', () => {
-      gulp.src(['dist/**/*.spec.js', '!dist/it/**/*'], { read: false })
+      gulp.src(['dist/**/*.spec.js', '!dist/__tests/**/*'], { read: false })
         .pipe(espower())
         .pipe(mocha({
           ui: 'bdd',
@@ -128,7 +128,7 @@ gulp.task('unit-test', (done) => {
 });
 
 gulp.task('integration-test', (done) => {
-  gulp.src(['dist/it/**/*.spec.js'], { read: false })
+  gulp.src(['dist/__tests/**/*.spec.js'], { read: false })
     .pipe(espower())
     .pipe(mocha({
       ui: 'bdd',

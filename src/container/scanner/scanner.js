@@ -25,7 +25,7 @@ class Scanner {
           }
         });
       },
-      exclude: this.ignoreFile,
+      exclude: (path) => this.ignoreFile(path, filePath),
     });
 
     return result;
