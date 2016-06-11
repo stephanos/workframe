@@ -2,6 +2,6 @@ src
 lib
 coverage
 node_modules
-dist/it
-dist/*.spec.js
+__tests
+*.spec.js
 fixtures/

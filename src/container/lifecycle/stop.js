@@ -8,6 +8,7 @@ async function stopChildren(container) {
 async function stop(container) {
   container.updateStatus(Status.STOPPING);
 
+  // children must be stopped AFTER parent
   await container.registry.stop(container.dispatcher);
   await stopChildren(container);
 

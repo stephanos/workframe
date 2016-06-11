@@ -1,6 +1,6 @@
 class ViewComponentType {
 
-  typeName = 'View';
+  name = 'View';
 }
 
 

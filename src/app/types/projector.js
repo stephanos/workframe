@@ -1,6 +1,6 @@
 class ProjectorComponentType {
 
-  typeName = 'Projector';
+  name = 'Projector';
 }
 
 

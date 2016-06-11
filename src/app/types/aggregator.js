@@ -1,6 +1,6 @@
 class AggregatorComponentType {
 
-  typeName = 'Aggregator';
+  name = 'Aggregator';
 }
 
 

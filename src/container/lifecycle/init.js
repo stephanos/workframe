@@ -6,6 +6,10 @@ import Scanner from '../scanner';
 import Status from '../status';
 
 
+async function initChildren(container) {
+  await Promise.all(container.children.map((c) => c.init()));
+}
+
 function createScanner(componentSchema) {
   const isComponent = (obj) => componentSchema.isComponent(obj);
   const excludeFiles = (filePath, rootDir) => {
@@ -25,8 +29,6 @@ function createScanner(componentSchema) {
 }
 
 function load(container) {
-  container.updateStatus(Status.INITIALISING);
-
   const schema = container.componentSchema;
   const componentFactory = new ComponentFactory(schema, IdGenerator);
   const scanner = createScanner(schema);
@@ -37,9 +39,18 @@ function load(container) {
   components.forEach((comp) => container.registry.add(comp));
 
   // TODO: validate registry (e.g. no cycles)
+}
+
+
+async function init(container) {
+  container.updateStatus(Status.INITIALISING);
+
+  // children must be initilises BEFORE parent
+  await initChildren(container);
+  load(container);
 
   container.updateStatus(Status.INITIALISED);
 }
 
 
-export default load;
+export default init;

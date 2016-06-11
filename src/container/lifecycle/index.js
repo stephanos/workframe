@@ -1,9 +1,9 @@
-import load from './load';
+import init from './init';
 import start from './start';
 import stop from './stop';
 
 export {
-  load,
+  init,
   start,
   stop,
 };

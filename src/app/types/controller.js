@@ -1,6 +1,6 @@
 class ControllerComponentType {
 
-  typeName = 'Controller';
+  name = 'Controller';
 }
 
 

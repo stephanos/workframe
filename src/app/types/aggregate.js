@@ -1,6 +1,6 @@
 class AggregateComponentType {
 
-  typeName = 'Aggregate';
+  name = 'Aggregate';
 }
 
 

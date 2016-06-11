@@ -1,9 +1,9 @@
-import { load, start, stop } from './lifecycle';
+import { init, start, stop } from './lifecycle';
+import { Clock, IdGenerator } from '../util';
 import Dispatcher from './dispatcher';
 import Journal from './journal';
 import Registry from './registry';
 import Status from './status';
-import { IdGenerator, Clock } from '../util';
 
 
 class Container {
@@ -20,8 +20,11 @@ class Container {
     this.children = [];
   }
 
+  async init() {
+    await init(this);
+  }
+
   async start() {
-    load(this);
     await start(this);
   }
 
@@ -40,6 +43,10 @@ class Container {
       throw Error(`invalid status "${newStatus}"`);
     }
     this.status = newStatus;
+  }
+
+  get components() {
+    return this.registry.components;
   }
 }
 

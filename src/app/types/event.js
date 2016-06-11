@@ -1,6 +1,6 @@
 class EventComponentType {
 
-  typeName = 'Event';
+  name = 'Event';
 }
 
 

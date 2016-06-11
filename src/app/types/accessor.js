@@ -1,6 +1,6 @@
 class AccessorComponentType {
 
-  typeName = 'Accessor';
+  name = 'Accessor';
 }
 
 

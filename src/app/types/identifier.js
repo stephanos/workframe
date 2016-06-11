@@ -5,7 +5,7 @@ class Identifier {
 
   test(type, input) {
     const inputName = input.name;
-    const typeName = type.typeName;
+    const typeName = type.name;
     return endsWith(inputName, typeName);
   }
 }

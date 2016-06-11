@@ -1,6 +1,6 @@
 class ProcessorComponentType {
 
-  typeName = 'Processor';
+  name = 'Processor';
 }
 
 

@@ -6,9 +6,9 @@ import { types, TypeIdentifier } from './types';
 
 function createRootContainer() {
   class ServiceComponentType {}
-  const schema = new ComponentSchema(
-    [ServiceComponentType],
-    { test: () => ServiceComponentType });
+  const typeIdentifier = { test: () => ServiceComponentType };
+  const schema = new ComponentSchema([new ServiceComponentType()], typeIdentifier);
+
   const rootDir = path.join(__dirname, '..');
   this.rootContainer = new Container(rootDir, schema);
 }
@@ -30,11 +30,8 @@ class Application {
   }
 
   async start() {
+    await this.rootContainer.init();
     await this.rootContainer.start();
-  }
-
-  async dispatch(...args) {
-    return this.modules.router.dispatch(...args);
   }
 
   async stop() {

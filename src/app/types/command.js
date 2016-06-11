@@ -1,6 +1,6 @@
 class CommandComponentType {
 
-  typeName = 'Command';
+  name = 'Command';
 }
 
 
