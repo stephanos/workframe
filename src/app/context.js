@@ -8,16 +8,12 @@ class ApplicationContext {
     this.container = process.rootContainer; // TODO: find a cleaner way
   }
 
+  createComponent(component) {
+    return this.container.createComponent(component);
+  }
+
   get components() {
-    const result = [];
-
-    const collectComponents = (container) => {
-      result.push(...container.components);
-      container.children.forEach((child) => collectComponents(child));
-    };
-    collectComponents(this.container);
-
-    return result;
+    return this.container.components;
   }
 }
 

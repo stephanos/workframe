@@ -45,8 +45,32 @@ class Container {
     this.status = newStatus;
   }
 
+  createComponent(component) {
+    const create = (container) => {
+      if (container.registry.has(component)) {
+        return container.registry.create(component);
+      }
+
+      for (const child of container.children) {
+        const result = create(child);
+        if (result) {
+          return result;
+        }
+      }
+
+      return undefined;
+    };
+    return create(this);
+  }
+
   get components() {
-    return this.registry.components;
+    const collect = (container) => {
+      const result = [];
+      result.push(...container.registry.components);
+      container.children.forEach((child) => result.push(...collect(child)));
+      return result;
+    };
+    return collect(this);
   }
 }
 

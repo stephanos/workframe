@@ -5,7 +5,9 @@ import { types, TypeIdentifier } from './types';
 
 
 function createRootContainer() {
-  class ServiceComponentType {}
+  class ServiceComponentType {
+    name = 'Service';
+  }
   const typeIdentifier = { test: () => ServiceComponentType };
   const schema = new ComponentSchema([new ServiceComponentType()], typeIdentifier);
 

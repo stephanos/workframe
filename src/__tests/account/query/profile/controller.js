@@ -12,10 +12,9 @@ class AuthentictionController {
   accountAccessor;
 
 
-  @Resource('/', Method.GET)
-  async getAccount(req, resp, next) {
+  @Resource(Method.GET, '/')
+  async getAccount() {
     // console.log('GET');
-    await next();
   }
 }
 

@@ -5,10 +5,9 @@ import { Method, Resource } from '../../http';
 @Component('/accounts')
 class AccountsController {
 
-  @Resource('/hello', Method.GET)
-  async getAccount(req, resp, next) {
-    resp.write('Hi');
-    await next();
+  @Resource(Method.GET, '/hello/:who')
+  async getAccount(request, response) {
+    response.write(`Hi ${request.urlParams.who}`);
   }
 }
 

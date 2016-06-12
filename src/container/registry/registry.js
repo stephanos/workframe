@@ -11,17 +11,8 @@ class Registry {
   constructor(parent) {
     this.network = new Network();
     this.registrar = new Registrar(this.network);
-    this.factory = new Factory(this.network, parent ? parent.factory : undefined);
+    this.factory = new Factory(this.network, parent ? parent.factory : parent);
     this.transitioner = new Transitioner(this.network, this.factory);
-  }
-
-  add(component) {
-    this.registrar.register(component);
-    this.components.push(component);
-  }
-
-  create(type) {
-    this.factory.create(type);
   }
 
   async start(dispatcher) {
@@ -30,6 +21,19 @@ class Registry {
 
   async stop(dispatcher) {
     await this.transitioner.stop(dispatcher);
+  }
+
+  add(component) {
+    this.registrar.register(component);
+    this.components.push(component);
+  }
+
+  has(component) {
+    return this.components.includes(component);
+  }
+
+  create(component) {
+    return this.factory.create(component.factory);
   }
 }
 

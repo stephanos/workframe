@@ -12,10 +12,9 @@ class ChangeEmailAddressController {
   changeEmailProcessor;
 
 
-  @Resource('/changeEmailAddress', Method.PUT)
-  async changeEmailAddress(req, resp, next) {
+  @Resource(Method.PUT, '/changeEmailAddress')
+  async changeEmailAddress() {
     // console.log('PUT');
-    await next();
   }
 }
 
