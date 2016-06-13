@@ -32,7 +32,7 @@ class Registrar {
   }
 
   register(component) {
-    this.network.add(component.factory);
+    this.network.add(component.factory, { component });
 
     const connections = findDependencies(component);
     connections.forEach((connection) => {

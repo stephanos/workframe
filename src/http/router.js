@@ -1,5 +1,5 @@
 import { ApplicationContext } from '../app';
-import { Component, Inject } from '../container';
+import { Component, Inject, OnStart } from '../container';
 
 import Resource from './resource';
 import { Resource as ResourceDecorator } from './decorators';
@@ -13,7 +13,7 @@ class Router {
   @Inject(ApplicationContext)
   appContext;
 
-
+  @OnStart()
   async start() {
     this.appContext.components
       .filter((comp) => comp.type.name === 'Controller')

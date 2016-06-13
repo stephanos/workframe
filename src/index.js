@@ -1,5 +1,5 @@
 import { Application } from './app';
-import { Component, Inject } from './container';
+import { Component, Inject, OnStart, OnStop } from './container';
 import { Record } from './util';
 
 
@@ -14,5 +14,7 @@ export {
   boot,
   Component,
   Inject,
+  OnStart,
+  OnStop,
   Record,
 };

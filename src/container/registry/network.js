@@ -5,11 +5,13 @@ import { alg, Graph } from 'graphlib';
 class Network {
   idByValue = {};
   valueById = {};
+  propsByValue = {};
   networkByRelation = {};
 
 
-  add(value) {
+  add(value, props) {
     this.getOrAdd(value);
+    this.propsByValue[value] = props;
   }
 
   connect(from, to, relation, props) {

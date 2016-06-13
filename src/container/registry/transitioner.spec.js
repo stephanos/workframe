@@ -1,6 +1,7 @@
 import assert from 'assert';
 
 import Transitioner from './transitioner';
+import { OnStart, OnStop } from '../lifecycle/decorators';
 
 
 let transitioner;
@@ -20,7 +21,13 @@ describe('Transitioner', () => {
     class B { async start() { started.push(B); } }
     class C { async start() { started.push(C); } }
     class D { async start() { started.push(D); } }
+    const component = { decorations: [{ type: OnStart, target: { name: 'start', kind: 'method' } }] };
+
     transitioner.network.values = [D, C, A, B];
+    transitioner.network.propsByValue = {
+      [A]: { component }, [B]: { component },
+      [C]: { component }, [D]: { component },
+    };
     transitioner.network.connectionsFrom = (value) => {
       if (value === A) {
         return [{ from: A, to: B }];
@@ -34,7 +41,7 @@ describe('Transitioner', () => {
       return null;
     };
 
-    await transitioner.start();
+    await transitioner.start(OnStart);
 
     assert.deepEqual(started, [C, D, B, A]);
   });
@@ -45,7 +52,13 @@ describe('Transitioner', () => {
     class B { async stop() { stopped.push(B); } }
     class C { async stop() { stopped.push(C); } }
     class D { async stop() { stopped.push(D); } }
+    const component = { decorations: [{ type: OnStop, target: { name: 'stop', kind: 'method' } }] };
+
     transitioner.network.values = [D, C, A, B];
+    transitioner.network.propsByValue = {
+      [A]: { component }, [B]: { component },
+      [C]: { component }, [D]: { component },
+    };
     transitioner.network.connectionsTo = (value) => {
       if (value === A) {
         return [];
@@ -59,7 +72,7 @@ describe('Transitioner', () => {
       return null;
     };
 
-    await transitioner.stop();
+    await transitioner.stop(OnStop);
 
     assert.deepEqual(stopped, [D, A, B, C]);
   });

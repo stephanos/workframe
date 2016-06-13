@@ -1,4 +1,5 @@
 import relations from './relations';
+import { OnStart, OnStop } from '../lifecycle/decorators';
 
 
 class Transitioner {
@@ -9,14 +10,14 @@ class Transitioner {
   }
 
   async start(dispatcher) {
-    await this.to(dispatcher, 'start', 'connectionsFrom', 'to');
+    await this.to(dispatcher, OnStart, 'connectionsFrom', 'to');
   }
 
   async stop(dispatcher) {
-    await this.to(dispatcher, 'stop', 'connectionsTo', 'from');
+    await this.to(dispatcher, OnStop, 'connectionsTo', 'from');
   }
 
-  async to(dispatcher, state, connection, dir) {
+  async to(dispatcher, decoratorType, connection, dir) {
     const promises = [];
 
     const transition = async (values) => {
@@ -30,12 +31,13 @@ class Transitioner {
         }
 
         const instance = this.factory.create(value);
-        if (typeof instance[state] !== 'function') {
-          return;
-        }
 
-        const stateChangeP = instance[state](dispatcher);
-        promises.push(stateChangeP);
+        const component = this.network.propsByValue[value].component;
+        component.decorations
+          .filter((decoration) => decoration.type === decoratorType)
+          .filter((decoration) => decoration.target.kind === 'method')
+          .map((decoration) => decoration.target.name)
+          .forEach((funcName) => promises.push(instance[funcName](dispatcher)));
       });
 
       if (untransitioned.length > 0) {

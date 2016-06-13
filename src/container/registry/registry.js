@@ -1,3 +1,5 @@
+import { OnStart, OnStop } from '../lifecycle/decorators';
+
 import Factory from './factory';
 import Network from './network';
 import Registrar from './registrar';
@@ -16,11 +18,11 @@ class Registry {
   }
 
   async start(dispatcher) {
-    await this.transitioner.start(dispatcher);
+    await this.transitioner.start(dispatcher, OnStart);
   }
 
   async stop(dispatcher) {
-    await this.transitioner.stop(dispatcher);
+    await this.transitioner.stop(dispatcher, OnStop);
   }
 
   add(component) {

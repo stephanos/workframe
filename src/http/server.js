@@ -3,7 +3,7 @@ import Koa from 'koa';
 import KoaRouter from 'koa-router';
 
 import Config from '../config';
-import { Component, Inject } from '../container';
+import { Component, Inject, OnStart, OnStop } from '../container';
 
 import Request from './request';
 import Response from './response';
@@ -40,6 +40,7 @@ class Server {
   config;
 
 
+  @OnStart()
   async start() {
     const httpRouter = this::createHttpRouter();
     const httpPort = this.config.get('http.port');
@@ -48,6 +49,7 @@ class Server {
     this.httpServer.listen(httpPort, httpHost);
   }
 
+  @OnStop()
   async stop() {
     this.httpServer.close();
   }
