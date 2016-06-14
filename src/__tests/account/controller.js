@@ -7,7 +7,9 @@ class AccountsController {
 
   @Resource(Method.GET, '/hello/:who')
   async getAccount(request, response) {
-    response.write(`Hi ${request.urlParams.who}`);
+    response
+      .setHeader('Content-Type', 'application/json')
+      .write(`{ Hi: ${request.urlParams.who} }`);
   }
 }
 

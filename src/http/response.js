@@ -8,6 +8,15 @@ class Response {
     this.ctx.body = body;
     return this;
   }
+
+  getHeader(field) {
+    return this.ctx.response.get(field);
+  }
+
+  setHeader(field, value) {
+    this.ctx.response.set(field, value);
+    return this;
+  }
 }
 
 
