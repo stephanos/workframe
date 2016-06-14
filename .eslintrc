@@ -1,5 +1,8 @@
 {
   "parser": "babel-eslint",
+  "plugins": [
+    "flowtype"
+  ],
 
   "extends": "airbnb-base",
 
@@ -10,6 +13,9 @@
 
   "rules": {
     "max-len": 0,
-    "new-cap": 0
+    "new-cap": 0,
+
+    "flowtype/space-after-type-colon": [2, "always"],
+    "flowtype/space-before-type-colon": [2, "never"]
   }
 }
