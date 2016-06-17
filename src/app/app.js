@@ -17,15 +17,16 @@ function createRootContainer() {
 
 function createUserContainer() {
   const schema = new ComponentSchema(types, new TypeIdentifier());
-  const rootDir = path.dirname(this.opts.module.id);
-  this.userContainer = this.rootContainer.fork(rootDir, schema);
+  this.userContainer = this.rootContainer.fork(this.rootDir, schema);
 }
 
 
 class Application {
 
-  constructor(opts) {
+  constructor(module, opts) {
+    this.rootDir = path.dirname(module.id);
     this.opts = opts;
+
     this::createRootContainer();
     this::createUserContainer();
     process.rootContainer = this.rootContainer;

@@ -46,7 +46,7 @@ class Container {
   }
 
   createComponent(component) {
-    const create = (container) => {
+    function create(container) {
       if (container.registry.has(component)) {
         return container.registry.create(component);
       }
@@ -58,8 +58,9 @@ class Container {
         }
       }
 
-      return undefined;
-    };
+      throw new Error(`unable to create '${component.factory.name}': not found`);
+    }
+
     return create(this);
   }
 

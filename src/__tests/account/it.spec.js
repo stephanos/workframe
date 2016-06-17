@@ -1,4 +1,4 @@
-import { boot } from '../../';
+import { boot } from 'workframe';
 import axios from 'axios';
 
 // import assert from 'assert';
@@ -15,12 +15,12 @@ describe('Integration Test "Account"', () => {
   });
 
   it('should load', async () => {
-    app = await boot({ module });
+    app = await boot(module);
   });
 
   it('should respond to HTTP requests', async () => {
     try {
-      await axios.get('http://localhost:9000/hello/me');
+      await axios.get('http://localhost:9000/accounts/ping/you');
     } catch (e) {
       throw new Error(`request failed: '${e.status} ${e.statusText}'`);
     }

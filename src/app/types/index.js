@@ -10,6 +10,7 @@ import EventComponentType from './event';
 import ProcessorComponentType from './processor';
 import ProjectorComponentType from './projector';
 // import QueryComponentType from './query';
+import RouterComponentType from './router';
 // import { StateComponentType } from './state';
 // import SystemComponentType from './system';
 import TypeIdentifier from './identifier';
@@ -29,6 +30,7 @@ const types = [
   new ProcessorComponentType(),
   new ProjectorComponentType(),
   // QueryComponentType,
+  new RouterComponentType(),
   // StateComponentType,
   // SystemComponentType,
   new ViewComponentType(),
