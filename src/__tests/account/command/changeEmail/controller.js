@@ -1,18 +1,17 @@
-import { Component, Inject } from '../../../../';
-import { Method, Resource } from '../../../../http';
+import { Component, Inject } from 'workframe';
+import { Method, Resource } from 'workframe/http';
 
-import AccountsController from '../../controller';
 import ChangeEmailProcessor from './processor';
 
 
-@Component(AccountsController)
+@Component()
 class ChangeEmailAddressController {
 
   @Inject(ChangeEmailProcessor)
   changeEmailProcessor;
 
 
-  @Resource(Method.PUT, '/changeEmailAddress')
+  @Resource(Method.PUT, '/')
   async changeEmailAddress() {
     // console.log('PUT');
   }

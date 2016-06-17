@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable */
 
-import { Component, Record } from '../../../../';
+import { Component, Record } from 'workframe';
 
 import { Iterable, List, Map } from 'immutable';
 

@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const del = require('del');
 const gulp = require('gulp');
 const path = require('path');
@@ -44,8 +45,14 @@ function handleError(err) {
 
 
 gulp.task('clean', (done) => {
-  del.sync(['dist', 'coverage']);
+  del.sync(['dist', 'coverage', './node_modules/workframe']);
   done();
+});
+
+gulp.task('symlink', (done) => {
+  fs.mkdir('dist', () => {
+    fs.symlink('./dist', './node_modules/workframe', done);
+  });
 });
 
 gulp.task('copy', () =>
@@ -167,7 +174,7 @@ gulp.task('package',
   gulp.series('copy', 'build', 'build-it', 'lint', 'unit-test', 'integration-test', 'coveralls'));
 
 gulp.task('dev',
-  gulp.series('_daemon', 'clean', 'generate', 'package', 'watch'));
+  gulp.series('_daemon', 'clean', 'symlink', 'generate', 'package', 'watch'));
 
 gulp.task('default',
-  gulp.series('clean', 'generate'));
+  gulp.series('clean', 'symlink', 'package'));

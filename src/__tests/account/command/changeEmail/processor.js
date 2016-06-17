@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Component } from '../../../../';
+import { Component } from 'workframe';
 import ChangeEmailCommand from './command';
 import AccountAggregateRoot from '../aggregate';
 import EmailChangedEvent from '../../event/emailChanged';

@@ -1,8 +1,8 @@
-import { Component } from '../../';
-import { Method, Resource } from '../../http';
+import { Component } from 'workframe';
+import { Method, Resource } from 'workframe/http';
 
 
-@Component('/accounts')
+@Component()
 class AccountsController {
 
   @Resource(Method.GET, '/hello/:who')

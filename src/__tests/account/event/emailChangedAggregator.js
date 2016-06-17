@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Component } from '../../../';
+import { Component } from 'workframe';
 import EmailChangedEvent from './emailChanged';
 
 

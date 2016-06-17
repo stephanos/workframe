@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Component } from '../../../../';
+import { Component } from 'workframe';
 import CreateAccountCommand from './command';
 import AccountAggregateRoot from '../aggregate';
 import AccountCreatedEvent from '../../event/accountCreated';

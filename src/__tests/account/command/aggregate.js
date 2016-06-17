@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Record } from '../../../';
+import { Record } from 'workframe';
 
 
 @Record('account')
