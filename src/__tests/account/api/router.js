@@ -13,8 +13,7 @@ class UrlRouter {
       // TODO: LoginUserFilter,
 
       '/accounts': {
-        controller: AccountsController,
-
+        '/': AccountsController,
         '/authentication': AuthenticationController,
         '/profile': ProfileController,
       },

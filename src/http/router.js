@@ -49,19 +49,15 @@ class Router {
       Object.keys(routeTree).forEach((key) => {
         const val = routeTree[key];
 
-        if (key === 'controller') {
-          createResources(url, val);
-          return;
-        }
-
         if (!key.startsWith('/')) {
           throw new Error(`invalid URL route '${key}': must start with an '/'`);
         }
 
+        const fullUrl = key === '/' ? url : url + key;
         if (val.name) {
-          createResources(url + key, val);
+          createResources(fullUrl, val);
         } else {
-          collect(val, url + key);
+          collect(val, fullUrl);
         }
       });
     };
