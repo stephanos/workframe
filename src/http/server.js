@@ -51,7 +51,9 @@ class Server {
 
   @OnStop()
   async stop() {
-    this.httpServer.close();
+    if (this.httpServer) {
+      this.httpServer.close();
+    }
   }
 }
 

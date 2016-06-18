@@ -1,4 +1,4 @@
-import { boot } from 'workframe';
+import { Application } from 'workframe';
 import axios from 'axios';
 
 import assert from 'assert';
@@ -15,7 +15,8 @@ describe('Integration Test "Account"', () => {
   });
 
   it('should load', async () => {
-    app = await boot(module);
+    app = new Application(module);
+    await app.start();
   });
 
   it('should respond to HTTP requests', async () => {
