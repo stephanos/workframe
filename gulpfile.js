@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const del = require('del');
 const gulp = require('gulp');
 const path = require('path');
@@ -45,13 +45,13 @@ function handleError(err) {
 
 
 gulp.task('clean', (done) => {
-  del.sync(['dist', 'coverage', './node_modules/workframe']);
+  del.sync(['dist', 'coverage', 'node_modules/workframe']);
   done();
 });
 
 gulp.task('symlink', (done) => {
-  fs.mkdir('dist', () => {
-    fs.symlink('./dist', './node_modules/workframe', done);
+  fs.ensureDir('dist', () => {
+    fs.ensureSymlink('dist', 'node_modules/workframe', done);
   });
 });
 
