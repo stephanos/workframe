@@ -1,7 +1,7 @@
 import { boot } from 'workframe';
 import axios from 'axios';
 
-// import assert from 'assert';
+import assert from 'assert';
 // import ChangeEmailCommand from './account/command/changeEmail/command';
 // import CreateAccountCommand from './account/command/createAccount/command';
 
@@ -19,11 +19,14 @@ describe('Integration Test "Account"', () => {
   });
 
   it('should respond to HTTP requests', async () => {
+    let resp;
     try {
-      await axios.get('http://localhost:9000/accounts/ping/you');
+      resp = await axios.get('http://localhost:9000/accounts/ping/you');
     } catch (e) {
       throw new Error(`request failed: '${e.status} ${e.statusText}'`);
     }
+
+    assert.equal(resp.headers['content-type'], 'application/json');
   });
 
   // it('should create account', async () => {

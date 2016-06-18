@@ -4,13 +4,17 @@ import AccountsController from './controller/root';
 import AuthenticationController from './controller/auth';
 import ProfileController from './controller/profile';
 
+import ContentFilter from './filter/content';
+
 
 @Component()
 class UrlRouter {
 
   routes() {
     return {
-      // TODO: LoginUserFilter,
+      filters: [
+        [ContentFilter, { type: 'application/json' }],
+      ],
 
       '/accounts': {
         '/': AccountsController,

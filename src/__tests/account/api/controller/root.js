@@ -7,9 +7,7 @@ class AccountsController {
 
   @Resource(Method.GET, '/ping/:message')
   async ping(req: Request, res: Response) {
-    res
-      .setHeader('Content-Type', 'application/json')
-      .write(`{ pong: ${req.urlParams.message} }`);
+    res.write(`{ pong: ${req.urlParams.message} }`);
   }
 }
 

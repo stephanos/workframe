@@ -6,7 +6,7 @@ import AggregatorComponentType from './aggregator';
 import CommandComponentType from './command';
 import ControllerComponentType from './controller';
 import EventComponentType from './event';
-// import FilterComponentType from './filter';
+import FilterComponentType from './filter';
 import ProcessorComponentType from './processor';
 import ProjectorComponentType from './projector';
 // import QueryComponentType from './query';
@@ -26,7 +26,7 @@ const types = [
   new ControllerComponentType(),
   new CommandComponentType(),
   new EventComponentType(),
-  // FilterComponentType,
+  new FilterComponentType(),
   new ProcessorComponentType(),
   new ProjectorComponentType(),
   // QueryComponentType,
