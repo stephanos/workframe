@@ -10,7 +10,7 @@ import ContentFilter from './filter/content';
 @Component()
 class UrlRouter {
 
-  routes() {
+  get routes() {
     return {
       filters: [
         [ContentFilter, { type: 'application/json' }],
