@@ -1,8 +1,7 @@
-import util from 'util';
-
 import { ApplicationContext } from '../app';
 import { Component, Inject, OnStart } from '../container';
 
+import FilterFactory from './filterFactory';
 import Resource from './resource';
 import ResourceFactory from './resourceFactory';
 
@@ -17,12 +16,16 @@ class Router {
   @Inject(ApplicationContext)
   appContext;
 
+  @Inject(FilterFactory)
+  filterFactory;
+
   @Inject(ResourceFactory)
   resourceFactory;
 
+
   @OnStart()
   async start() {
-    const getRoutes = () => {
+    const getRouteTree = () => {
       const urlRouterComponent = this.appContext.components.find((c) => c.factory.name === 'UrlRouter');
       if (!urlRouterComponent) {
         throw new Error('unable to find "UrlRouter"');
@@ -32,43 +35,11 @@ class Router {
       return urlRouter.routes;
     };
 
-    // TODO: good enough for now but needs some love
-    const getFilters = (routeTree, baseFilters) => {
-      const handlers = [];
-      const paramsByHandler = {};
-      baseFilters.forEach((filter) => {
-        handlers.push(filter.handler);
-        paramsByHandler[filter.handler] = filter.params;
-      });
-      (routeTree[FILTER_KEY] || []).forEach((val) => {
-        let handlerRef;
-        let params;
-        if (util.isArray(val)) {
-          handlerRef = val[0];
-          params = val[1];
-        } else {
-          handlerRef = val;
-          params = [];
-        }
+    const getResources = (routeTree, parentFilters = [], baseUrl = '') => {
+      const filterFactories = routeTree[FILTER_KEY] || [];
+      const filters = this.filterFactory.create(filterFactories, parentFilters);
 
-        const handlerComp = this.appContext.components.find((c) => c.factory === handlerRef);
-        const handler = this.appContext.createComponent(handlerComp);
-        if (!handlers.includes(handler)) {
-          handlers.push(handler);
-        }
-        paramsByHandler[handler] = params;
-      });
-      return handlers.map((handler) =>
-        ({
-          handler,
-          params: paramsByHandler[handler],
-        })
-      );
-    };
-
-    const collect = (routeTree, baseFilters = [], baseUrl = '') => {
       const resources = [];
-      const filters = getFilters(routeTree, baseFilters);
       Object.keys(routeTree).forEach((key) => {
         if (key === FILTER_KEY) {
           return;
@@ -83,13 +54,13 @@ class Router {
         if (routeVal.name) {
           resources.push(...this.resourceFactory.create(url, filters, routeVal));
         } else {
-          resources.push(...collect(routeVal, filters, url));
+          resources.push(...getResources(routeVal, filters, url));
         }
       });
       return resources;
     };
 
-    this.resources = collect(getRoutes());
+    this.resources = getResources(getRouteTree());
   }
 }
 
