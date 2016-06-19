@@ -4,7 +4,7 @@ import { ApplicationContext } from '../app';
 import { Component, Inject, OnStart } from '../container';
 
 import Resource from './resource';
-import { Resource as ResourceDecorator } from './decorators';
+import ResourceFactory from './resourceFactory';
 
 const FILTER_KEY = 'filters';
 
@@ -12,73 +12,28 @@ const FILTER_KEY = 'filters';
 @Component()
 class Router {
 
-  resources = [];
+  resources: Array<Resource> = [];
 
   @Inject(ApplicationContext)
   appContext;
 
+  @Inject(ResourceFactory)
+  resourceFactory;
+
   @OnStart()
   async start() {
-    const urlRouterComponent = this.appContext.components.find((c) => c.factory.name === 'UrlRouter');
-    if (!urlRouterComponent) {
-      throw new Error('unable to find "UrlRouter"');
-    }
+    const getRoutes = () => {
+      const urlRouterComponent = this.appContext.components.find((c) => c.factory.name === 'UrlRouter');
+      if (!urlRouterComponent) {
+        throw new Error('unable to find "UrlRouter"');
+      }
 
-    const urlRouter = this.appContext.createComponent(urlRouterComponent);
-    if (!urlRouter) {
-      throw new Error('unable to create "UrlRouter"');
-    }
-
-    const routes = urlRouter.routes();
-
-    const createResources = (url, filters, controllerRef) => {
-      const controllerComp = this.appContext.components.find((c) => c.factory === controllerRef);
-      const controller = this.appContext.createComponent(controllerComp);
-
-      controllerComp.decorations
-        .filter((dec) => dec.type === ResourceDecorator)
-        .forEach((resourceDec) => {
-          const handlers = filters.slice();
-          handlers.push({
-            handler: {
-              handle: async (dispatcher, request, response) => {
-                const method = resourceDec.target.name;
-                await controller[method](dispatcher, request, response);
-              },
-            },
-          });
-
-          function createHandler(list, prev) {
-            const item = list[list.length - 1];
-            const handler = async (dispatcher, request, response) => {
-              const next = async () => {
-                await prev(dispatcher, request, response);
-              };
-              await item.handler.handle(dispatcher, request, response, item.params, next);
-            };
-
-            if (list.length === 1) {
-              return handler;
-            }
-            return createHandler(list.slice(0, 1), handler);
-          }
-          const rootHandler = createHandler(handlers);
-
-          const handle = async (request, response) => {
-            const dispatcher = null; // TOOD
-            await rootHandler(dispatcher, request, response);
-          };
-
-          const httpMethod = resourceDec.parameters[0];
-          const httpPath = url + resourceDec.parameters[1];
-          const resource = new Resource(handle, httpMethod, httpPath);
-          this.resources.push(resource);
-
-          // console.log(resource);
-        });
+      const urlRouter = this.appContext.createComponent(urlRouterComponent);
+      return urlRouter.routes;
     };
 
-    const collect = (routeTree, baseFilters = [], baseUrl = '') => {
+    // TODO: good enough for now but needs some love
+    const getFilters = (routeTree, baseFilters) => {
       const handlers = [];
       const paramsByHandler = {};
       baseFilters.forEach((filter) => {
@@ -103,32 +58,38 @@ class Router {
         }
         paramsByHandler[handler] = params;
       });
-      const filters = handlers.map((handler) =>
+      return handlers.map((handler) =>
         ({
           handler,
           params: paramsByHandler[handler],
         })
       );
+    };
 
+    const collect = (routeTree, baseFilters = [], baseUrl = '') => {
+      const resources = [];
+      const filters = getFilters(routeTree, baseFilters);
       Object.keys(routeTree).forEach((key) => {
         if (key === FILTER_KEY) {
           return;
         }
+
         if (!key.startsWith('/')) {
           throw new Error(`invalid URL route '${key}': must start with an '/'`);
         }
 
         const url = key === '/' ? baseUrl : baseUrl + key;
-        const val = routeTree[key];
-        if (val.name) {
-          createResources(url, filters, val);
+        const routeVal = routeTree[key];
+        if (routeVal.name) {
+          resources.push(...this.resourceFactory.create(url, filters, routeVal));
         } else {
-          collect(val, filters, url);
+          resources.push(...collect(routeVal, filters, url));
         }
       });
+      return resources;
     };
 
-    collect(routes);
+    this.resources = collect(getRoutes());
   }
 }
 
