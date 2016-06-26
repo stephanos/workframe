@@ -33,7 +33,7 @@ class FilterFactory {
         params = {};
       }
 
-      const handlerComp = this.appContext.components.find((c) => c.factory === handlerFactory);
+      const handlerComp = this.appContext.getComponentByFactory(handlerFactory);
       const handler = this.appContext.createComponent(handlerComp);
       if (!handlers.includes(handler)) {
         handlers.push(handler);

@@ -13,8 +13,12 @@ class ApplicationContext {
     return this.container.createComponent(component);
   }
 
-  get components() {
-    return this.container.components;
+  getComponentByFactory(factory) {
+    return this.container.components.find((c) => c.factory === factory);
+  }
+
+  getComponentByName(name) {
+    return this.container.components.find((c) => c.factory.name === name);
   }
 }
 

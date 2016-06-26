@@ -14,7 +14,7 @@ class ResourceFactory {
 
   create(url, filters, controllerFactory): Array<Resource> {
     const resources = [];
-    const controllerComp = this.appContext.components.find((c) => c.factory === controllerFactory);
+    const controllerComp = this.appContext.getComponentByFactory(controllerFactory);
     const controller = this.appContext.createComponent(controllerComp);
 
     controllerComp.decorations

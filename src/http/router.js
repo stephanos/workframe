@@ -26,12 +26,15 @@ class Router {
   @OnStart()
   async start() {
     const getRouteTree = () => {
-      const urlRouterComponent = this.appContext.components.find((c) => c.factory.name === 'UrlRouter');
+      const urlRouterComponent = this.appContext.getComponentByName('UrlRouter');
       if (!urlRouterComponent) {
         throw new Error('unable to find "UrlRouter"');
       }
 
       const urlRouter = this.appContext.createComponent(urlRouterComponent);
+      if (!urlRouter) {
+        throw new Error('unable to create "UrlRouter"');
+      }
       return urlRouter.routes;
     };
 
