@@ -15,7 +15,7 @@ class Validator {
 
   validateDependencies(input, type, dependencies) {
     Object.keys(dependencies).forEach((property) => {
-      if (dependencies.hasOwnProperty(property)) {
+      if ({}.hasOwnProperty.call(dependencies, property)) {
         const dependency = dependencies[property];
         const depTypeName = dependency.type.typeName;
         if (type.injectTypeWhitelist.indexOf(depTypeName) === -1) {

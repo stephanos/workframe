@@ -25,8 +25,10 @@ describe('Transitioner', () => {
 
     transitioner.network.values = [D, C, A, B];
     transitioner.network.propsByValue = {
-      [A]: { component }, [B]: { component },
-      [C]: { component }, [D]: { component },
+      [A]: { component },
+      [B]: { component },
+      [C]: { component },
+      [D]: { component },
     };
     transitioner.network.connectionsFrom = (value) => {
       if (value === A) {
@@ -56,8 +58,10 @@ describe('Transitioner', () => {
 
     transitioner.network.values = [D, C, A, B];
     transitioner.network.propsByValue = {
-      [A]: { component }, [B]: { component },
-      [C]: { component }, [D]: { component },
+      [A]: { component },
+      [B]: { component },
+      [C]: { component },
+      [D]: { component },
     };
     transitioner.network.connectionsTo = (value) => {
       if (value === A) {

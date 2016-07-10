@@ -69,7 +69,6 @@ gulp.task('build', () =>
       handleError(err.message + "\n" + err.codeFrame);
     })
     .pipe(sourcemaps.write())
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'))
 );
 

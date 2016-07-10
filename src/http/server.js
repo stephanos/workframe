@@ -1,4 +1,5 @@
 import http from 'http';
+import pg from 'polygoat';
 import Koa from 'koa';
 import KoaRouter from 'koa-router';
 
@@ -10,13 +11,23 @@ import Response from './response';
 import Router from './router';
 
 
+function listen(server, port, host, callback) {
+  return pg((done) => {
+    server.listen({
+      port,
+      host,
+    }, done);
+  }, callback);
+}
+
 function createHttpRouter() {
   const koaRouter = new KoaRouter();
   this.router.resources.forEach((resource) => {
     koaRouter[resource.method.toLowerCase()](resource.path, async (ctx) => {
+      const dispatcher = null;
       const response = new Response(ctx);
       const request = new Request(ctx);
-      await resource.handler(request, response);
+      await resource.handler(dispatcher, request, response);
     });
   });
   return koaRouter;
@@ -46,7 +57,7 @@ class Server {
     const httpPort = this.config.get('http.port');
     const httpHost = this.config.get('http.host');
     this.httpServer = this::createHttpServer(httpRouter);
-    this.httpServer.listen(httpPort, httpHost);
+    await listen(this.httpServer, httpPort, httpHost);
   }
 
   @OnStop()

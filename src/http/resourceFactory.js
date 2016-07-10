@@ -5,6 +5,26 @@ import Resource from './resource';
 import { Resource as ResourceDecorator } from './decorators';
 
 
+const HANDLE_METHOD_NAME = '__handle';
+
+
+function joinHandlers(list, prev) {
+  const item = list[list.length - 1];
+  const handler = async (dispatcher, request, response) => {
+    const next = async () => {
+      await prev(dispatcher, request, response);
+    };
+    await item.handler[HANDLE_METHOD_NAME](dispatcher, request, response, item.params, next);
+  };
+
+  if (list.length === 1) {
+    return handler;
+  }
+
+  return joinHandlers(list.slice(0, 1), handler);
+}
+
+
 @Component()
 class ResourceFactory {
 
@@ -21,40 +41,17 @@ class ResourceFactory {
       .filter((dec) => dec.type === ResourceDecorator)
       .forEach((resourceDec) => {
         const handlers = filters.slice();
+        const methodName = `__${resourceDec.target.name}`; // TODO: call via dispatcher
         handlers.push({
           handler: {
-            handle: async (dispatcher, request, response) => {
-              const method = resourceDec.target.name;
-              await controller[method](dispatcher, request, response);
-            },
+            [HANDLE_METHOD_NAME]: controller[methodName].bind(controller),
           },
         });
 
-        function createHandler(list, prev) {
-          const item = list[list.length - 1];
-          const handler = async (dispatcher, request, response) => {
-            const next = async () => {
-              await prev(dispatcher, request, response);
-            };
-            await item.handler.handle(dispatcher, request, response, item.params, next);
-          };
-
-          if (list.length === 1) {
-            return handler;
-          }
-          return createHandler(list.slice(0, 1), handler);
-        }
-        const rootHandler = createHandler(handlers);
-
-        const handle = async (request, response) => {
-          const dispatcher = null; // TOOD
-          await rootHandler(dispatcher, request, response);
-        };
-
+        const rootHandler = joinHandlers(handlers);
         const httpMethod = resourceDec.parameters[0];
         const httpPath = url + resourceDec.parameters[1];
-        const resource = new Resource(handle, httpMethod, httpPath);
-        resources.push(resource);
+        resources.push(new Resource(rootHandler, httpMethod, httpPath));
       });
 
     return resources;
