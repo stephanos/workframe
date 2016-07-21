@@ -98,7 +98,7 @@ gulp.task('generate', () =>
         'babel-plugin-syntax-flow',
         'babel-plugin-syntax-decorators',
         'babel-plugin-syntax-class-properties',
-        'immutable-record',
+        ['immutable-record', { 'header': 'eslint-disable' }],
       ],
     }))
     .on('error', handleError)

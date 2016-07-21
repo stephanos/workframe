@@ -1,11 +1,12 @@
-/* @flow */
-/* eslint-disable */
+/*
+eslint-disable
+*/ /* @flow */
 
 import { Component, Record } from 'workframe';
 
 import { Iterable, List, Map } from 'immutable';
 
-function toMap(v) {
+function toMap(v): any {
   if (v instanceof Iterable) {
     return v.map(toMap);
   }
@@ -43,7 +44,7 @@ class EmailChangedEvent extends Record.Base {
 
   update(update: EmailChangedEventUpdate): EmailChangedEvent {
     const updated = Object.create(EmailChangedEvent.prototype);
-    updated.data = this.data.merge(update);
+    updated.data = this.data.merge(Map(update));
     return updated;
   }
 
@@ -53,11 +54,13 @@ class EmailChangedEvent extends Record.Base {
 
 }
 
-type EmailChangedEventUpdate = { aggregateId?: string;
+type EmailChangedEventUpdate = {
+  aggregateId?: string;
   newEmailAddress?: string;
   [key: string]: void;
 };
-type EmailChangedEventInit = { aggregateId: string;
+type EmailChangedEventInit = {
+  aggregateId: string;
   newEmailAddress: string;
   [key: string]: void;
 };

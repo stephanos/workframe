@@ -1,11 +1,12 @@
-/* @flow */
-/* eslint-disable */
+/*
+eslint-disable
+*/ /* @flow */
 
 import { Component, Record } from 'workframe';
 
 import { Iterable, List, Map } from 'immutable';
 
-function toMap(v) {
+function toMap(v): any {
   if (v instanceof Iterable) {
     return v.map(toMap);
   }
@@ -53,7 +54,7 @@ class CreateAccountCommand extends Record.Base {
 
   update(update: CreateAccountCommandUpdate): CreateAccountCommand {
     const updated = Object.create(CreateAccountCommand.prototype);
-    updated.data = this.data.merge(update);
+    updated.data = this.data.merge(Map(update));
     return updated;
   }
 
@@ -63,13 +64,15 @@ class CreateAccountCommand extends Record.Base {
 
 }
 
-type CreateAccountCommandUpdate = { id?: string;
+type CreateAccountCommandUpdate = {
+  id?: string;
   givenName?: string;
   familyName?: string;
   emailAddress?: string;
   [key: string]: void;
 };
-type CreateAccountCommandInit = { id: string;
+type CreateAccountCommandInit = {
+  id: string;
   givenName: string;
   familyName: string;
   emailAddress: string;
