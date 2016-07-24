@@ -160,6 +160,7 @@ gulp.task('coveralls', (done) => {
 
 gulp.task('watch', () => {
   gulp.watch(['src/**/*.t.js'], gulp.series('generate'));
+  gulp.watch(['it/**/*.js'], gulp.series('package'));
   gulp.watch(['src/**/*.js', 'lib/**/*.js', '!src/**/*.t.js'], gulp.series('package'));
 });
 
