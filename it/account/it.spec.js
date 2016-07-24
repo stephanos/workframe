@@ -22,12 +22,13 @@ describe('Integration Test "Account"', () => {
   it('should respond to HTTP requests', async () => {
     let resp;
     try {
-      resp = await axios.get('http://localhost:9000/accounts/ping/you');
+      resp = await axios.get('http://localhost:9000/accounts/ping/hey');
     } catch (e) {
       throw new Error(`request failed: '${e.status} ${e.statusText}'`);
     }
 
     assert.equal(resp.headers['content-type'], 'application/json');
+    assert.equal(resp.data, '{ pong: hey }');
   });
 
   // it('should create account', async () => {
