@@ -5,17 +5,13 @@ class Factory {
 
   instanceByType = {};
 
-  constructor(network, parent) {
+  constructor(network) {
     this.network = network;
-    this.parent = parent;
   }
 
   create(rootType) {
     const resolve = (type) => {
       if (!this.network.contains(type)) {
-        if (this.parent) {
-          return this.parent.create(type);
-        }
         throw new Error(`unable to resolve type '${type.name ? type.name : type}'`);
       }
 

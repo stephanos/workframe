@@ -73,18 +73,6 @@ describe('Factory', () => {
     assert.equal(instance.dep1, instance.dep2);
   });
 
-  it('should use parent factory if type unknown', () => {
-    class D {}
-    const network = { contains: sinon.stub() };
-    const parentFactory = { create: sinon.stub() };
-    parentFactory.create.withArgs(D).returns(new D());
-    factory = new Factory(network, parentFactory);
-
-    const instance = factory.create(D);
-    assert.ok(instance);
-    assert.ok(instance instanceof D);
-  });
-
   it('should fail for unknown type', () => {
     class D {}
     assert.throws(() => factory.create(D));

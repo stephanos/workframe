@@ -10,11 +10,11 @@ class Registry {
 
   components = [];
 
-  constructor(parent) {
-    this.network = new Network();
-    this.registrar = new Registrar(this.network);
-    this.factory = new Factory(this.network, parent ? parent.factory : parent);
-    this.transitioner = new Transitioner(this.network, this.factory);
+  constructor() {
+    const network = new Network();
+    this.factory = new Factory(network);
+    this.registrar = new Registrar(network);
+    this.transitioner = new Transitioner(network, this.factory);
   }
 
   async start(dispatcher) {

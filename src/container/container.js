@@ -1,6 +1,5 @@
-import { init, start, stop } from './lifecycle';
+import init from './init';
 import Registry from './registry';
-import Status from './status';
 
 
 class Container {
@@ -10,8 +9,7 @@ class Container {
     this.componentSchema = componentSchema;
     this.parent = parent;
 
-    this.registry = new Registry(parent ? parent.registry : undefined);
-    this.status = Status.IDLE;
+    this.registry = parent ? parent.registry : new Registry();
     this.children = [];
   }
 
@@ -20,11 +18,11 @@ class Container {
   }
 
   async start() {
-    await start(this);
+    await this.registry.start(this.dispatcher);
   }
 
   async stop() {
-    await stop(this);
+    await this.registry.stop(this.dispatcher);
   }
 
   fork(rootDir, componentSchema = this.componentSchema) {
@@ -33,12 +31,12 @@ class Container {
     return forked;
   }
 
-  updateStatus(newStatus) {
-    if (!newStatus) {
-      throw Error(`invalid status "${newStatus}"`);
-    }
-    this.status = newStatus;
-  }
+  // updateStatus(newStatus) {
+  //   if (!newStatus) {
+  //     throw Error(`invalid status "${newStatus}"`);
+  //   }
+  //   this.status = newStatus;
+  // }
 
   createComponent(component) {
     function create(container) {

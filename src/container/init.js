@@ -1,9 +1,8 @@
 import path from 'path';
 
-import { ComponentFactory } from '../component2';
-import { IdGenerator } from '../../util';
-import Scanner from '../scanner';
-import Status from '../status';
+import { ComponentFactory } from './component2';
+import { IdGenerator } from '../util';
+import Scanner from './scanner';
 
 
 async function initChildren(container) {
@@ -43,13 +42,9 @@ function load(container) {
 
 
 async function init(container) {
-  container.updateStatus(Status.INITIALISING);
-
   // children must be initilises BEFORE parent
   await initChildren(container);
   load(container);
-
-  container.updateStatus(Status.INITIALISED);
 }
 
 
