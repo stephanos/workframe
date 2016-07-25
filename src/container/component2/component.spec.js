@@ -8,12 +8,12 @@ class MyClass {}
 describe('Component', () => {
   it('should be created', () => {
     const type = {};
-    const decorations = [{}];
-    const comp = new Component('42', type, MyClass, decorations);
+    const comp = new Component('42', type, MyClass, ['param'], ['decorator']);
 
     assert.equal(comp.id, '42');
     assert.equal(comp.type, type);
     assert.equal(comp.factory, MyClass);
-    assert.equal(comp.decorations, decorations);
+    assert.deepEqual(comp.parameters, ['param']);
+    assert.deepEqual(comp.decorations, ['decorator']);
   });
 });

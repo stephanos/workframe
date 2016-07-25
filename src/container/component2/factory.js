@@ -1,6 +1,7 @@
 import util from 'util';
 
 import Component from './component';
+import ComponentDecorator from './decorator';
 
 
 function findDecorations(type, factory) {
@@ -16,6 +17,15 @@ function findDecorations(type, factory) {
         ))
       ), []
     );
+}
+
+function findParameters(factory) {
+  const decorators = Reflect.getMetadata('decorator', factory) || [];
+  const decorator = decorators.find((d) => d.type === ComponentDecorator);
+  if (decorator) {
+    return decorator.parameters;
+  }
+  return [];
 }
 
 
@@ -37,8 +47,9 @@ class ComponentFactory {
     }
 
     const componentId = this.idGenerator.next();
+    const parameters = findParameters(factory);
     const decorations = findDecorations(type, factory);
-    return new Component(componentId, type, factory, decorations);
+    return new Component(componentId, type, factory, parameters, decorations);
   }
 }
 
