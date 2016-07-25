@@ -31,13 +31,6 @@ class Container {
     return forked;
   }
 
-  // updateStatus(newStatus) {
-  //   if (!newStatus) {
-  //     throw Error(`invalid status "${newStatus}"`);
-  //   }
-  //   this.status = newStatus;
-  // }
-
   createComponent(component) {
     function create(container) {
       if (container.registry.has(component)) {
@@ -58,13 +51,7 @@ class Container {
   }
 
   get components() {
-    const collect = (container) => {
-      const result = [];
-      result.push(...container.registry.components);
-      container.children.forEach((child) => result.push(...collect(child)));
-      return result;
-    };
-    return collect(this);
+    return this.registry.components;
   }
 }
 
