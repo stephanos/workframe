@@ -50,7 +50,7 @@ class ResourceFactory {
 
         const rootHandler = joinHandlers(handlers);
         const httpMethod = resourceDec.parameters[0];
-        const httpPath = url + resourceDec.parameters[1];
+        const httpPath = url + (resourceDec.parameters[1] || '');
         resources.push(new Resource(rootHandler, httpMethod, httpPath));
       });
 
