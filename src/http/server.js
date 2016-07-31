@@ -20,15 +20,30 @@ function listen(server, port, host, callback) {
   }, callback);
 }
 
+/* eslint no-param-reassign:0 no-nested-ternary:0 */
+function createHttpRoute(resource) {
+  const route = {};
+  route.method = resource.method.toLowerCase();
+  route.path = resource.path;
+  route.fn = async (ctx) => {
+    const dispatcher = null;
+    const response = new Response();
+    const request = new Request(ctx);
+
+    await resource.handler(dispatcher, request, response);
+
+    ctx.body = response.body;
+    ctx.status = response.httpStatus ? response.httpStatus : (response.body ? 200 : 204);
+    Object.keys(response.httpHeaders).forEach((h) => ctx.set(h, response.httpHeaders[h]));
+  };
+  return route;
+}
+
 function createHttpRouter() {
   const koaRouter = new KoaRouter();
   this.router.resources.forEach((resource) => {
-    koaRouter[resource.method.toLowerCase()](resource.path, async (ctx) => {
-      const dispatcher = null;
-      const response = new Response(ctx);
-      const request = new Request(ctx);
-      await resource.handler(dispatcher, request, response);
-    });
+    const route = createHttpRoute(resource);
+    koaRouter[route.method](route.path, route.fn);
   });
   return koaRouter;
 }

@@ -1,9 +1,6 @@
 import { Component } from 'workframe';
 
-import AccountsController from './controller/root';
-import AuthenticationController from './controller/auth';
-import ProfileController from './controller/profile';
-
+import RootController from './controller/root';
 import ContentFilter from './filter/content';
 
 
@@ -17,9 +14,7 @@ class UrlRouter {
       ],
 
       '/accounts': {
-        '/': AccountsController,
-        '/authentication': AuthenticationController,
-        '/profile': ProfileController,
+        '/': RootController,
       },
     };
   }

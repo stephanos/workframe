@@ -20,6 +20,10 @@ class ApplicationContext {
   getComponentByName(name) {
     return this.container.components.find((c) => c.factory.name === name);
   }
+
+  getComponentsByType(typeName) {
+    return this.container.components.filter((c) => c.type.name === typeName);
+  }
 }
 
 

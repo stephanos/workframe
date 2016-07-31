@@ -2,8 +2,6 @@ import { Application } from 'workframe';
 import axios from 'axios';
 
 import assert from 'assert';
-// import ChangeEmailCommand from './account/command/changeEmail/command';
-// import CreateAccountCommand from './account/command/createAccount/command';
 
 describe('Integration Test "Account"', () => {
   let app;
@@ -24,39 +22,49 @@ describe('Integration Test "Account"', () => {
     try {
       resp = await axios.get('http://localhost:9000/accounts/ping/hey');
     } catch (e) {
-      throw new Error(`request failed: '${e.status} ${e.statusText}'`);
+      console.log(e);
+      throw new Error('request failed');
     }
 
-    assert.equal(resp.headers['content-type'], 'application/json');
+    assert.equal(resp.status, 200);
     assert.equal(resp.data, '{ pong: hey }');
+    assert.equal(resp.headers['content-type'], 'application/json');
   });
 
-  // it('should create account', async () => {
-  //   const cmd = new CreateAccountCommand({
-  //     id: '0',
-  //     givenName: 'Arthur',
-  //     familyName: 'Dent',
-  //     emailAddress: 'arthur@earth.com',
-  //   });
-  //
-  //   const { result } = await app.dispatch(cmd);
-  //
-  //   assert.deepEqual(result.toJS(), [{
-  //     aggregate: {
-  //       revision: 0,
-  //     },
-  //     command: {
-  //       name: 'CreateAccountCommand',
-  //       id: '0',
-  //     },
-  //     payload: {
-  //       aggregateId: 'TODO',
-  //       givenName: 'Arthur',
-  //       familyName: 'Dent',
-  //       emailAddress: 'arthur@earth.com',
-  //     },
-  //   }]);
-  // });
+  it('should create account', async () => {
+    let resp;
+    try {
+      resp = await axios.post('http://localhost:9000/accounts', {
+        id: 'command-1',
+        givenName: 'Arthur',
+        familyName: 'Dent',
+        emailAddress: 'arthur@earth.com',
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('request failed');
+    }
+
+    assert.equal(resp.status, 204);
+
+    // const { result } = await app.dispatch(cmd);
+    //
+    // assert.deepEqual(result.toJS(), [{
+    //   aggregate: {
+    //     revision: 0,
+    //   },
+    //   command: {
+    //     name: 'CreateAccountCommand',
+    //     id: '0',
+    //   },
+    //   payload: {
+    //     aggregateId: 'TODO',
+    //     givenName: 'Arthur',
+    //     familyName: 'Dent',
+    //     emailAddress: 'arthur@earth.com',
+    //   },
+    // }]);
+  });
 
   // it('should handle query', () => {
   //   const { result } = app.dispatch(AccountAccessor, { accountId: '42' });

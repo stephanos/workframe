@@ -8,20 +8,25 @@ import { Resource as ResourceDecorator } from './decorators';
 const HANDLE_METHOD_NAME = '__handle';
 
 
-function joinHandlers(list, prev) {
-  const item = list[list.length - 1];
-  const handler = async (dispatcher, request, response) => {
-    const next = async () => {
-      await prev(dispatcher, request, response);
-    };
-    await item.handler[HANDLE_METHOD_NAME](dispatcher, request, response, item.params, next);
-  };
-
-  if (list.length === 1) {
-    return handler;
+/* eslint no-param-reassign:0 */
+function createRootHandler(handlers, chain) {
+  if (handlers.length === 0) {
+    return chain;
   }
 
-  return joinHandlers(list.slice(0, 1), handler);
+  const item = handlers[handlers.length - 1];
+  const handler = async (dispatcher, request, response) => {
+    const next = async () => {
+      await chain(dispatcher, request, response);
+    };
+
+    const result = await item.handler[HANDLE_METHOD_NAME](dispatcher, request, response, item.params, next);
+    if (result) {
+      response.body = result;
+    }
+  };
+
+  return createRootHandler(handlers.slice(0, handlers.length - 1), handler);
 }
 
 
@@ -48,7 +53,7 @@ class ResourceFactory {
           },
         });
 
-        const rootHandler = joinHandlers(handlers);
+        const rootHandler = createRootHandler(handlers);
         const httpMethod = resourceDec.parameters[0];
         const httpPath = url + (resourceDec.parameters[1] || '');
         resources.push(new Resource(rootHandler, httpMethod, httpPath));

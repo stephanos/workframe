@@ -1,20 +1,15 @@
 class Response {
 
-  constructor(koaContext) {
-    this.ctx = koaContext;
-  }
+  httpStatus = null
+  httpHeaders = {}
 
-  write(body) {
-    this.ctx.body = body;
+  set status(status) {
+    this.httpStatus = status;
     return this;
   }
 
-  getHeader(field) {
-    return this.ctx.response.get(field);
-  }
-
   setHeader(field, value) {
-    this.ctx.response.set(field, value);
+    this.httpHeaders[field] = value;
     return this;
   }
 }
