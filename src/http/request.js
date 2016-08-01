@@ -4,6 +4,16 @@ class Request {
     this.ctx = koaContext;
   }
 
+
+  accepts(...types) {
+    return this.ctx.request.accepts(...types);
+  }
+
+  is(...types) {
+    return this.ctx.request.is(...types);
+  }
+
+
   get body() {
     return this.ctx.request.body;
   }

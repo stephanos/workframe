@@ -5,7 +5,8 @@ import ComponentDecorator from './decorator';
 
 
 function findDecorations(type, factory) {
-  return (Reflect.getMetadata('decorated', factory) || [])
+  const factoryDecorations = Reflect.getMetadata('decorator', factory);
+  const memberDecorations = (Reflect.getMetadata('decorated', factory) || [])
     .reduce(((acc, decorated) =>
       acc.concat(Reflect.getMetadata('decorator', factory, decorated.name)
         .map((decorator) =>
@@ -17,6 +18,7 @@ function findDecorations(type, factory) {
         ))
       ), []
     );
+  return factoryDecorations.concat(memberDecorations);
 }
 
 function findParameters(factory) {

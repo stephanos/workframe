@@ -1,11 +1,6 @@
-import { ApplicationContext } from '../app';
-import { Component, Inject } from '../container';
+import { Component } from '../container';
 
 import Resource from './resource';
-import { Resource as ResourceDecorator } from './decorators';
-
-
-const HANDLE_METHOD_NAME = '__handle';
 
 
 /* eslint no-param-reassign:0 */
@@ -20,7 +15,7 @@ function createRootHandler(handlers, chain) {
       await chain(dispatcher, request, response);
     };
 
-    const result = await item.handler[HANDLE_METHOD_NAME](dispatcher, request, response, item.params, next);
+    const result = await item.handle(dispatcher, request, response, item.params, next);
     if (result) {
       response.body = result;
     }
@@ -33,31 +28,19 @@ function createRootHandler(handlers, chain) {
 @Component()
 class ResourceFactory {
 
-  @Inject(ApplicationContext)
-  appContext;
-
-
-  create(url, filters, controllerFactory): Array<Resource> {
+  create(url, filters, endpoints): Array<Resource> {
     const resources = [];
-    const controllerComp = this.appContext.getComponentByFactory(controllerFactory);
-    const controller = this.appContext.createComponent(controllerComp);
 
-    controllerComp.decorations
-      .filter((dec) => dec.type === ResourceDecorator)
-      .forEach((resourceDec) => {
-        const handlers = filters.slice();
-        const methodName = `__${resourceDec.target.name}`; // TODO: call via dispatcher
-        handlers.push({
-          handler: {
-            [HANDLE_METHOD_NAME]: controller[methodName].bind(controller),
-          },
-        });
+    endpoints.forEach((endpoint) => {
+      const handlers = filters.slice();
+      handlers.push(endpoint);
 
-        const rootHandler = createRootHandler(handlers);
-        const httpMethod = resourceDec.parameters[0];
-        const httpPath = url + (resourceDec.parameters[1] || '');
-        resources.push(new Resource(rootHandler, httpMethod, httpPath));
-      });
+      const rootHandler = createRootHandler(handlers);
+      const httpMethod = endpoint.method;
+      const httpPath = url + endpoint.path;
+      const resource = new Resource(rootHandler, httpMethod, httpPath);
+      resources.push(resource);
+    });
 
     return resources;
   }

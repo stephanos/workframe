@@ -1,10 +1,11 @@
 import Method from './methods';
 import Request from './request';
-import { Resource } from './decorators';
+import { Consumes, Resource } from './decorators';
 import Response from './response';
 
 
 export {
+  Consumes,
   Method,
   Request,
   Resource,

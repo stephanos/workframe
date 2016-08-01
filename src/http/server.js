@@ -5,6 +5,7 @@ import KoaRouter from 'koa-router';
 
 import Config from '../config';
 import { Component, Inject, OnStart, OnStop } from '../container';
+import DispatcherFactory from '../dispatcher';
 
 import Request from './request';
 import Response from './response';
@@ -21,12 +22,12 @@ function listen(server, port, host, callback) {
 }
 
 /* eslint no-param-reassign:0 no-nested-ternary:0 */
-function createHttpRoute(resource) {
+function createHttpRoute(resource, dispatcherFactory) {
   const route = {};
   route.method = resource.method.toLowerCase();
   route.path = resource.path;
   route.fn = async (ctx) => {
-    const dispatcher = null;
+    const dispatcher = dispatcherFactory.create();
     const response = new Response();
     const request = new Request(ctx);
 
@@ -40,9 +41,10 @@ function createHttpRoute(resource) {
 }
 
 function createHttpRouter() {
+  const dispatcherFactory = new DispatcherFactory();
   const koaRouter = new KoaRouter();
   this.router.resources.forEach((resource) => {
-    const route = createHttpRoute(resource);
+    const route = createHttpRoute(resource, dispatcherFactory);
     koaRouter[route.method](route.path, route.fn);
   });
   return koaRouter;

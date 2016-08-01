@@ -1,6 +1,7 @@
 import { ApplicationContext } from '../app';
 import { Component, Inject, OnStart } from '../container';
 
+import EndpointFactory from './endpointFactory';
 import FilterFactory from './filterFactory';
 import Resource from './resource';
 import ResourceFactory from './resourceFactory';
@@ -29,6 +30,9 @@ class Router {
 
   @Inject(ApplicationContext)
   appContext;
+
+  @Inject(EndpointFactory)
+  endpointFactory;
 
   @Inject(FilterFactory)
   filterFactory;
@@ -60,7 +64,8 @@ class Router {
       const url = key === '/' ? baseUrl : baseUrl + key;
       const routeVal = routeTree[key];
       if (routeVal.name) {
-        resources.push(...this.resourceFactory.create(url, filters, routeVal));
+        const endpoints = this.endpointFactory.create(routeVal);
+        resources.push(...this.resourceFactory.create(url, filters, endpoints));
       } else {
         resources.push(...this.createResources(routeVal, filters, url));
       }

@@ -10,6 +10,7 @@ describe('Router', () => {
   beforeEach(() => {
     router = new Router();
     router.appContext = mock('ApplicationContext');
+    router.endpointFactory = mock('EndpointFactory');
     router.filterFactory = mock('FilterFactory');
     router.resourceFactory = mock('ResourceFactory');
   });
@@ -30,11 +31,11 @@ describe('Router', () => {
         .thenReturn(urlRouterComponent);
       when(router.appContext.createComponent(urlRouterComponent))
         .thenReturn(new UrlRouter());
-
       when(router.filterFactory.create([], []))
         .thenReturn([]);
-
-      when(router.resourceFactory.create('/a', [], Controller))
+      when(router.endpointFactory.create(Controller))
+          .thenReturn([]);
+      when(router.resourceFactory.create('/a', [], []))
         .thenReturn([]);
 
       await router.start();

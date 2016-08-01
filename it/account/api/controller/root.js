@@ -1,12 +1,13 @@
 import { Component, Inject } from 'workframe';
 import { CommandRouter } from 'workframe/cqrs';
-import { Method, Request, Resource, Response } from 'workframe/http';
+import { Consumes, Method, Request, Resource, Response } from 'workframe/http';
 
 import CreateAccountCommand from '../../command/createAccount/command';
 // import ChangeEmailAddressCommand from '../../command/changeEmail/command';
 
 
 @Component()
+@Consumes('application/json')
 class RootController {
 
   @Inject(CommandRouter)
