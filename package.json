@@ -62,6 +62,7 @@
     "node-uuid": "^1.4.7",
     "object-sizeof": "^1.0.10",
     "polygoat": "^1.1.4",
+    "raw-body": "^2.1.7",
     "require-directory": "^2.1.1"
   }
 }

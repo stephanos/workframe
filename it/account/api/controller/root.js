@@ -1,6 +1,7 @@
 import { Component, Inject } from 'workframe';
 import { CommandRouter } from 'workframe/cqrs';
 import { Consumes, Method, Request, Resource, Response } from 'workframe/http';
+import BodyParser from 'workframe/http/parser';
 
 import CreateAccountCommand from '../../command/createAccount/command';
 // import ChangeEmailAddressCommand from '../../command/changeEmail/command';
@@ -13,6 +14,9 @@ class RootController {
   @Inject(CommandRouter)
   commandRouter;
 
+  @Inject(BodyParser)
+  bodyParser;
+
 
   @Resource(Method.GET, '/ping/:message')
   async ping(req: Request, res: Response) {
@@ -21,11 +25,12 @@ class RootController {
 
   @Resource(Method.POST)
   async create(req: Request, res: Response) {
+    const body = await this.bodyParser.parse(req);
     const command = new CreateAccountCommand({
-      // id: req.body.id,
-      // givenName: req.body.givenName,
-      // familyName: req.body.familyName,
-      // emailAddress: req.body.emailAddress,
+      id: body.id,
+      givenName: body.givenName,
+      familyName: body.familyName,
+      emailAddress: body.emailAddress,
     });
     await this.commandRouter.process(command);
   }

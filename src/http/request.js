@@ -14,6 +14,10 @@ class Request {
   }
 
 
+  get raw() {
+    return this.ctx.req;
+  }
+
   get body() {
     return this.ctx.request.body;
   }
@@ -76,6 +80,10 @@ class Request {
 
   get headers() {
     return this.ctx.request.header;
+  }
+
+  get encoding() {
+    return this.headers['content-encoding'];
   }
 }
 
