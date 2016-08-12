@@ -91,6 +91,11 @@ gulp.task('lint', () =>
     .pipe(gulpif(!daemon, eslint.failAfterError()))
 );
 
+gulp.task('typecheck', () =>
+  gulp.src(['src/**/*.js'])
+    .pipe(flowtype({}))
+);
+
 gulp.task('generate', () =>
   gulp.src('src/**/*.t.js')
     .pipe(babel({
@@ -171,7 +176,7 @@ gulp.task('_daemon', (done) => {
 
 
 gulp.task('package',
-  gulp.series('copy', 'build', 'build-it', 'lint', 'unit-test', 'integration-test', 'coveralls'));
+  gulp.series('copy', 'build', 'build-it', 'typecheck', 'lint', 'unit-test', 'integration-test', 'coveralls'));
 
 gulp.task('dev',
   gulp.series('_daemon', 'clean', 'symlink', 'generate', 'package', 'watch'));
