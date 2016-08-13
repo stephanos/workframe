@@ -1,4 +1,7 @@
+/* @flow */
+
 import zlib from 'zlib';
+import stream from 'stream';
 
 import HttpError from '../error';
 import { Component } from '../../container';
@@ -7,24 +10,24 @@ import { Component } from '../../container';
 @Component()
 class Inflater {
 
-  inflate(request, encoding) {
-    let stream;
+  inflate(incomingStream: stream.Readable, encoding: string): stream.Readable {
+    let inflatedStream;
     switch (encoding) {
       case 'deflate':
-        stream = zlib.createInflate();
-        request.pipe(stream);
+        inflatedStream = zlib.createInflate();
+        incomingStream.pipe(inflatedStream);
         break;
       case 'gzip':
-        stream = zlib.createGunzip();
-        request.pipe(stream);
+        inflatedStream = zlib.createGunzip();
+        incomingStream.pipe(inflatedStream);
         break;
       case 'identity':
-        stream = request;
+        inflatedStream = incomingStream;
         break;
       default:
         throw new HttpError(415, `unsupported content encoding '${encoding}'`);
     }
-    return stream;
+    return inflatedStream;
   }
 }
 

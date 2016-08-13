@@ -1,3 +1,5 @@
+/* flow */
+
 import { Component, Inject, OnStart } from '../../container';
 import HttpError from '../error';
 
@@ -11,18 +13,10 @@ import JsonBodyParser from './parser_json';
 @Component()
 class BodyParser {
 
-  @Inject(FormBodyParser)
-  formBodyParser;
-
-  @Inject(JsonBodyParser)
-  jsonBodyParser;
-
-
-  @Inject(BodyReader)
-  reader;
-
-  @Inject(Inflater)
-  inflater;
+  @Inject() formBodyParser: FormBodyParser;
+  @Inject() jsonBodyParser: JsonBodyParser;
+  @Inject() reader: BodyReader;
+  @Inject() inflater: Inflater;
 
 
   @OnStart()

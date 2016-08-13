@@ -1,3 +1,5 @@
+/* flow */
+
 import BodyParser from './parser';
 
 

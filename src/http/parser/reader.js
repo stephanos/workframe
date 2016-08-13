@@ -1,3 +1,5 @@
+/* flow */
+
 import getRawBody from 'raw-body';
 
 import { Component } from '../../container';
