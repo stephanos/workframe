@@ -1,4 +1,4 @@
-import load from './load';
+import Loader from './loader';
 import Registry from './registry';
 
 
@@ -8,13 +8,14 @@ class Container {
     this.rootDir = rootDir;
     this.componentSchema = componentSchema;
     this.parent = parent;
+    this.loader = new Loader();
 
     this.registry = parent ? parent.registry : new Registry();
     this.children = [];
   }
 
   async load() {
-    await load(this);
+    await this.loader.load(this);
   }
 
   async init() {

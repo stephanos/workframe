@@ -1,7 +1,7 @@
 import path from 'path';
 
-import { ComponentFactory } from './component2';
-import { IdGenerator } from '../util';
+import { ComponentFactory } from '../component2';
+import { IdGenerator } from '../../util';
 import Scanner from './scanner';
 
 
@@ -41,11 +41,14 @@ function loadComponents(container) {
 }
 
 
-async function load(container) {
-  // children must be initilises BEFORE parent
-  await loadChildren(container);
-  loadComponents(container);
+class Loader {
+
+  async load(container) {
+    // children must be initilises BEFORE parent
+    await loadChildren(container);
+    loadComponents(container);
+  }
 }
 
 
-export default load;
+export default Loader;
