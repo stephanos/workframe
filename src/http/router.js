@@ -28,17 +28,10 @@ class Router {
 
   resources: Array<Resource> = [];
 
-  @Inject(ApplicationContext)
-  appContext;
-
-  @Inject(EndpointFactory)
-  endpointFactory;
-
-  @Inject(FilterFactory)
-  filterFactory;
-
-  @Inject(ResourceFactory)
-  resourceFactory;
+  @Inject() appContext: ApplicationContext;
+  @Inject() endpointFactory: EndpointFactory;
+  @Inject() filterFactory: FilterFactory;
+  @Inject() resourceFactory: ResourceFactory;
 
 
   @OnInit()

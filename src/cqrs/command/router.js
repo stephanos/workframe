@@ -5,10 +5,9 @@ import { Component, Inject, OnInit } from '../../container';
 @Component()
 class CommandRouter {
 
-  processorByCommandType = {}
+  @Inject() appContext: ApplicationContext;
 
-  @Inject(ApplicationContext)
-  appContext;
+  processorByCommandType = {};
 
 
   @OnInit()

@@ -61,11 +61,10 @@ function createHttpServer(koaRouter) {
 @Component()
 class Server {
 
-  @Inject(Router)
-  router;
+  @Inject() router: Router;
+  @Inject() config: Config;
 
-  @Inject(Config)
-  config;
+  httpServer;
 
 
   @OnStart()

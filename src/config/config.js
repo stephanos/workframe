@@ -42,8 +42,7 @@ function createFileConfig(container, profiles) {
 @Component()
 class Config {
 
-  @Inject(ApplicationContext)
-  appContext;
+  @Inject() appContext: ApplicationContext;
 
 
   @OnInit()

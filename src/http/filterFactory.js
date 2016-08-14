@@ -9,8 +9,7 @@ import Filter from './filter';
 @Component()
 class FilterFactory {
 
-  @Inject(ApplicationContext)
-  appContext;
+  @Inject() appContext: ApplicationContext;
 
 
   // TODO: good enough for now but needs some love

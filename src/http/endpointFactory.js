@@ -10,8 +10,7 @@ import Endpoint from './endpoint';
 @Component()
 class EndpointFactory {
 
-  @Inject(ApplicationContext)
-  appContext;
+  @Inject() appContext: ApplicationContext;
 
 
   create(controllerFactory): Array<Endpoint> {
