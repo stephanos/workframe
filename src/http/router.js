@@ -1,5 +1,5 @@
 import { ApplicationContext } from '../app';
-import { Component, Inject, OnStart } from '../container';
+import { Component, Inject, OnInit } from '../container';
 
 import EndpointFactory from './endpointFactory';
 import FilterFactory from './filterFactory';
@@ -41,8 +41,8 @@ class Router {
   resourceFactory;
 
 
-  @OnStart()
-  async start() {
+  @OnInit()
+  async init() {
     const routeTree = getRouteTree(this.appContext);
     this.resources = this.createResources(routeTree);
   }

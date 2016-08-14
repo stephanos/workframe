@@ -38,12 +38,12 @@ describe('Router', () => {
       when(router.resourceFactory.create('/a', [], []))
         .thenReturn([]);
 
-      await router.start();
+      await router.init();
     });
 
     it('should fail when no UrlRouter is found', async () => {
       try {
-        await router.start();
+        await router.init();
         throw new Error('Missing expected exception');
       } catch (e) {
         assert.equal(e.message, 'unable to find "UrlRouter"');

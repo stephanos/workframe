@@ -3,7 +3,7 @@ import path from 'path';
 import { Map, OrderedSet, fromJS } from 'immutable';
 
 import { ApplicationContext } from '../app';
-import { Component, Inject, OnStart } from '../container';
+import { Component, Inject, OnInit } from '../container';
 
 
 const defaultProfile = 'default';
@@ -46,8 +46,8 @@ class Config {
   appContext;
 
 
-  @OnStart()
-  async start() {
+  @OnInit()
+  async init() {
     const defaultConf = Map({ profiles: OrderedSet([defaultProfile]) });
     const argsConf = createArgsConfig();
     const envConf = createEnvConfig();

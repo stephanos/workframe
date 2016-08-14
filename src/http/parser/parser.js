@@ -1,6 +1,6 @@
 /* flow */
 
-import { Component, Inject, OnStart } from '../../container';
+import { Component, Inject, OnInit } from '../../container';
 import HttpError from '../error';
 
 import Inflater from './inflater';
@@ -19,8 +19,8 @@ class BodyParser {
   @Inject() inflater: Inflater;
 
 
-  @OnStart()
-  start() {
+  @OnInit()
+  init() {
     this.parsers = [
       this.formBodyParser,
       this.jsonBodyParser,

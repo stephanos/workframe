@@ -1,11 +1,11 @@
-import { Component, OnStart } from '../container';
+import { Component, OnInit } from '../container';
 
 
 @Component()
 class ApplicationContext {
 
-  @OnStart()
-  async start() {
+  @OnInit()
+  async init() {
     this.container = process.rootContainer; // TODO: find a cleaner way
   }
 

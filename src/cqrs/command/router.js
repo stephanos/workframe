@@ -1,5 +1,5 @@
 import { ApplicationContext } from '../../app';
-import { Component, Inject, OnStart } from '../../container';
+import { Component, Inject, OnInit } from '../../container';
 
 
 @Component()
@@ -11,7 +11,7 @@ class CommandRouter {
   appContext;
 
 
-  @OnStart()
+  @OnInit()
   async init() {
     const processorComponents = this.appContext.getComponentsByType('Processor');
     processorComponents.forEach((processorComponent) => {
