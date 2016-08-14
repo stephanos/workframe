@@ -12,7 +12,7 @@ class CommandRouter {
 
 
   @OnStart()
-  async start() {
+  async init() {
     const processorComponents = this.appContext.getComponentsByType('Processor');
     processorComponents.forEach((processorComponent) => {
       const processor = this.appContext.createComponent(processorComponent);

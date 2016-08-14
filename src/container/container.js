@@ -1,4 +1,4 @@
-import init from './init';
+import load from './load';
 import Registry from './registry';
 
 
@@ -13,8 +13,12 @@ class Container {
     this.children = [];
   }
 
+  async load() {
+    await load(this);
+  }
+
   async init() {
-    await init(this);
+    await this.registry.init(this.dispatcher);
   }
 
   async start() {

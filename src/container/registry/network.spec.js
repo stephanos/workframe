@@ -12,68 +12,50 @@ describe('Network', () => {
     const net = new Network();
     net.add(Adam);
 
-    assert.deepEqual(net.values, [Adam]);
+    assert.deepEqual(net.nodes, [Adam]);
   });
 
-  it('should connect 2 new values', () => {
+  it('should connect two values', () => {
     const net = new Network();
-    net.connect(Adam, Eve, 'like');
+    net.connect(Adam, Eve);
 
-    assert.deepEqual(net.connectionsTo(Eve, 'like'), [{ from: Adam }]);
-    assert.deepEqual(net.connectionsFrom(Adam, 'like'), [{ to: Eve }]);
-    assert.deepEqual(net.values, [Adam, Eve]);
+    assert.deepEqual(net.connectionsTo(Eve), [{ from: Adam }]);
+    assert.deepEqual(net.connectionsFrom(Adam), [{ to: Eve }]);
+    assert.deepEqual(net.nodes, [Adam, Eve]);
   });
 
-  it('should connect 2 values with properties', () => {
+  it('should connect three values', () => {
     const net = new Network();
-    net.connect(Adam, Eve, 'like', { how: 'very much' });
+    net.connect(Adam, Eve);
+    net.connect(Snake, Adam);
 
-    assert.deepEqual(net.connectionsTo(Eve, 'like'),
+    assert.deepEqual(net.connectionsTo(Eve), [{ from: Adam }]);
+    assert.deepEqual(net.connectionsTo(Adam), [{ from: Snake }]);
+    assert.deepEqual(net.connectionsFrom(Adam), [{ to: Eve }]);
+    assert.deepEqual(net.nodes, [Adam, Eve, Snake]);
+  });
+
+  it('should connect two values with properties', () => {
+    const net = new Network();
+    net.connect(Adam, Eve, { how: 'very much' });
+
+    assert.deepEqual(net.connectionsTo(Eve),
       [{ from: Adam, props: { how: 'very much' } }]);
-    assert.deepEqual(net.connectionsFrom(Adam, 'like'),
+    assert.deepEqual(net.connectionsFrom(Adam),
       [{ to: Eve, props: { how: 'very much' } }]);
-  });
-
-  it('should connect new value with existing value', () => {
-    const net = new Network();
-    net.connect(Adam, Eve, 'like');
-    net.connect(Snake, Eve, 'hate');
-
-    assert.deepEqual(net.connectionsTo(Eve, 'hate'), [{ from: Snake }]);
-    assert.deepEqual(net.connectionsFrom(Eve, 'hate'), []);
-    assert.deepEqual(net.connectionsTo(Snake, 'hate'), []);
-    assert.deepEqual(net.connectionsFrom(Snake, 'hate'), [{ to: Eve }]);
-  });
-
-  it('should connect existing value with new value', () => {
-    const net = new Network();
-    net.connect(Snake, Adam, 'hate');
-    net.connect(Snake, Eve, 'hate');
-
-    assert.deepEqual(net.connectionsTo(Eve, 'hate'), [{ from: Snake }]);
-    assert.deepEqual(net.connectionsFrom(Eve, 'hate'), []);
-    assert.deepEqual(net.connectionsTo(Adam, 'hate'), [{ from: Snake }]);
-    assert.deepEqual(net.connectionsFrom(Snake, 'hate'), [{ to: Adam }, { to: Eve }]);
   });
 
   it('should fail to return connections to non-existing node', () => {
     const net = new Network();
-    net.connect(Adam, Eve, 'like');
+    net.connect(Adam, Eve);
 
-    assert.throws(() => net.connectionsTo(Snake, 'like'));
-    assert.throws(() => net.connectionsFrom(Snake, 'like'));
-  });
-
-  it('should fail to return connections for non-existing relation', () => {
-    const net = new Network();
-    net.connect(Adam, Eve, 'like');
-
-    assert.deepEqual(net.connectionsTo(Adam, 'hate'), []);
+    assert.throws(() => net.connectionsTo(Snake));
+    assert.throws(() => net.connectionsFrom(Snake));
   });
 
   it('should return whether contains a value', () => {
     const net = new Network();
-    net.connect(Adam, Eve, 'like');
+    net.connect(Adam, Eve);
 
     assert.ok(net.contains(Adam));
     assert.ok(net.contains(Eve));
@@ -83,19 +65,19 @@ describe('Network', () => {
   describe('without a cycle', () => {
     it('should return empty cyclic path', () => {
       const net = new Network();
-      net.connect(Adam, Eve, 'like');
+      net.connect(Adam, Eve);
 
-      assert.deepEqual(net.cycles('like'), []);
+      assert.deepEqual(net.cycles, []);
     });
   });
 
   describe('with a cycle', () => {
     it('should return path of cycle', () => {
       const net = new Network();
-      net.connect(Adam, Eve, 'like');
-      net.connect(Eve, Adam, 'like');
+      net.connect(Adam, Eve);
+      net.connect(Eve, Adam);
 
-      assert.deepEqual(net.cycles('like'), [[Eve, Adam]]);
+      assert.deepEqual(net.cycles, [[Eve, Adam]]);
     });
   });
 });

@@ -3,38 +3,36 @@ import { alg, Graph } from 'graphlib';
 
 
 class Network {
+  graph;
   idByValue = {};
   valueById = {};
   propsByValue = {};
-  networkByRelation = {};
 
+  constructor() {
+    this.graph = new Graph();
+  }
 
   add(value, props) {
     this.getOrAdd(value);
     this.propsByValue[value] = props;
   }
 
-  connect(from, to, relation, props) {
+  connect(from, to, props) {
     const fromId = this.getOrAdd(from);
     const toId = this.getOrAdd(to);
-    this.getOrCreateNetwork(relation).setEdge(fromId, toId, props);
+    this.graph.setEdge(fromId, toId, props);
   }
 
-  connectionsTo(value, relation) {
-    return this.connectionsOf(value, relation, true);
+  connectionsTo(value) {
+    return this.connectionsOf(value, true);
   }
 
-  connectionsFrom(value, relation) {
-    return this.connectionsOf(value, relation, false);
+  connectionsFrom(value) {
+    return this.connectionsOf(value, false);
   }
 
-  cycles(relation) {
-    const network = this.networkByRelation[relation];
-    if (!network) {
-      return [];
-    }
-
-    return alg.findCycles(this.getOrCreateNetwork(relation))
+  get cycles() {
+    return alg.findCycles(this.graph)
       .map((cycle) => cycle.map((node) => this.valueById[node]));
   }
 
@@ -51,15 +49,7 @@ class Network {
     return id;
   }
 
-  getOrCreateNetwork(relation) {
-    if (this.networkByRelation[relation] === undefined) {
-      this.networkByRelation[relation] = new Graph();
-    }
-
-    return this.networkByRelation[relation];
-  }
-
-  get values() {
+  get nodes() {
     return Object.values(this.valueById);
   }
 
@@ -67,25 +57,20 @@ class Network {
     return this.idByValue[value] !== undefined;
   }
 
-  connectionsOf(value, relation, incoming) {
+  connectionsOf(value, incoming) {
     const valueNodeId = this.idByValue[value];
     if (!valueNodeId) {
       throw Error('unknown value');
     }
 
-    const network = this.networkByRelation[relation];
-    if (!network) {
-      return [];
-    }
-
-    const edges = network[incoming ? 'inEdges' : 'outEdges'](valueNodeId) || [];
+    const edges = this.graph[incoming ? 'inEdges' : 'outEdges'](valueNodeId) || [];
     return edges
       .map((edge) => {
         const connection = {};
         const connectedNodeId = edge[incoming ? 'v' : 'w'];
         connection[incoming ? 'from' : 'to'] = this.valueById[connectedNodeId];
-        const props = network.edge(connectedNodeId, valueNodeId)
-          || network.edge(valueNodeId, connectedNodeId);
+        const props = this.graph.edge(connectedNodeId, valueNodeId)
+          || this.graph.edge(valueNodeId, connectedNodeId);
         if (props) {
           connection.props = props;
         }

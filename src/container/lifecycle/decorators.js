@@ -1,3 +1,7 @@
+export function OnInit() {
+  return () => {};
+}
+
 export function OnStart() {
   return () => {};
 }

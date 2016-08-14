@@ -14,6 +14,7 @@ describe('Integration Test "Account"', () => {
 
   it('should load', async () => {
     app = new Application(module);
+    await app.init();
     await app.start();
   });
 

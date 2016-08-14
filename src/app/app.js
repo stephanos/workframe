@@ -23,6 +23,8 @@ function createUserContainer() {
 
 class Application {
 
+  status;
+
   constructor(module, opts) {
     this.rootDir = path.dirname(module.id);
     this.opts = opts;
@@ -32,8 +34,12 @@ class Application {
     process.rootContainer = this.rootContainer;
   }
 
-  async start() {
+  async init() {
+    await this.rootContainer.load();
     await this.rootContainer.init();
+  }
+
+  async start() {
     await this.rootContainer.start();
   }
 

@@ -23,7 +23,7 @@ describe('Transitioner', () => {
     class D { async start() { started.push(D); } }
     const component = { decorations: [{ type: OnStart, target: { name: 'start', kind: 'method' } }] };
 
-    transitioner.network.values = [D, C, A, B];
+    transitioner.network.nodes = [D, C, A, B];
     transitioner.network.propsByValue = {
       [A]: { component },
       [B]: { component },
@@ -56,7 +56,7 @@ describe('Transitioner', () => {
     class D { async stop() { stopped.push(D); } }
     const component = { decorations: [{ type: OnStop, target: { name: 'stop', kind: 'method' } }] };
 
-    transitioner.network.values = [D, C, A, B];
+    transitioner.network.nodes = [D, C, A, B];
     transitioner.network.propsByValue = {
       [A]: { component },
       [B]: { component },

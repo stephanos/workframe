@@ -5,8 +5,8 @@ import { IdGenerator } from '../util';
 import Scanner from './scanner';
 
 
-async function initChildren(container) {
-  await Promise.all(container.children.map((c) => c.init()));
+async function loadChildren(container) {
+  await Promise.all(container.children.map((c) => c.load()));
 }
 
 function createScanner(componentSchema) {
@@ -27,7 +27,7 @@ function createScanner(componentSchema) {
   return new Scanner(isComponent, excludeFiles);
 }
 
-function load(container) {
+function loadComponents(container) {
   const schema = container.componentSchema;
   const componentFactory = new ComponentFactory(schema, IdGenerator);
   const scanner = createScanner(schema);
@@ -41,11 +41,11 @@ function load(container) {
 }
 
 
-async function init(container) {
+async function load(container) {
   // children must be initilises BEFORE parent
-  await initChildren(container);
-  load(container);
+  await loadChildren(container);
+  loadComponents(container);
 }
 
 
-export default init;
+export default load;

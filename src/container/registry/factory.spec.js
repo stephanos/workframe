@@ -28,7 +28,7 @@ describe('Factory', () => {
   });
 
   it('should create component with direct dependencies', () => {
-    factory.network.connectionsFrom.withArgs(A, 'dependsOn').returns([
+    factory.network.connectionsFrom.withArgs(A).returns([
       { to: B, props: { fieldName: 'depB' } },
       { to: C, props: { fieldName: 'depC' } },
     ]);
@@ -41,10 +41,10 @@ describe('Factory', () => {
   });
 
   it('should create component with transitive dependencies', () => {
-    factory.network.connectionsFrom.withArgs(A, 'dependsOn').returns([
+    factory.network.connectionsFrom.withArgs(A).returns([
       { to: B, props: { fieldName: 'depB' } },
     ]);
-    factory.network.connectionsFrom.withArgs(B, 'dependsOn').returns([
+    factory.network.connectionsFrom.withArgs(B).returns([
       { to: C, props: { fieldName: 'depC' } },
     ]);
 
@@ -63,7 +63,7 @@ describe('Factory', () => {
   });
 
   it('should create each dependency only once', () => {
-    factory.network.connectionsFrom.withArgs(A, 'dependsOn').returns([
+    factory.network.connectionsFrom.withArgs(A).returns([
       { to: B, props: { fieldName: 'dep1' } },
       { to: B, props: { fieldName: 'dep2' } },
     ]);

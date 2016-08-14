@@ -1,6 +1,3 @@
-import relations from './relations';
-
-
 class Factory {
 
   instanceByType = {};
@@ -21,7 +18,7 @@ class Factory {
       }
 
       const newInstance = new type();
-      const dependencies = this.network.connectionsFrom(type, relations.DEPENDS) || [];
+      const dependencies = this.network.connectionsFrom(type) || [];
       dependencies.forEach((dependency) => {
         const property = dependency.props.fieldName;
         const dependencyComponent = dependency.to;

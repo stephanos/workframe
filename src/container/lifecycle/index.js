@@ -1,6 +1,7 @@
-import { OnStart, OnStop } from './decorators';
+import { OnInit, OnStart, OnStop } from './decorators';
 
 export {
+  OnInit,
   OnStart,
   OnStop,
 };

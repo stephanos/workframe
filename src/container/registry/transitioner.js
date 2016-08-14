@@ -1,5 +1,12 @@
-import relations from './relations';
-import { OnStart, OnStop } from '../lifecycle/decorators';
+import { OnInit, OnStart, OnStop } from '../lifecycle/decorators';
+
+
+function findMethodsWithDecorator(component, decoratorType) {
+  return component.decorations
+    .filter((decoration) => decoration.type === decoratorType)
+    .filter((decoration) => decoration.target.kind === 'method')
+    .map((decoration) => decoration.target.name);
+}
 
 
 class Transitioner {
@@ -9,44 +16,50 @@ class Transitioner {
     this.factory = factory;
   }
 
+  async init(dispatcher) {
+    await this.transitionTo(dispatcher, OnInit, 'connectionsFrom', 'to');
+  }
+
   async start(dispatcher) {
-    await this.to(dispatcher, OnStart, 'connectionsFrom', 'to');
+    await this.transitionTo(dispatcher, OnStart, 'connectionsFrom', 'to');
   }
 
   async stop(dispatcher) {
-    await this.to(dispatcher, OnStop, 'connectionsTo', 'from');
+    await this.transitionTo(dispatcher, OnStop, 'connectionsTo', 'from');
   }
 
-  async to(dispatcher, decoratorType, connection, dir) {
-    const promises = [];
+  async transitionTo(dispatcher, transitionDecorator, connectionFn, dir) {
+    const transitioning = [];
 
-    const transition = async (values) => {
-      const untransitioned = [];
-      values.forEach((value) => {
-        const dependsOn = this.network[connection](value, relations.DEPENDS);
-        const untransitionedDependency = dependsOn.find((dep) => values.indexOf(dep[dir]) >= 0);
-        if (untransitionedDependency) {
-          untransitioned.push(value);
+    const transition = async (componentFactories) => {
+      if (componentFactories.length === 0) {
+        return;
+      }
+
+      const transitionLater = [];
+
+      componentFactories.forEach((componentFactory) => {
+        const dependencies = this.network[connectionFn](componentFactory);
+        const hasUntransitionedDependency = dependencies.find((dep) => componentFactories.indexOf(dep[dir]) >= 0);
+        if (hasUntransitionedDependency) {
+          transitionLater.push(componentFactory);
           return;
         }
 
-        const instance = this.factory.create(value);
-
-        const component = this.network.propsByValue[value].component;
-        component.decorations
-          .filter((decoration) => decoration.type === decoratorType)
-          .filter((decoration) => decoration.target.kind === 'method')
-          .map((decoration) => decoration.target.name)
-          .forEach((funcName) => promises.push(instance[funcName](dispatcher)));
+        const { component } = this.network.propsByValue[componentFactory];
+        findMethodsWithDecorator(component, transitionDecorator)
+          .forEach((transitionMethod) => {
+            const instance = this.factory.create(componentFactory);
+            transitioning.push(instance[transitionMethod](dispatcher));
+          });
       });
 
-      if (untransitioned.length > 0) {
-        await transition(untransitioned);
-      }
+      await transition(transitionLater);
     };
 
-    await transition(this.network.values);
-    await Promise.all(promises);
+    await transition(this.network.nodes);
+
+    await Promise.all(transitioning);
   }
 }
 

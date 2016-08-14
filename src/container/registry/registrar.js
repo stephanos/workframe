@@ -1,5 +1,4 @@
 import Inject from './decorator';
-import relations from './relations';
 
 
 function findDependencies(component) {
@@ -16,7 +15,6 @@ function findDependencies(component) {
 
       dependencies.push({
         to: dependency,
-        relation: relations.DEPENDS,
         properties: { fieldName: decoration.target.name },
       });
     });
@@ -39,7 +37,6 @@ class Registrar {
       this.network.connect(
         component.factory,
         connection.to,
-        connection.relation,
         connection.properties,
       );
     });

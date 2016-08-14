@@ -36,7 +36,7 @@ describe('Registrar', () => {
     });
 
     assert(registrar.network.add.calledWith(A));
-    assert(registrar.network.connect.calledWith(A, B, 'dependsOn', { fieldName: 'dependency' }));
+    assert(registrar.network.connect.calledWith(A, B, { fieldName: 'dependency' }));
   });
 
   // it('should fail for missing component', () => {
