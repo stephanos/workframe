@@ -1,14 +1,23 @@
+/* @flow */
+
 import Datastore from 'nedb';
-import { fromJS } from 'immutable';
+import { List, fromJS } from 'immutable';
+
+import Event from '../../event';
+import AggregatorRef from '../../aggregatorRef';
+import { IdGenerator, Clock } from '../../../util';
 
 
 class MemoryStorage {
 
-  constructor(idGenerator, clock) {
+  db: Datastore;
+  clock: Clock;
+  idGenerator: IdGenerator;
+
+  constructor(idGenerator: IdGenerator, clock: Clock) {
+    this.db = new Datastore();
     this.clock = clock;
     this.idGenerator = idGenerator;
-
-    this.clear();
   }
 
   async connect() {
@@ -19,23 +28,30 @@ class MemoryStorage {
     return;
   }
 
-  async addEvents(events) {
+  async addEvents(events: List<Event>) {
     return new Promise((resolve, reject) => {
-      const eventsWithId = events.map((evt) => evt.merge({ _id: evt.get('id') }));
-      this.db.insert(eventsWithId.toJS(), (err, newDocs) => {
+      const serializedEvents =
+        events.toJS().map((evt) => {
+          const copy = Object.assign({}, evt);
+          copy._id = evt.id; /* eslint no-underscore-dangle: 0 */
+          return copy;
+        });
+
+      this.db.insert(serializedEvents, (err, newDocs) => {
         if (err) reject(err);
         else resolve(newDocs);
       });
     });
   }
 
-  async getEventStream(ref) {
+  async getEventStream(ref: AggregatorRef) {
     return new Promise((resolve, reject) => {
       const query = {
         'aggregate.context': ref.context,
         'aggregate.name': ref.name,
         'aggregate.id': ref.id,
       };
+
       this.db.find(query).sort({ aggregate: { revision: 1 } }).exec((err, found) => {
         if (err) reject(err);
         else {
@@ -44,10 +60,6 @@ class MemoryStorage {
         }
       });
     });
-  }
-
-  async clear() {
-    this.db = new Datastore();
   }
 }
 

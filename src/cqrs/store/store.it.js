@@ -1,6 +1,9 @@
 import sinon from 'sinon';
 import assert from 'assert';
-import { Map, List, fromJS } from 'immutable';
+import { List } from 'immutable';
+
+import Event from '../event';
+import AggregatorRef from '../aggregatorRef';
 
 import EventStore from './store';
 import MemoryStorage from './storage/memory';
@@ -26,19 +29,23 @@ describe('Event Store IT', () => {
       });
 
       it('should add add events', async () => {
-        const evt1 = Map();
-        const evt2 = Map();
+        const evt1 = new Event();
+        const evt2 = new Event();
         await store.addEvents(List.of(evt1, evt2));
       });
 
       it('should return event stream', async () => {
-        const aggrRef = { context: 'ctx', name: 'name', id: 'id' };
-        const data = fromJS({ aggregate: aggrRef });
-        const evt1 = data.mergeDeep({ aggregate: { revision: 0 } });
-        const evt2 = data.mergeDeep({ aggregate: { revision: 1 } });
+        const aggr = new AggregatorRef('ctx', 'name', 'id');
+
+        const evt1 = new Event();
+        evt1.aggregate = Object.assign({}, aggr, { revision: 0 });
+
+        const evt2 = new Event();
+        evt2.aggregate = Object.assign({}, aggr, { revision: 1 });
+
         await store.addEvents(List.of(evt1, evt2));
 
-        const stream = await store.getEventStream(aggrRef, {});
+        const stream = await store.getEventStream(aggr);
         assert.deepEqual(stream.toJS(), {
           aggregate: {
             context: 'ctx',

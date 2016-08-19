@@ -1,0 +1,4 @@
+interface Storage {
+
+  // TODO
+}

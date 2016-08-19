@@ -1,24 +1,25 @@
+/* @flow */
+
+import AggregatorRef from './aggregatorRef';
+
+
 class Event {
+  id: string;
+  commandId: string;
+  context: string;
+  payload: string;
 
-  id;
-  commandId;
-  context;
-  payload;
-
-  name;
-  version;
+  name: string;
+  version: string;
 
   // commit: {
-  //   id,
-  //   size,
-  //   sequence,
-  //   stamp,
-  // };
+//   id,
+//   size,
+//   sequence,
+//   stamp,
+// };
 
-  aggregateContext;
-  aggregateName;
-  aggregateId;
-  aggregateRevision;
+  aggregate: AggregatorRef;
 }
 
 

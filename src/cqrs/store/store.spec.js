@@ -1,7 +1,8 @@
 import sinon from 'sinon';
 import assert from 'assert';
-import { Map, List } from 'immutable';
+import { List } from 'immutable';
 
+import Event from '../event';
 import EventStore from './store';
 
 
@@ -25,8 +26,8 @@ describe('Event Store', () => {
   });
 
   it('add events', async () => {
-    const evt1 = Map();
-    const evt2 = Map();
+    const evt1 = new Event();
+    const evt2 = new Event();
     await store.addEvents(List.of(evt1, evt2));
 
     assert.ok(storage.addEvents.calledOnce);

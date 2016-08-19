@@ -1,9 +1,11 @@
+/* @flow */
+
 class Command {
-  id;
-  name;
-  version;
-  aggregate;
-  payload;
+  id: string;
+  name: string;
+  version: string;
+  aggregate: string;
+  payload: any;
 }
 
 

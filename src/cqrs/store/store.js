@@ -1,37 +1,49 @@
-import { Map } from 'immutable';
+/* @flow */
+
+import { List, Map } from 'immutable';
+
+import { Storage } from './storage';
+
+import Event from '../event';
+import AggregatorRef from '../aggregatorRef';
+import { IdGenerator, Clock } from '../../util';
 
 
 class EventStore {
 
-  constructor(storage, idGenerator, clock) {
+  storage: Storage;
+  idGenerator: IdGenerator;
+  clock: Clock;
+
+  constructor(storage: Storage, idGenerator: IdGenerator, clock: Clock) {
     this.storage = storage;
     this.idGenerator = idGenerator;
     this.clock = clock;
   }
 
-  async addEvents(events) {
+  async addEvents(events: List<Event>) {
     const commitId = this.idGenerator.next();
     const commitStamp = this.clock.now();
     const eventsLen = events.size;
 
-    const uncommittedEvents = events.map((evt, idx) =>
-      evt.mergeDeep(Map({
-        id: `${commitId}-${idx.toString()}`,
-        commit: {
-          id: commitId,
-          timestamp: commitStamp,
-          sequence: idx,
-          size: eventsLen,
-        },
-        // TODO: aggregateRevision:
-      }))
-    );
+    const uncommittedEvents = events.map((evt, idx) => {
+      const copy = Object.assign({}, evt);
+      copy.id = `${commitId}-${idx.toString()}`;
+      copy.commit = {
+        id: commitId,
+        timestamp: commitStamp,
+        sequence: idx,
+        size: eventsLen,
+      };
+      // TODO: aggregateRevision:
+      return copy;
+    });
 
-    return this.storage.addEvents(uncommittedEvents);
+    return await this.storage.addEvents(uncommittedEvents);
   }
 
-  async getEventStream(aggregateRef, qryOpts) {
-    const events = await this.storage.getEventStream(aggregateRef, qryOpts);
+  async getEventStream(aggregateRef: AggregatorRef) {
+    const events = await this.storage.getEventStream(aggregateRef);
     const aggregateRevision = events.isEmpty() ? -1 : events.last().getIn(['aggregate', 'revision']);
     return Map({
       aggregate: {
