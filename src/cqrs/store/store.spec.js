@@ -11,18 +11,17 @@ describe('Event Store', () => {
   let storage;
 
   before(() => {
-    const clock = {
+    store = new EventStore();
+    store.clock = {
       now: sinon.stub().returns(new Date(0)),
     };
-    const idGenerator = {
+    store.idGenerator = {
       next: sinon.stub().returns('42'),
     };
-    storage = {
+    storage = store.storage = {
       addEvents: sinon.mock().returns(Promise.resolve()),
       getEventStream: sinon.mock().returns(Promise.resolve(List())),
     };
-
-    store = new EventStore(storage, idGenerator, clock);
   });
 
   it('add events', async () => {

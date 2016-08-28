@@ -2,7 +2,6 @@
 
 
 class AggregatorRef {
-
   context: string;
   name: string;
   id: string;

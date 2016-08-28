@@ -2,23 +2,27 @@
 
 import { List, Map } from 'immutable';
 
-import { Storage } from './storage';
+import { Storage, StorageFactory } from './storage';
 
-import Event from '../event';
 import AggregatorRef from '../aggregatorRef';
-import { IdGenerator, Clock } from '../../util';
+import Event from '../event';
+
+import { Clock, IdGenerator } from '../../util';
+import { Component, Inject, OnStart } from '../../container';
 
 
+@Component()
 class EventStore {
 
-  storage: Storage;
-  idGenerator: IdGenerator;
-  clock: Clock;
+  @Inject() storageFactory: StorageFactory;
 
-  constructor(storage: Storage, idGenerator: IdGenerator, clock: Clock) {
-    this.storage = storage;
-    this.idGenerator = idGenerator;
-    this.clock = clock;
+  clock = Clock;
+  idGenerator = IdGenerator;
+  storage: Storage;
+
+  @OnStart()
+  start() {
+    this.storage = this.storageFactory.create();
   }
 
   async addEvents(events: List<Event>) {

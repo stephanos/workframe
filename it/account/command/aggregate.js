@@ -1,14 +1,15 @@
 /* @flow */
 
-import { Record } from 'workframe';
+import { Component, Record } from 'workframe';
 
 
-@Record('account')
-class AccountAggregateRoot {
+@Record()
+@Component('account')
+class AccountAggregate {
 
   id: string;
   emailAddress: string;
 }
 
 
-export default AccountAggregateRoot;
+export default AccountAggregate;

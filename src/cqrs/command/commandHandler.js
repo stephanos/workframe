@@ -1,53 +1,45 @@
 import { Map, List } from 'immutable';
 
+import { Component, Inject } from '../../container';
+import { IdGenerator } from '../../util';
+import { Store } from '../store';
 
-async function getAggregateStream(store, command) {
+import AggregateFactory from './aggregateFactory';
+
+
+async function getStream(store, aggregateRef) {
   return await store.getEventStream({
-    context: command.aggregateContext,
-    name: command.aggregateName,
-    id: command.aggregateId,
+    context: aggregateRef.context,
+    name: aggregateRef.name,
+    id: aggregateRef.id,
   });
 }
 
-function buildAggregate(registry, aggregateStream) {
-  const initialAggregate = {};
-  const aggregateEvents = aggregateStream.get('events');
-  return aggregateEvents.reduce((aggr, evt) => {
-    const aggregator = registry.getConnection('aggregates', evt.name)[0];
-    return aggregator.aggregate(aggr, evt);
-  }, initialAggregate);
-}
-
-
+@Component()
 class CommandHandler {
 
-  constructor(store, registry) {
-    this.store = store;
-    this.registry = registry;
-  }
+  @Inject() store: Store;
+  @Inject() aggregateFactory: AggregateFactory;
 
-  async handle(processFn, command) {
-    const aggregateStream = await getAggregateStream(this.store, command);
-    const aggregate = buildAggregate(this.registry, aggregateStream);
-    const eventPayload = await processFn(aggregate, command);
-    if (!eventPayload) {
+  async handle(aggregateRef, processor, command) {
+    const aggregateStream = await getStream(this.store, aggregateRef);
+    const aggregate = await this.aggregateFactory.create(aggregateStream);
+    const processorResult = await processor.process(aggregate, command);
+    if (!processorResult) {
       return null; // TODO
     }
-    const eventPayloads = List.of(eventPayload.toMap()); // TODO
+    const eventPayloads = List.of(processorResult.toMap()); // TODO: multiple events?
     const events = eventPayloads.map((payload, idx) =>
       Map({
+        payload,
         command: {
-          name: command.constructor.name,
+          name: command.constructor.name, // TODO: use command name from @Component
           id: command.id,
         },
-        // context: TODO,
-        payload,
-        // name: TOOD,
-        // version: TODO,
         aggregate: {
-          // context: command.aggregate.context,
-          // name: command.aggregate.name,
-          // id: command.aggregate.id, //  || eventPayload[0].aggregateId
+          context: aggregateRef.context,
+          name: aggregateRef.name,
+          id: command.aggregateId || IdGenerator.next(),
           revision: (aggregateStream.aggregateRevision || 0) + idx,
         },
       })

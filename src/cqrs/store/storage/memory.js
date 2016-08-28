@@ -6,18 +6,19 @@ import { List, fromJS } from 'immutable';
 import Event from '../../event';
 import AggregatorRef from '../../aggregatorRef';
 import { IdGenerator, Clock } from '../../../util';
+import { Component, OnStart } from '../../../container';
 
 
+@Component()
 class MemoryStorage {
 
   db: Datastore;
-  clock: Clock;
-  idGenerator: IdGenerator;
+  clock = Clock;
+  idGenerator = IdGenerator;
 
-  constructor(idGenerator: IdGenerator, clock: Clock) {
+  @OnStart()
+  start() {
     this.db = new Datastore();
-    this.clock = clock;
-    this.idGenerator = idGenerator;
   }
 
   async connect() {

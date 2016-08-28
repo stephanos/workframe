@@ -10,7 +10,9 @@ import MemoryStorage from './storage/memory';
 
 
 function memory() {
-  return new MemoryStorage();
+  const storage = new MemoryStorage();
+  storage.start();
+  return storage;
 }
 
 describe('Event Store IT', () => {
@@ -19,13 +21,14 @@ describe('Event Store IT', () => {
   [memory].forEach((storageFactory) => {
     describe(`storage engine '${storageFactory.name}'`, () => {
       beforeEach(() => {
-        const idGenerator = {
+        store = new EventStore();
+        store.idGenerator = {
           next: sinon.stub().returns('42'),
         };
-        const clock = {
+        store.clock = {
           now: sinon.stub().returns(new Date(0)),
         };
-        store = new EventStore(storageFactory(), idGenerator, clock);
+        store.storage = storageFactory();
       });
 
       it('should add add events', async () => {
