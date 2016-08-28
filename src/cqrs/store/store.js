@@ -25,7 +25,7 @@ class EventStore {
     this.storage = this.storageFactory.create();
   }
 
-  async addEvents(events: List<Event>) {
+  async addEvents(events: List<Event>): Promise<Map<string, any>> {
     const commitId = this.idGenerator.next();
     const commitStamp = this.clock.now();
     const eventsLen = events.size;
@@ -46,7 +46,7 @@ class EventStore {
     return await this.storage.addEvents(uncommittedEvents);
   }
 
-  async getEventStream(aggregateRef: AggregatorRef) {
+  async getEventStream(aggregateRef: AggregatorRef): Promise<Map<string, any>> {
     const events = await this.storage.getEventStream(aggregateRef);
     const aggregateRevision = events.isEmpty() ? -1 : events.last().getIn(['aggregate', 'revision']);
     return Map({

@@ -1,9 +1,12 @@
+/* @flow */
+
 import { Map, List } from 'immutable';
 
 import { Component, Inject } from '../../container';
 import { IdGenerator } from '../../util';
 import { Store } from '../store';
 
+import AggregateRef from '../aggregatorRef';
 import AggregateFactory from './aggregateFactory';
 
 
@@ -21,13 +24,10 @@ class CommandHandler {
   @Inject() store: Store;
   @Inject() aggregateFactory: AggregateFactory;
 
-  async handle(aggregateRef, processor, command) {
+  async handle(aggregateRef: AggregateRef, processor: any, command: any): List<Map<string, any>> {
     const aggregateStream = await getStream(this.store, aggregateRef);
     const aggregate = await this.aggregateFactory.create(aggregateStream);
     const processorResult = await processor.process(aggregate, command);
-    if (!processorResult) {
-      return null; // TODO
-    }
     const eventPayloads = List.of(processorResult.toMap()); // TODO: multiple events?
     const events = eventPayloads.map((payload, idx) =>
       Map({

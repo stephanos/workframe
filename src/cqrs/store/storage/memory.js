@@ -21,15 +21,15 @@ class MemoryStorage {
     this.db = new Datastore();
   }
 
-  async connect() {
+  async connect(): void {
     return;
   }
 
-  async disconnect() {
+  async disconnect(): void {
     return;
   }
 
-  async addEvents(events: List<Event>) {
+  async addEvents(events: List<Event>): Promise<array<object>> {
     return new Promise((resolve, reject) => {
       const serializedEvents =
         events.toJS().map((evt) => {
@@ -45,7 +45,7 @@ class MemoryStorage {
     });
   }
 
-  async getEventStream(ref: AggregatorRef) {
+  async getEventStream(ref: AggregatorRef): Promise<list<object>> {
     return new Promise((resolve, reject) => {
       const query = {
         'aggregate.context': ref.context,

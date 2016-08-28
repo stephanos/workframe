@@ -31,7 +31,7 @@ class CommandRouter {
     });
   }
 
-  async process(command: Object) {
+  async process(command: Object): List<Map<string, any>> {
     const processor = this.processorByCommandType[command.constructor];
     const aggregateComp = this.aggregateComponentByCommandType[command.constructor];
     const aggregateRef = new AggregatorRef(

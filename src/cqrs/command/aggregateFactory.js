@@ -1,3 +1,7 @@
+/* @flow */
+
+import { Map } from 'immutable';
+
 import { ApplicationContext } from '../../app';
 import { Component, Inject, OnInit } from '../../container';
 
@@ -20,7 +24,7 @@ class AggregateFactory {
     });
   }
 
-  async create(aggregateStream) {
+  async create(aggregateStream: Map<object>): Promise<object> {
     const initialAggregate = {};
     const aggregateEvents = aggregateStream.get('events');
     return aggregateEvents.reduce((aggr, evt) => {
